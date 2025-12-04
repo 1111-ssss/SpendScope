@@ -1,0 +1,36 @@
+name: spend_scope
+description: "spend scope"
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  fl_chart: ^1.1.1
+  provider: ^6.1.5
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+  path_provider: ^2.1.5
+  intl: ^0.20.2
+  shared_preferences: ^2.5.3
+  flutter_slidable: ^4.0.3
+  # mobile_scanner: ^7.1.3
+  permission_handler: ^12.0.1
+  http: ^1.5.0
+  camera: ^0.11.3
+  google_mlkit_barcode_scanning: ^0.14.1
+  google_mlkit_text_recognition: ^0.15.0
+  carousel_slider: ^5.1.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  build_runner: ^2.4.0
+  isar_generator: ^3.1.0+1
+
+flutter:
+  uses-material-design: true

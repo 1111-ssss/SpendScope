@@ -1,38 +1,66 @@
-# Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,flutter,dotnetcore,windows,database
-# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,flutter,dotnetcore,windows,database
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
 
-### Database ###
-*.accdb
-*.db
-*.dbf
-*.mdb
-*.pdb
-*.sqlite3
-*.db-shm
-*.db-wal
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
 
-### DotnetCore ###
-# .NET Core build folders
-bin/
-obj/
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
 
-# Common node modules locations
-/node_modules
-/wwwroot/node_modules
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+
+# Created by https://www.toptal.com/developers/gitignore/api/flutter,visualstudiocode
+# Edit at https://www.toptal.com/developers/gitignore?templates=flutter,visualstudiocode
 
 ### Flutter ###
 # Flutter/Dart/Pub related
 **/doc/api/
-mobile/.dart_tool/
-mobile/.flutter-plugins
-mobile/.flutter-plugins-dependencies
-mobile/.fvm/flutter_sdk
-mobile/.packages
-mobile/.pub-cache/
-mobile/.pub/
-mobile/build/
-mobile/coverage/
-mobile/lib/generated_plugin_registrant.dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.fvm/flutter_sdk
+.packages
+.pub-cache/
+.pub/
+build/
+coverage/
+lib/generated_plugin_registrant.dart
 # For library packages, don’t commit the pubspec.lock file.
 # Regenerating the pubspec.lock file lets you test your package against the latest compatible versions of its dependencies.
 # See https://dart.dev/guides/libraries/private-files#pubspeclock
@@ -103,30 +131,4 @@ mobile/lib/generated_plugin_registrant.dart
 .history
 .ionide
 
-### Windows ###
-# Windows thumbnail cache files
-Thumbs.db
-Thumbs.db:encryptable
-ehthumbs.db
-ehthumbs_vista.db
-
-# Dump file
-*.stackdump
-
-# Folder config file
-[Dd]esktop.ini
-
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msix
-*.msm
-*.msp
-
-# Windows shortcuts
-*.lnk
-
-# End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,flutter,dotnetcore,windows,database
+# End of https://www.toptal.com/developers/gitignore/api/flutter,visualstudiocode
