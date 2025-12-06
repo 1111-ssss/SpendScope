@@ -5,7 +5,7 @@ import 'package:camera/camera.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:provider/provider.dart';
-import 'package:spend_scope/model/expense.dart';
+import 'package:spend_scope/domain/model/expense.dart';
 import 'package:spend_scope/service/data_provider_service.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:spend_scope/model/category.dart';
-import 'package:spend_scope/model/expense.dart';
+import 'package:spend_scope/domain/model/category.dart';
+import 'package:spend_scope/domain/model/expense.dart';
 
 class DataProviderService with ChangeNotifier {
   late Isar isar;

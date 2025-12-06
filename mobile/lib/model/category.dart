@@ -1,5 +1,5 @@
 import 'package:isar/isar.dart';
-import 'package:spend_scope/model/expense.dart';
+import 'package:spend_scope/domain/model/expense.dart';
 
 part 'category.g.dart';
 

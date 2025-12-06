@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:spend_scope/model/expense.dart';
+import 'package:spend_scope/domain/model/expense.dart';
 import 'package:spend_scope/service/data_provider_service.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 

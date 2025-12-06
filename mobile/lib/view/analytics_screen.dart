@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:provider/provider.dart';
-import 'package:spend_scope/model/expense.dart';
-import 'package:spend_scope/model/category.dart';
+import 'package:spend_scope/domain/model/expense.dart';
+import 'package:spend_scope/domain/model/category.dart';
 import 'package:intl/intl.dart';
 import 'package:spend_scope/service/data_provider_service.dart';
 
