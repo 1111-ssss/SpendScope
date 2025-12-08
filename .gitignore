@@ -1,132 +1,133 @@
-# Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,flutter,dotnetcore,windows,database
-# Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,flutter,dotnetcore,windows,database
-
-### Database ###
-*.accdb
-*.db
-*.dbf
-*.mdb
-*.pdb
-*.sqlite3
-*.db-shm
-*.db-wal
-
-### DotnetCore ###
-# .NET Core build folders
-bin/
-obj/
-
-# Common node modules locations
-/node_modules
-/wwwroot/node_modules
-
-### Flutter ###
-# Flutter/Dart/Pub related
-**/doc/api/
-mobile/.dart_tool/
-mobile/.flutter-plugins
-mobile/.flutter-plugins-dependencies
-mobile/.fvm/flutter_sdk
-mobile/.packages
-mobile/.pub-cache/
-mobile/.pub/
-mobile/build/
-mobile/coverage/
-mobile/lib/generated_plugin_registrant.dart
-# For library packages, don’t commit the pubspec.lock file.
-# Regenerating the pubspec.lock file lets you test your package against the latest compatible versions of its dependencies.
-# See https://dart.dev/guides/libraries/private-files#pubspeclock
-#pubspec.lock
-
-# Android related
-**/android/**/gradle-wrapper.jar
-**/android/.gradle
-**/android/captures/
-**/android/gradlew
-**/android/gradlew.bat
-**/android/key.properties
-**/android/local.properties
-**/android/**/GeneratedPluginRegistrant.java
-
-# iOS/XCode related
-**/ios/**/*.mode1v3
-**/ios/**/*.mode2v3
-**/ios/**/*.moved-aside
-**/ios/**/*.pbxuser
-**/ios/**/*.perspectivev3
-**/ios/**/*sync/
-**/ios/**/.sconsign.dblite
-**/ios/**/.tags*
-**/ios/**/.vagrant/
-**/ios/**/DerivedData/
-**/ios/**/Icon?
-**/ios/**/Pods/
-**/ios/**/.symlinks/
-**/ios/**/profile
-**/ios/**/xcuserdata
-**/ios/.generated/
-**/ios/Flutter/.last_build_id
-**/ios/Flutter/App.framework
-**/ios/Flutter/Flutter.framework
-**/ios/Flutter/Flutter.podspec
-**/ios/Flutter/Generated.xcconfig
-**/ios/Flutter/app.flx
-**/ios/Flutter/app.zip
-**/ios/Flutter/flutter_assets/
-**/ios/Flutter/flutter_export_environment.sh
-**/ios/ServiceDefinitions.json
-**/ios/Runner/GeneratedPluginRegistrant.*
-
-# Exceptions to above rules.
-!**/ios/**/default.mode1v3
-!**/ios/**/default.mode2v3
-!**/ios/**/default.pbxuser
-!**/ios/**/default.perspectivev3
-!/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
-
-### VisualStudioCode ###
-.vscode/*
+# ╔═══════════════════════════════════════╗
+# ║             Общие файлы               ║
+# ╚═══════════════════════════════════════╝
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.bak
+*.swp
+*~.nib
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.cache
+*.tmp_proj
+*.vscode-test
+*.vs/
+*.vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-!.vscode/*.code-snippets
 
-# Local History for Visual Studio Code
+Files/
+
+# ╔═══════════════════════════════════════╗
+# ║              Flutter (mobile/)        ║
+# ╚═══════════════════════════════════════╝
+mobile/.dart_tool/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/.packages
+mobile/.pub-cache/
+mobile/.pub/
+mobile/build/
+mobile/ios/Flutter/App.framework
+mobile/ios/Flutter/Flutter.framework
+mobile/ios/Flutter/Generated.xcconfig
+mobile/ios/Flutter/flutter_export_environment.sh
+mobile/ios/Flutter/flutter_assets/
+mobile/ios/Flutter/app.flx
+mobile/ios/Flutter/Flutter.podspec
+mobile/ios/.symlinks/
+mobile/ios/Pods/
+mobile/ios/Runner.xcworkspace/
+mobile/ios/Podfile.lock
+mobile/android/.gradle/
+mobile/android/app/build/
+mobile/android/build/
+mobile/android/local.properties
+mobile/android/gradlew
+mobile/android/gradlew.bat
+mobile/windows/flutter/ephemeral/
+mobile/linux/flutter/ephemeral/
+mobile/macos/Flutter/ephemeral/
+mobile/.idea/
+
+# ╔═══════════════════════╗
+# ║   ASP.NET Core (api/) ║
+# ╚═══════════════════════╝
+**/bin/
+**/obj/
+**/*.csproj.user
+**/*.user
+**/[Tt]est[Rr]esults/
+api/appsettings.*.json
+api/appsettings.Development.json
+api/wwwroot/uploads/
+api/.vs/
+api/[Tt]est[Rr]esults/
+
+# ╔═══════════════════════╗
+# ║      WPF (admin/)     ║
+# ╚═══════════════════════╝
+admin/bin/
+admin/obj/
+admin/AppData/
+admin/TestResults/
+admin/*.csproj.user
+
+# ╔═══════════════════════╗
+# ║        Docker         ║
+# ╚═══════════════════════╝
+.docker/
+Dockerfile.*
+docker-compose.override.yml
+*.dockerignore
+*.tar.gz
+
+# ╔═══════════════════════╗
+# ║       Общие .NET      ║
+# ╚═══════════════════════╝
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa]rchive/
+[Bb]in/
+[Oo]bj/
+*.pdb
+*.cache
+*.ilk
+*.meta
+*.suo
+*.userprefs
+
+# ╔═══════════════════════╗
+# ║   Visual Studio Code  ║
+# ╚═══════════════════════╝
+.vscode/settings.json.bak
+.vscode/launch.json.bak
 .history/
+.ionide/
 
-# Built Visual Studio Code Extensions
-*.vsix
+# ╔═══════════════════════╗
+# ║      Secrets          ║
+# ╚═══════════════════════╝
+*.pem
+*.key
+*.pfx
+secrets.json
+*.env
+*.env.local
 
-### VisualStudioCode Patch ###
-# Ignore all local history of files
-.history
-.ionide
-
-### Windows ###
-# Windows thumbnail cache files
-Thumbs.db
-Thumbs.db:encryptable
-ehthumbs.db
-ehthumbs_vista.db
-
-# Dump file
-*.stackdump
-
-# Folder config file
-[Dd]esktop.ini
-
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msix
-*.msm
-*.msp
-
-# Windows shortcuts
-*.lnk
-
-# End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,flutter,dotnetcore,windows,database
+# ╔═══════════════════════╗
+# ║        NuGet          ║
+# ╚═══════════════════════╝
+packages/
+*.nupkg
+# Не игнорируем .nuspec, .snupkg и т.п., если они в репозитории
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
