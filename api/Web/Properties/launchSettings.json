@@ -9,7 +9,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "Jwt__Key": "jwtke!FOrspeEDndSCOO@0Oepe4373952faf$#5%~",
-        "ConnectionStrings__Default": "Host=localhost;Database=SpendScopeDB;Username=postgres;Password=admin"
+        "ConnectionStrings__DefaultConnection": "Host=localhost;Database=SpendScopeDB;Username=postgres;Password=admin",
+        "Password__Pepper": "peppeeeerkeeeyeyafsn3%&#*ns"
       }
     },
     "https": {
@@ -20,7 +21,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "Jwt__Key": "jwtke!FOrspeEDndSCOO@0Oepe4373952faf$#5%~",
-        "ConnectionStrings__Default": "Host=localhost;Database=SpendScopeDB;Username=postgres;Password=admin"
+        "ConnectionStrings__DefaultConnection": "Host=localhost;Database=SpendScopeDB;Username=postgres;Password=admin",
+        "Password__Pepper": "peppeeeerkeeeyeyafsn3%&#*ns"
       }
     }
   }
