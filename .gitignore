@@ -59,9 +59,7 @@ mobile/.idea/
 # ╔═══════════════════════╗
 # ║   ASP.NET Core (api/) ║
 # ╚═══════════════════════╝
-api/Web/appsettings.json
-api/Web/appsettings.Development.json
-api/Web/Properties/launchSettings.json
+api/Web/secrets.json
 
 api/**/bin/
 api/**/obj/

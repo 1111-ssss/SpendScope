@@ -29,6 +29,9 @@ namespace Application.Service.Auth
             if (await _users.ExistsByUsernameAsync(request.Username))
                 return Result<string>.Failed(ErrorCode.Conflict, "Пользователь уже существует");
 
+            if (!string.IsNullOrWhiteSpace(request.Email) && await _users.ExistsByEmailAsync(request.Email))
+                return Result<string>.Failed(ErrorCode.Conflict, "Email уже используется");
+
             Result<string> passwordHash = _hasher.Hash(request.Password);
 
             if (!passwordHash.IsSuccess)

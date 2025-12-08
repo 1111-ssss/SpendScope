@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
-using Isopoh.Cryptography.Argon2;
+using Konscious.Security.Cryptography;
 using Microsoft.Extensions.Configuration;
 using Domain.Model.Result;
 using Application.Abstractions.Auth;
@@ -24,34 +24,60 @@ namespace Application.Service.Auth
 
         public Result<string> Hash(string password)
         {
-            var salt = RandomNumberGenerator.GetBytes(SaltLength);
-
-            var config = new Argon2Config
+            try
             {
-                Type = Argon2Type.DataIndependentAddressing,
-                Version = Argon2Version.Nineteen,
-                TimeCost = Iterations,
-                MemoryCost = MemoryCostKb,
-                Lanes = Parallelism,
-                Threads = Parallelism,
-                Password = Encoding.UTF8.GetBytes(password),
-                Salt = salt,
-                Secret = _pepper,
-                AssociatedData = null,
-                HashLength = HashLength
-            };
-
-            var hash = new Argon2(config).Hash();
-
-            if (hash == null)
+                var salt = RandomNumberGenerator.GetBytes(SaltLength);
+                var pwdBytes = Encoding.UTF8.GetBytes(password);
+                var argon2 = new Argon2id(_pepper != null ? Combine(pwdBytes, _pepper) : pwdBytes)
+                {
+                    Salt = salt,
+                    DegreeOfParallelism = Parallelism,
+                    MemorySize = MemoryCostKb,
+                    Iterations = Iterations
+                };
+                var hash = argon2.GetBytes(HashLength);
+                
+                var result = Convert.ToBase64String(salt) + ":" + Convert.ToBase64String(hash);
+                return Result<string>.Success(result);
+            }
+            catch
+            {
                 return Result<string>.Failed(ErrorCode.InternalServerError, "Ошибка хеширования");
-
-            return Result<string>.Success(hash.ToString()!);
+            }
         }
 
         public bool Verify(string password, string hash)
         {
-            return Argon2.Verify(hash, Encoding.UTF8.GetBytes(password), Parallelism);
+            if (string.IsNullOrEmpty(hash)) return false;
+            try
+            {
+                var parts = hash.Split(':');
+                if (parts.Length != 2) return false;
+                var salt = Convert.FromBase64String(parts[0]);
+                var hashBytes = Convert.FromBase64String(parts[1]);
+                var pwdBytes = Encoding.UTF8.GetBytes(password);
+                var argon2 = new Argon2id(_pepper != null ? Combine(pwdBytes, _pepper) : pwdBytes)
+                {
+                    Salt = salt,
+                    DegreeOfParallelism = Parallelism,
+                    MemorySize = MemoryCostKb,
+                    Iterations = Iterations
+                };
+                var computed = argon2.GetBytes(hashBytes.Length);
+                return CryptographicOperations.FixedTimeEquals(computed, hashBytes);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static byte[] Combine(byte[] first, byte[] second)
+        {
+            var ret = new byte[first.Length + second.Length];
+            Buffer.BlockCopy(first, 0, ret, 0, first.Length);
+            Buffer.BlockCopy(second, 0, ret, first.Length, second.Length);
+            return ret;
         }
     }
 }

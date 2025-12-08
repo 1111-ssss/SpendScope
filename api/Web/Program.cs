@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
 builder.Services.AddScoped<RegisterUserHandler>();
+builder.Services.AddScoped<LoginUserHandler>();
 builder.Services.AddScoped<IPasswordHasher, Argon2PasswordHasher>();
 builder.Services.AddScoped<IJwtGenerator, JwtGenerator>();
 
@@ -16,7 +17,14 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Logging.AddConsole();
+// builder.Logging.AddConsole();
+
+builder.Services.AddLogging(logging =>
+{
+    logging.ClearProviders();
+    logging.AddConsole();
+    logging.AddDebug();
+});
 
 builder.Services.AddDataAccess(config);
 
@@ -32,6 +40,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapControllers();
-app.UseStaticFiles();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.Run();
