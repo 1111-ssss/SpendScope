@@ -59,16 +59,22 @@ mobile/.idea/
 # ╔═══════════════════════╗
 # ║   ASP.NET Core (api/) ║
 # ╚═══════════════════════╝
-**/bin/
-**/obj/
-**/*.csproj.user
-**/*.user
-**/[Tt]est[Rr]esults/
-api/appsettings.*.json
-api/appsettings.Development.json
-api/wwwroot/uploads/
-api/.vs/
-api/[Tt]est[Rr]esults/
+api/Web/appsettings.json
+api/Web/appsettings.Development.json
+api/Web/Properties/launchSettings.json
+
+api/**/bin/
+api/**/obj/
+api/**/*.csproj.user
+api/**/*.user
+api/**/Properties/PublishProfiles/
+api/**/publish/
+api/**/[Tt]est[Rr]esults/
+api/**/.idea/
+
+api/**/secrets.json
+api/**/*.env
+api/**/*.env.local
 
 # ╔═══════════════════════╗
 # ║      WPF (admin/)     ║
