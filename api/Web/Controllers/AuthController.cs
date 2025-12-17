@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Application.Service.Auth;
+using Application.Service.Auth.Handlers;
 using Application.DTO.Auth;
 
 [ApiController]

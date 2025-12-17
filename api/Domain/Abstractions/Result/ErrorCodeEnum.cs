@@ -1,4 +1,4 @@
-namespace Domain.Model.Result
+namespace Domain.Abstractions.Result
 {
     /// <summary>
     /// Рекомендуется использовать HTTP-коды для стандартных ошибок и

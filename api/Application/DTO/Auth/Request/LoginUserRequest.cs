@@ -1,4 +1,4 @@
-using Domain.Model.Enums;
+using Domain.Enums;
 
 namespace Application.DTO.Auth
 {

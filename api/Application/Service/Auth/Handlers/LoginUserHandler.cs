@@ -1,21 +1,20 @@
 using Application.DTO.Auth;
-using Infrastructure.Interfaces;
-using Domain.Model.Result;
-using Microsoft.EntityFrameworkCore;
+using Application.Abstractions.Interfaces;
+using Domain.Abstractions.Result;
 using Application.Abstractions.Auth;
-using Domain.Model.EntityModels;
-using Domain.Model.Enums;
+using Domain.Entities;
+using Domain.Enums;
+using Domain.Specifications;
 
-namespace Application.Service.Auth
+namespace Application.Service.Auth.Handlers
 {
     public class LoginUserHandler
     {
-        private readonly IAppDbContext _db;
+        private readonly IUnitOfWork _db;
         private readonly IPasswordHasher _hasher;
         private readonly IJwtGenerator _jwtGenerator;
-        private readonly IUserRepository _users;
-
-        public LoginUserHandler(IAppDbContext db, IPasswordHasher hasher, IJwtGenerator jwtGenerator, IUserRepository users)
+        private readonly IRepository<User> _users;
+        public LoginUserHandler(IUnitOfWork db, IPasswordHasher hasher, IJwtGenerator jwtGenerator, IRepository<User> users)
         {
             _db = db;
             _hasher = hasher;
@@ -27,15 +26,15 @@ namespace Application.Service.Auth
             if (string.IsNullOrWhiteSpace(request.UsernameOrEmail))
                 return Result<string>.Failed(ErrorCode.ValidationFailed, "Username или Email обязателен");
 
-            UserModel? user = null;
+            User? user = null;
 
             switch (request.LoginMethod)
             {
                 case LoginMethod.Email:
-                    user = await _users.GetByEmailAsync(request.UsernameOrEmail);
+                    user = await _users.FindSingleAsync(new UserByEmailSpecification(request.UsernameOrEmail), ct);
                     break;
                 case LoginMethod.Username:
-                    user = await _users.GetByUsernameAsync(request.UsernameOrEmail);
+                    user = await _users.FindSingleAsync(new UserByUsernameSpecification(request.UsernameOrEmail), ct);
                     break;
             }
 
@@ -48,7 +47,7 @@ namespace Application.Service.Auth
             if (!verifyPass)
                 return Result<string>.Failed(ErrorCode.Unauthorized, "Неверное имя пользователя или пароль");
 
-            var jwt = _jwtGenerator.GenerateToken(user.Id, user.Username, user.IsAdmin ?? false);
+            var jwt = _jwtGenerator.GenerateToken(user.Id, user.Username, user.IsAdmin);
             return Result<string>.Success(jwt);
         }
     }

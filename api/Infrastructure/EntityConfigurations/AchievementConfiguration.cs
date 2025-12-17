@@ -1,26 +1,33 @@
+using Domain.Entities;
+using Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Infrastructure.Entities;
 
 public class AchievementConfiguration : IEntityTypeConfiguration<Achievement>
 {
-    public void Configure(EntityTypeBuilder<Achievement> entity)
+    public void Configure(EntityTypeBuilder<Achievement> builder)
     {
-        entity.HasKey(e => e.Id).HasName("achievements_pkey");
+        builder.HasKey(a => a.Id);
+        builder.ToTable("achievements");
 
-        entity.ToTable("achievements");
+        builder.Property(a => a.Id)
+               .HasColumnName("id")
+               .ValueGeneratedOnAdd();
 
-        entity.HasIndex(e => e.Name, "achievements_name_key").IsUnique();
+        builder.Property(a => a.Name)
+               .HasColumnName("name")
+               .HasMaxLength(100)
+               .IsRequired();
 
-        entity.Property(e => e.Id).HasColumnName("id");
-        entity.Property(e => e.Description)
-            .HasMaxLength(200)
-            .HasColumnName("description");
-        entity.Property(e => e.IconUrl)
-            .HasMaxLength(255)
-            .HasColumnName("icon_url");
-        entity.Property(e => e.Name)
-            .HasMaxLength(100)
-            .HasColumnName("name");
+        builder.HasIndex(a => a.Name, "achievements_name_key")
+               .IsUnique();
+
+        builder.Property(a => a.Description)
+               .HasColumnName("description")
+               .HasMaxLength(200);
+
+        builder.Property(a => a.IconUrl)
+               .HasColumnName("icon_url")
+               .HasMaxLength(255);
     }
 }

@@ -1,50 +1,35 @@
 using Application.DTO.AppVersion;
-using Infrastructure.Interfaces;
+using Application.Service.Versions.Handlers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 [ApiController]
 [Route("api/[controller]")]
+[Tags("Версии приложения")]
 public class AppVersionController : ControllerBase
 {
-    private readonly IAppDbContext _db;
     private readonly IWebHostEnvironment _env;
     private readonly IConfiguration _config;
-    public AppVersionController(IAppDbContext db, IWebHostEnvironment env, IConfiguration config)
+    private readonly GetLatestHandler _handler;
+
+    public AppVersionController(GetLatestHandler handler, IWebHostEnvironment env, IConfiguration config)
     {
-        _db = db;
+        _handler = handler;
         _env = env;
         _config = config;
     }
     [HttpGet]
-    public async Task<ActionResult<GetLatestVersionResponse>> GetLatest(
+    public async Task<IActionResult> GetLatest(
         [FromQuery] GetLatestVersionRequest request
         )
     {
-        var latest = await _db.AppVersions
-            .Where(v => v.Branch == request.Branch)
-            .OrderByDescending(v => v.Build)
-            .Include(v => v.UploadedByNavigation)
-            .FirstOrDefaultAsync();
-
-        if (latest == null) return NotFound();
-
-        var baseUrl = $"{Request.Scheme}://{Request.Host}";
-        var downloadUrl = $"{baseUrl}/api/download/apk/{latest.Branch}/{latest.Build}/SpendScope.apk";
-
-        return Ok(new GetLatestVersionResponse(
-            Build: latest.Build,
-            DownloadUrl: downloadUrl,
-            Changelog: latest.Changelog,
-            UploadedAt: latest.UploadedAt,
-            UploadedBy: latest.UploadedByNavigation?.Username ?? "Unknown"
-        ));
+        var result = await _handler.Handle(request);
+        return result.ToActionResult();
     }
-    [HttpGet("api/download/apk/{**fileName}")]
-    public IActionResult Download(string fileName)
+    [HttpGet("download/apk/{**fileName}")]
+    public IActionResult DownloadApk(string fileName)
     {
         var path = Path.Combine(
-            Directory.GetCurrentDirectory(), "Files", "apk", fileName);
+            Directory.GetCurrentDirectory(), "Files", "apk", fileName, "SpendScope.apk");
 
         if (!System.IO.File.Exists(path))
             return NotFound($"Файл не найден: {fileName}");

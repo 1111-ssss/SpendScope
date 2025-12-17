@@ -7,7 +7,7 @@ using Application.Abstractions.Auth;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Application.Service.Auth
+namespace Application.Service.Auth.Helpers
 {
     public class JwtGenerator : IJwtGenerator
     {

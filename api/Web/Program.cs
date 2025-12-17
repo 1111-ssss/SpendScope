@@ -2,6 +2,12 @@ using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Application.Service.Auth;
 using Application.Abstractions.Auth;
+using Infrastructure.Interfaces;
+using Application.Service.Auth.Handlers;
+using Application.Service.Auth.Helpers;
+using Application.Abstractions.Interfaces;
+using Infrastructure.Repositories;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -43,5 +49,19 @@ app.MapControllers();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+var apkStoragePath = builder.Configuration["AppSettings:ApkStoragePath"]
+                     ?? Path.Combine(Directory.GetCurrentDirectory(), "ApkStorage");
+if (!Directory.Exists(apkStoragePath))
+{
+    Directory.CreateDirectory(apkStoragePath);
+}
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(apkStoragePath),
+    RequestPath = "/apk",
+    ServeUnknownFileTypes = true,
+    DefaultContentType = "application/vnd.android.package-archive"
+});
 
 app.Run();

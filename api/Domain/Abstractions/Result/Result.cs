@@ -1,4 +1,4 @@
-namespace Domain.Model.Result
+namespace Domain.Abstractions.Result
 {
     public interface IResultT
     {

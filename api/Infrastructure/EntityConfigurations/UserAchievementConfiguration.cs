@@ -1,28 +1,28 @@
+using Domain.Entities;
+using Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Infrastructure.Entities;
 
 public class UserAchievementConfiguration : IEntityTypeConfiguration<UserAchievement>
 {
-    public void Configure(EntityTypeBuilder<UserAchievement> entity)
+    public void Configure(EntityTypeBuilder<UserAchievement> builder)
     {
-        entity.HasKey(e => new { e.UserId, e.AchievementId }).HasName("user_achievements_pkey");
+        builder.HasKey(ua => new { ua.UserId, ua.AchievementId });
+        builder.ToTable("user_achievements");
 
-        entity.ToTable("user_achievements");
+        builder.Property(ua => ua.UserId)
+               .HasColumnName("user_id")
+               .HasConversion(id => id.Value, value => new EntityId<User>(value));
 
-        entity.Property(e => e.UserId).HasColumnName("user_id");
-        entity.Property(e => e.AchievementId).HasColumnName("achievement_id");
-        entity.Property(e => e.UnlockedAt)
-            .HasDefaultValueSql("CURRENT_TIMESTAMP")
-            .HasColumnType("timestamp without time zone")
-            .HasColumnName("unlocked_at");
+        builder.Property(ua => ua.AchievementId)
+               .HasColumnName("achievement_id");
 
-        entity.HasOne(d => d.Achievement).WithMany(p => p.UserAchievements)
-            .HasForeignKey(d => d.AchievementId)
-            .HasConstraintName("user_achievements_achievement_id_fkey");
+        builder.Property(ua => ua.UnlockedAt)
+               .HasColumnName("unlocked_at")
+               .HasDefaultValueSql("CURRENT_TIMESTAMP")
+               .HasColumnType("timestamp without time zone");
 
-        entity.HasOne(d => d.User).WithMany(p => p.UserAchievements)
-            .HasForeignKey(d => d.UserId)
-            .HasConstraintName("user_achievements_user_id_fkey");
+        builder.HasIndex(ua => ua.UserId);
+        builder.HasIndex(ua => ua.AchievementId);
     }
 }

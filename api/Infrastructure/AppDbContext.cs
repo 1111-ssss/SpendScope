@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using Infrastructure.Entities;
+using Application.Abstractions.Interfaces;
+using Domain.Entities;
 using Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure;
 
-public partial class AppDbContext : DbContext, IAppDbContext
+public partial class AppDbContext : DbContext, IAppDbContext, IUnitOfWork
 {
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)

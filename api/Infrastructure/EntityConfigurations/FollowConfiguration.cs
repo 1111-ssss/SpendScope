@@ -1,32 +1,30 @@
+using Domain.Entities;
+using Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Infrastructure.Entities;
 
 public class FollowConfiguration : IEntityTypeConfiguration<Follow>
 {
-    public void Configure(EntityTypeBuilder<Follow> entity)
+    public void Configure(EntityTypeBuilder<Follow> builder)
     {
-        entity.HasKey(e => new { e.FollowerId, e.FollowedId }).HasName("follows_pkey");
+        builder.HasKey(f => new { f.FollowerId, f.FollowedId });
+        builder.ToTable("follows");
 
-        entity.ToTable("follows");
+        builder.Property(f => f.FollowerId)
+               .HasColumnName("follower_id")
+               .HasConversion(id => id.Value, value => new EntityId<User>(value));
 
-        entity.HasIndex(e => e.FollowedId, "idx_follows_followed");
+        builder.Property(f => f.FollowedId)
+               .HasColumnName("followed_id")
+               .HasConversion(id => id.Value, value => new EntityId<User>(value));
 
-        entity.HasIndex(e => e.FollowerId, "idx_follows_follower");
+        builder.Property(f => f.FollowedAt)
+               .HasColumnName("followed_at")
+               .HasDefaultValueSql("CURRENT_TIMESTAMP")
+               .HasColumnType("timestamp without time zone")
+               .IsRequired();
 
-        entity.Property(e => e.FollowerId).HasColumnName("follower_id");
-        entity.Property(e => e.FollowedId).HasColumnName("followed_id");
-        entity.Property(e => e.FollowedAt)
-            .HasDefaultValueSql("CURRENT_TIMESTAMP")
-            .HasColumnType("timestamp without time zone")
-            .HasColumnName("followed_at");
-
-        entity.HasOne(d => d.Followed).WithMany(p => p.FollowFolloweds)
-            .HasForeignKey(d => d.FollowedId)
-            .HasConstraintName("follows_followed_id_fkey");
-
-        entity.HasOne(d => d.Follower).WithMany(p => p.FollowFollowers)
-            .HasForeignKey(d => d.FollowerId)
-            .HasConstraintName("follows_follower_id_fkey");
+        builder.HasIndex(f => f.FollowedId, "idx_follows_followed");
+        builder.HasIndex(f => f.FollowerId, "idx_follows_follower");
     }
 }

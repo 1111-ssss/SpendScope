@@ -1,12 +1,14 @@
-namespace Application.Abstractions.Repositories
+using Domain.Abstractions.Interfaces;
+using Domain.ValueObjects;
+
+namespace Application.Abstractions.Interfaces
 {
-    public interface IRepository<T> where T : class
+    public interface IRepository<T> where T : class, IAggregateRoot
     {
-        Task<T> GetByIdAsync(int id);
-        Task<IEnumerable<T>> ListAsync();
-        Task AddAsync(T entity);
-        void Update(T entity);
-        void Delete(T entity);
-        Task<int> SaveChangesAsync();
+        Task AddAsync(T entity, CancellationToken ct = default);
+        Task<T?> GetByIdAsync(EntityId<T> id, CancellationToken ct = default);
+        Task<T?> FindSingleAsync(Ardalis.Specification.ISpecification<T> spec, CancellationToken ct = default);
+        Task<bool> AnyAsync(Ardalis.Specification.ISpecification<T> spec, CancellationToken ct = default);
+        Task<IReadOnlyList<T>> ListAsync(Ardalis.Specification.ISpecification<T> spec, CancellationToken ct = default);
     }
 }

@@ -1,6 +1,6 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
-using Domain.Model.Result;
+using Domain.Abstractions.Result;
 
 public static class ResultExtensions
 {

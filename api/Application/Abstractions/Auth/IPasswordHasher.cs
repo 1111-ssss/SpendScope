@@ -1,4 +1,4 @@
-using Domain.Model.Result;
+using Domain.Abstractions.Result;
 
 namespace Application.Abstractions.Auth
 {

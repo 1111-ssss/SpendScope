@@ -2,10 +2,10 @@ using System.Security.Cryptography;
 using System.Text;
 using Konscious.Security.Cryptography;
 using Microsoft.Extensions.Configuration;
-using Domain.Model.Result;
+using Domain.Abstractions.Result;
 using Application.Abstractions.Auth;
 
-namespace Application.Service.Auth
+namespace Application.Service.Auth.Helpers
 {
     public sealed class Argon2PasswordHasher : IPasswordHasher
     {

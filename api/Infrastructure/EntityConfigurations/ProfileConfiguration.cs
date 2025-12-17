@@ -1,34 +1,37 @@
+using Domain.Entities;
+using Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Infrastructure.Entities;
 
 public class ProfileConfiguration : IEntityTypeConfiguration<Profile>
 {
-    public void Configure(EntityTypeBuilder<Profile> entity)
+    public void Configure(EntityTypeBuilder<Profile> builder)
     {
-        entity.HasKey(e => e.UserId).HasName("profiles_pkey");
+        builder.HasKey(p => p.UserId);
+        builder.ToTable("profiles");
 
-        entity.ToTable("profiles");
+        builder.Property(p => p.UserId)
+               .HasColumnName("user_id")
+               .HasConversion(id => id.Value, value => new EntityId<User>(value))
+               .ValueGeneratedNever();
 
-        entity.Property(e => e.UserId)
-            .ValueGeneratedNever()
-            .HasColumnName("user_id");
-        entity.Property(e => e.AvatarUrl)
-            .HasMaxLength(255)
-            .HasColumnName("avatar_url");
-        entity.Property(e => e.Bio)
-            .HasMaxLength(400)
-            .HasColumnName("bio");
-        entity.Property(e => e.DisplayName)
-            .HasMaxLength(20)
-            .HasColumnName("display_name");
-        entity.Property(e => e.LastOnline)
-            .HasDefaultValueSql("CURRENT_TIMESTAMP")
-            .HasColumnType("timestamp without time zone")
-            .HasColumnName("last_online");
+        builder.Property(p => p.DisplayName)
+               .HasColumnName("display_name")
+               .HasMaxLength(20);
 
-        entity.HasOne(d => d.User).WithOne(p => p.Profile)
-            .HasForeignKey<Profile>(d => d.UserId)
-            .HasConstraintName("profiles_user_id_fkey");
+        builder.Property(p => p.AvatarUrl)
+               .HasColumnName("avatar_url")
+               .HasMaxLength(255);
+
+        builder.Property(p => p.Bio)
+               .HasColumnName("bio")
+               .HasMaxLength(400);
+
+        builder.Property(p => p.LastOnline)
+               .HasColumnName("last_online")
+               .HasDefaultValueSql("CURRENT_TIMESTAMP")
+               .HasColumnType("timestamp without time zone");
+
+        builder.HasIndex(p => p.DisplayName);
     }
 }
