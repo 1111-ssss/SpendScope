@@ -8,6 +8,7 @@ using Application.Service.Auth.Helpers;
 using Application.Abstractions.Interfaces;
 using Infrastructure.Repositories;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -16,6 +17,7 @@ builder.Services.AddScoped<RegisterUserHandler>();
 builder.Services.AddScoped<LoginUserHandler>();
 builder.Services.AddScoped<IPasswordHasher, Argon2PasswordHasher>();
 builder.Services.AddScoped<IJwtGenerator, JwtGenerator>();
+builder.Services.AddAuth(config);
 
 builder.Services.AddOpenApi();
 
@@ -33,6 +35,12 @@ builder.Services.AddLogging(logging =>
 });
 
 builder.Services.AddDataAccess(config);
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy =>
+        policy.RequireRole("Admin"));
+});
 
 var app = builder.Build();
 
@@ -56,12 +64,5 @@ if (!Directory.Exists(apkStoragePath))
 {
     Directory.CreateDirectory(apkStoragePath);
 }
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(apkStoragePath),
-    RequestPath = "/apk",
-    ServeUnknownFileTypes = true,
-    DefaultContentType = "application/vnd.android.package-archive"
-});
 
 app.Run();

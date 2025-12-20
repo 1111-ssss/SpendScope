@@ -24,8 +24,6 @@ namespace Application.Service.Auth.Helpers
             if (string.IsNullOrEmpty(key))
                 throw new InvalidOperationException("JWT key is not configured (Jwt:Key)");
 
-            var issuer = _configuration["Jwt:Issuer"] ?? "SpendScope";
-            var audience = _configuration["Jwt:Audience"] ?? "SpendScopeAudience";
             var expiresDays = 7;
             if (int.TryParse(_configuration["Jwt:ExpiresDays"], out var d))
                 expiresDays = d;
@@ -35,7 +33,7 @@ namespace Application.Service.Auth.Helpers
 
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
+                new Claim(JwtRegisteredClaimNames.NameId, userId.ToString()),
                 new Claim(JwtRegisteredClaimNames.UniqueName, username)
             };
 
@@ -43,8 +41,6 @@ namespace Application.Service.Auth.Helpers
                 claims.Add(new Claim(ClaimTypes.Role, "Admin"));
 
             var token = new JwtSecurityToken(
-                issuer: issuer,
-                audience: audience,
                 claims: claims,
                 expires: DateTime.UtcNow.AddDays(expiresDays),
                 signingCredentials: credentials
