@@ -33,4 +33,9 @@ public partial class AppDbContext : DbContext, IAppDbContext, IUnitOfWork
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+    Task<int> IUnitOfWork.SaveChangesAsync(CancellationToken ct = default)
+    {
+        return base.SaveChangesAsync(ct);
+    }
 }

@@ -3,6 +3,7 @@ using Application.DTO.AppVersion;
 using Application.Service.Versions.Handlers;
 using Domain.Entities;
 using Domain.ValueObjects;
+using Logger;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -55,11 +56,14 @@ public class AppVersionController : ControllerBase
     }
     [HttpPost("upload")]
     [Authorize(Policy = "AdminOnly")]
+    [Consumes("multipart/form-data")]
+    [RequestFormLimits(MultipartBodyLengthLimit = 512_000_000)]
+    [RequestSizeLimit(512_000_000)]
     public async Task<IActionResult> UploadApk(
         [FromForm] string branch,
         [FromForm] string build,
         [FromForm] string? changelog,
-        [FromForm] IFormFile file)
+        IFormFile file)
     {
         var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(userIdString))
@@ -69,7 +73,7 @@ public class AppVersionController : ControllerBase
         var userId = new EntityId<User>(int.Parse(userIdString));
 
         var result = await _uploadHandler.Handle(
-            new UploadVersionRequest(branch, build, userId, changelog), file);
+            new UploadVersionRequest(branch, build, userId, changelog), file, _apkPath);
 
         return Ok(result);
     }

@@ -25,8 +25,9 @@ namespace Domain.Entities
         private User() { }
         public static User Create(string username, string email, string passwordHash, bool isAdmin = false)
         {
-            return new User
+            var user = new User
             {
+                Id = EntityId<User>.Empty,
                 Username = username.Trim(),
                 Email = email.Trim(),
                 PasswordHash = passwordHash,
@@ -34,6 +35,7 @@ namespace Domain.Entities
                 IsAdmin = isAdmin,
                 Profile = Profile.Create(EntityId<User>.Empty)
             };
+            return user;
         }
         public void UpdateProfile(string? displayName, string? avatarUrl, string? bio)
         {

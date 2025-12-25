@@ -42,6 +42,8 @@ namespace Application.Service.Auth.Handlers
                 isAdmin: false
             );
 
+            Console.WriteLine($"User ID: {user.Id}");
+
             await _users.AddAsync(user, ct);
             await _db.SaveChangesAsync(ct);
 

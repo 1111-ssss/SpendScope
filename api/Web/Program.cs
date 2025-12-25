@@ -1,4 +1,5 @@
 using Infrastructure;
+using Logger;
 using Microsoft.EntityFrameworkCore;
 using Application.Service.Auth;
 using Application.Abstractions.Auth;
@@ -9,12 +10,15 @@ using Application.Abstractions.Interfaces;
 using Infrastructure.Repositories;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
+using Application.Service.Versions.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
 builder.Services.AddScoped<RegisterUserHandler>();
 builder.Services.AddScoped<LoginUserHandler>();
+builder.Services.AddScoped<UploadApkHandler>();
+builder.Services.AddScoped<GetLatestHandler>();
 builder.Services.AddScoped<IPasswordHasher, Argon2PasswordHasher>();
 builder.Services.AddScoped<IJwtGenerator, JwtGenerator>();
 builder.Services.AddAuth(config);
@@ -44,7 +48,6 @@ builder.Services.AddAuthorization(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -53,12 +56,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.MapControllers();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-var apkStoragePath = builder.Configuration["AppSettings:ApkStoragePath"]
+app.MapControllers();
+
+var apkStoragePath = builder.Configuration["AppStorage:ApkPath"]
                      ?? Path.Combine(Directory.GetCurrentDirectory(), "ApkStorage");
 if (!Directory.Exists(apkStoragePath))
 {

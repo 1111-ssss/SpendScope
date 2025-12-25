@@ -92,7 +92,7 @@ namespace Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_follows", x => new { x.FollowerId, x.FollowedId });
-                    table.CheckConstraint("CK_follows_not_self", "follower_id <> followed_id");
+                    table.CheckConstraint("CK_follows_not_self", "\"FollowerId\" <> \"FollowedId\"");
                     table.ForeignKey(
                         name: "FK_follows_users_FollowedId",
                         column: x => x.FollowedId,

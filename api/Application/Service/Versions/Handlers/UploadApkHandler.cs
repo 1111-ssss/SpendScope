@@ -3,6 +3,7 @@ using Application.DTO.AppVersion;
 using Domain.Abstractions.Result;
 using Domain.Entities;
 using Domain.Specifications;
+using Logger;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
@@ -12,16 +13,12 @@ namespace Application.Service.Versions.Handlers
     {
         private readonly IUnitOfWork _db;
         private readonly IRepository<AppVersion> _appVersions;
-        private readonly string _apkPath;
-        public UploadApkHandler(IUnitOfWork db, IRepository<AppVersion> appVersions, IConfiguration config)
+        public UploadApkHandler(IUnitOfWork db, IRepository<AppVersion> appVersions)
         {
             _db = db;
             _appVersions = appVersions;
-            _apkPath = config.GetValue<string>("AppStorage:ApkPath") ?? "";
-            if (!Directory.Exists(_apkPath))
-                throw new ArgumentException("Путь к APK не указан в конфигурации");
         }
-        public async Task<Result<UploadVersionResponse>> Handle(UploadVersionRequest request, IFormFile file, CancellationToken ct = default)
+        public async Task<Result<UploadVersionResponse>> Handle(UploadVersionRequest request, IFormFile file, string apkPath, CancellationToken ct = default)
         {
             if (string.IsNullOrWhiteSpace(request.Branch) || string.IsNullOrWhiteSpace(request.Build))
                 return Result<UploadVersionResponse>.Failed(ErrorCode.BadRequest, "branch и build обязательны");
@@ -35,9 +32,9 @@ namespace Application.Service.Versions.Handlers
             var safeBranch = Path.GetFileName(request.Branch);
             var safeBuild = Path.GetFileName(request.Build);
 
-            var versionPath = Path.GetFullPath(Path.Combine(_apkPath, safeBranch, safeBuild));
+            var versionPath = Path.GetFullPath(Path.Combine(apkPath, safeBranch, safeBuild));
 
-            if (!versionPath.StartsWith(Path.GetFullPath(_apkPath), StringComparison.OrdinalIgnoreCase))
+            if (!versionPath.StartsWith(Path.GetFullPath(apkPath), StringComparison.OrdinalIgnoreCase))
                 return Result<UploadVersionResponse>.Failed(ErrorCode.BadRequest, "Недопустимые параметры branch или build");
 
             Directory.CreateDirectory(versionPath);
