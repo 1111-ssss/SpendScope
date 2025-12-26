@@ -20,7 +20,7 @@ namespace Application.Service.Versions.Handlers
             var latest = await _appVersions.FindSingleAsync(new AppVersionByBranchSpecification(request.Branch), ct);
 
             if (latest == null)
-                return Result<GetLatestVersionResponse>.Failed(ErrorCode.Forbidden, "Версия не найдена");
+                return Result<GetLatestVersionResponse>.Failed(ErrorCode.NotFound, "Версия не найдена");
 
             var downloadUrl = $"/api/appversion/download/apk/{latest.Branch}/{latest.Build}";
 

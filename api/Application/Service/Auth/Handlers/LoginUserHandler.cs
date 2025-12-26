@@ -24,7 +24,7 @@ namespace Application.Service.Auth.Handlers
         public async Task<Result<string>> Handle(LoginUserRequest request, CancellationToken ct = default)
         {
             if (string.IsNullOrWhiteSpace(request.UsernameOrEmail))
-                return Result<string>.Failed(ErrorCode.ValidationFailed, "Username или Email обязателен");
+                return Result<string>.Failed(ErrorCode.BadRequest, "Username или Email обязателен");
 
             User? user = null;
 
@@ -39,8 +39,7 @@ namespace Application.Service.Auth.Handlers
             }
 
             if (user == null)
-                return Result<string>.Failed(ErrorCode.Conflict, "Пользователь не найден");
-
+                return Result<string>.Failed(ErrorCode.UserNotFound, "Пользователь не найден");
 
             bool verifyPass = _hasher.Verify(request.Password, user.PasswordHash);
 

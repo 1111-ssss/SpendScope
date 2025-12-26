@@ -11,6 +11,8 @@ using Infrastructure.Repositories;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using Application.Service.Versions.Handlers;
+using Application.Service.Profiles.Handlers;
+using Application.Service.Profiles.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
@@ -19,8 +21,13 @@ builder.Services.AddScoped<RegisterUserHandler>();
 builder.Services.AddScoped<LoginUserHandler>();
 builder.Services.AddScoped<UploadApkHandler>();
 builder.Services.AddScoped<GetLatestHandler>();
+builder.Services.AddScoped<GetProfileHandler>();
+builder.Services.AddScoped<UpdateAvatarHandler>();
+builder.Services.AddScoped<UpdateProfileHandler>();
+builder.Services.AddScoped<ProfileValidator>();
 builder.Services.AddScoped<IPasswordHasher, Argon2PasswordHasher>();
 builder.Services.AddScoped<IJwtGenerator, JwtGenerator>();
+builder.Services.AddScoped(typeof(ICustomLogger<>), typeof(ConsoleLogger<>));
 builder.Services.AddAuth(config);
 
 builder.Services.AddOpenApi();
@@ -67,6 +74,12 @@ var apkStoragePath = builder.Configuration["AppStorage:ApkPath"]
 if (!Directory.Exists(apkStoragePath))
 {
     Directory.CreateDirectory(apkStoragePath);
+}
+var avatarPath = builder.Configuration["AppStorage:AvatarPath"]
+                     ?? Path.Combine(Directory.GetCurrentDirectory(), "AvatarStorage");
+if (!Directory.Exists(avatarPath))
+{
+    Directory.CreateDirectory(avatarPath);
 }
 
 app.Run();

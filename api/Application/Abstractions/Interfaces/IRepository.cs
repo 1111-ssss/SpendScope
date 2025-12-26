@@ -8,6 +8,7 @@ namespace Application.Abstractions.Interfaces
         Task AddAsync(T entity, CancellationToken ct = default);
         Task<T?> GetByIdAsync(EntityId<T> id, CancellationToken ct = default);
         Task<T?> FindSingleAsync(Ardalis.Specification.ISpecification<T> spec, CancellationToken ct = default);
+        Task UpdateAsync(T entity, CancellationToken ct = default);
         Task<bool> AnyAsync(Ardalis.Specification.ISpecification<T> spec, CancellationToken ct = default);
         Task<IReadOnlyList<T>> ListAsync(Ardalis.Specification.ISpecification<T> spec, CancellationToken ct = default);
     }

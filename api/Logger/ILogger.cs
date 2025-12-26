@@ -1,6 +1,6 @@
 ﻿namespace Logger
 {
-    public interface ILogger<T>
+    public interface ICustomLogger<T>
     {
         void Info(string message, params object[] args);
         void Warn(string message, params object[] args);

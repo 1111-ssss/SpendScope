@@ -4,6 +4,7 @@ using Application.Abstractions.Auth;
 using Domain.Entities;
 using Domain.Specifications;
 using Application.Abstractions.Interfaces;
+using Logger;
 
 namespace Application.Service.Auth.Handlers
 {
@@ -13,9 +14,11 @@ namespace Application.Service.Auth.Handlers
         private readonly IJwtGenerator _jwtGenerator;
         private readonly IRepository<User> _users;
         private readonly IUnitOfWork _db;
+        private readonly ICustomLogger<RegisterUserHandler> _logger;
 
-        public RegisterUserHandler(IUnitOfWork db, IPasswordHasher hasher, IJwtGenerator jwtGenerator, IRepository<User> users)
+        public RegisterUserHandler(ICustomLogger<RegisterUserHandler> logger, IUnitOfWork db, IPasswordHasher hasher, IJwtGenerator jwtGenerator, IRepository<User> users)
         {
+            _logger = logger;
             _db = db;
             _hasher = hasher;
             _jwtGenerator = jwtGenerator;
@@ -41,13 +44,15 @@ namespace Application.Service.Auth.Handlers
                 isAdmin: false
             );
 
-            Console.WriteLine($"User ID: {user.Id}");
-
             await _users.AddAsync(user, ct);
-            var count = await _db.GetTrackedEntitiesCountAsync();
-            Console.WriteLine($"Tracked entities: {count}");
+            try {
             await _db.SaveChangesAsync(ct);
-
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Ошибка при сохранении нового пользователя", ex);
+                return Result<string>.Failed(ErrorCode.InternalServerError, "Ошибка при сохранении пользователя");
+            }
             var token = _jwtGenerator.GenerateToken(user.Id, user.Username, user.IsAdmin);
             return Result<string>.Success(token);
         }

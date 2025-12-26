@@ -1,14 +1,10 @@
 namespace Domain.Abstractions.Result
 {
-    /// <summary>
-    /// Рекомендуется использовать HTTP-коды для стандартных ошибок и
-    /// отдельный диапазон (1000+) для доменных (бизнес) ошибок.
-    /// </summary>
     public enum ErrorCode
     {
         // special
         None = 0,
-        Unknown = 520, // неизвестная/непредвиденная ошибка
+        Unknown = 1,
 
         // HTTP-like common errors
         BadRequest = 400,
@@ -23,9 +19,10 @@ namespace Domain.Abstractions.Result
 
         // Application / domain specific (>=1000)
         UserAlreadyExists = 1001,
-        InvalidCredentials = 1002,
-        UserNotActivated = 1003,
-        PasswordTooWeak = 1004,
-        TokenExpired = 1005
+        InvalidEmail = 1002,
+        UserNotFound = 1003,
+        TokenExpired = 1005,
+        NotAllowed = 1006,
+        
     }
 }

@@ -11,10 +11,12 @@ namespace Application.Service.Versions.Handlers
 {
     public class UploadApkHandler
     {
+        private readonly ICustomLogger<UploadApkHandler> _logger;
         private readonly IUnitOfWork _db;
         private readonly IRepository<AppVersion> _appVersions;
-        public UploadApkHandler(IUnitOfWork db, IRepository<AppVersion> appVersions)
+        public UploadApkHandler(ICustomLogger<UploadApkHandler> logger, IUnitOfWork db, IRepository<AppVersion> appVersions)
         {
+            _logger = logger;
             _db = db;
             _appVersions = appVersions;
         }
@@ -54,7 +56,15 @@ namespace Application.Service.Versions.Handlers
             );
 
             await _appVersions.AddAsync(appVersion, ct);
-            await _db.SaveChangesAsync(ct);
+
+            try {
+                await _db.SaveChangesAsync(ct);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Ошибка при сохранении версии в базе данных", ex);
+                return Result<UploadVersionResponse>.Failed(ErrorCode.InternalServerError, "Ошибка при сохранении версии в базе данных");
+            }
 
             var downloadUrl = $"/api/appversion/download/apk/{request.Branch}/{request.Build}";
 
