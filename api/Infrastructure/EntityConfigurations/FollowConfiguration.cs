@@ -21,7 +21,7 @@ public class FollowConfiguration : IEntityTypeConfiguration<Follow>
         builder.Property(f => f.FollowedAt)
                .HasColumnName("followed_at")
                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-               .HasColumnType("timestamp without time zone")
+               .HasColumnType("timestamp with time zone")
                .IsRequired();
 
         builder.HasIndex(f => f.FollowedId, "idx_follows_followed");

@@ -37,7 +37,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.CreatedAt)
                .HasColumnName("created_at")
                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-               .HasColumnType("timestamp without time zone")
+               .HasColumnType("timestamp with time zone")
                .IsRequired();
 
         builder.Property(u => u.IsAdmin)

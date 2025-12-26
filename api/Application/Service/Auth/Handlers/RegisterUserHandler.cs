@@ -1,5 +1,4 @@
 using Application.DTO.Auth;
-using Application.Abstractions.Repositories;
 using Domain.Abstractions.Result;
 using Application.Abstractions.Auth;
 using Domain.Entities;
@@ -45,6 +44,8 @@ namespace Application.Service.Auth.Handlers
             Console.WriteLine($"User ID: {user.Id}");
 
             await _users.AddAsync(user, ct);
+            var count = await _db.GetTrackedEntitiesCountAsync();
+            Console.WriteLine($"Tracked entities: {count}");
             await _db.SaveChangesAsync(ct);
 
             var token = _jwtGenerator.GenerateToken(user.Id, user.Username, user.IsAdmin);

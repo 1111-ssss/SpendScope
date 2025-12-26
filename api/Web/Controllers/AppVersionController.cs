@@ -36,23 +36,40 @@ public class AppVersionController : ControllerBase
         var result = await _latestHandler.Handle(request);
         return result.ToActionResult();
     }
+    // [HttpGet("download/apk/{branch}/{build}")]
+    // public IActionResult DownloadApk(string branch, string build)
+    // {
+    //     var safeBranch = Path.GetFileName(branch);
+    //     var safeBuild = Path.GetFileName(build);
+
+    //     var path = Path.GetFullPath(Path.Combine(
+    //         _apkPath, safeBranch, safeBuild, "SpendScope.apk"));
+
+    //     if (!path.StartsWith(Path.GetFullPath(_apkPath), StringComparison.OrdinalIgnoreCase))
+    //         return BadRequest("Недопустимый путь");
+
+    //     if (!System.IO.File.Exists(path))
+    //         return NotFound($"Файл не найден: {branch}/{build}");
+
+    //     var stream = System.IO.File.OpenRead(path);
+    //     return File(stream, "application/vnd.android.package-archive", $"SpendScope.apk");
+    // }
+
     [HttpGet("download/apk/{branch}/{build}")]
     public IActionResult DownloadApk(string branch, string build)
     {
         var safeBranch = Path.GetFileName(branch);
         var safeBuild = Path.GetFileName(build);
-
-        var path = Path.GetFullPath(Path.Combine(
-            _apkPath, safeBranch, safeBuild, "SpendScope.apk"));
-
-        if (!path.StartsWith(Path.GetFullPath(_apkPath), StringComparison.OrdinalIgnoreCase))
+        if (string.IsNullOrWhiteSpace(safeBranch) || string.IsNullOrWhiteSpace(safeBuild))
+            return BadRequest("Недопустимые параметры");
+        var filePath = Path.Combine(_apkPath, safeBranch, safeBuild, "SpendScope.apk");
+        var fullFilePath = Path.GetFullPath(filePath);
+        var baseDir = Path.GetFullPath(_apkPath);
+        if (!fullFilePath.StartsWith(baseDir, StringComparison.OrdinalIgnoreCase))
             return BadRequest("Недопустимый путь");
-
-        if (!System.IO.File.Exists(path))
-            return NotFound($"Файл не найден: {branch}/{build}");
-
-        var stream = System.IO.File.OpenRead(path);
-        return File(stream, "application/vnd.android.package-archive", $"SpendScope.apk");
+        if (!System.IO.File.Exists(fullFilePath))
+            return NotFound("Файл не найден");
+        return PhysicalFile(fullFilePath, "application/vnd.android.package-archive", "SpendScope.apk");
     }
     [HttpPost("upload")]
     [Authorize(Policy = "AdminOnly")]

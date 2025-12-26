@@ -14,11 +14,14 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")).LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information));
-            // .UseSnakeCaseNamingConvention());
+            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
+            .LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information));
 
-        services.AddScoped<IAppDbContext, AppDbContext>();
-        services.AddScoped<IUnitOfWork, AppDbContext>();
+        // services.AddScoped<AppDbContext>();
+        // services.AddScoped<IUnitOfWork, AppDbContext>();
+
+        services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<AppDbContext>());
+        services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 
         services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 

@@ -30,7 +30,7 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Profile>
         builder.Property(p => p.LastOnline)
                .HasColumnName("last_online")
                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-               .HasColumnType("timestamp without time zone");
+               .HasColumnType("timestamp with time zone");
 
         builder.HasIndex(p => p.DisplayName);
     }

@@ -31,7 +31,7 @@ public class AppVersionConfiguration : IEntityTypeConfiguration<AppVersion>
         builder.Property(av => av.UploadedAt)
                .HasColumnName("uploaded_at")
                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-               .HasColumnType("timestamp without time zone")
+               .HasColumnType("timestamp with time zone")
                .IsRequired();
 
         builder.Property(av => av.UploadedBy)

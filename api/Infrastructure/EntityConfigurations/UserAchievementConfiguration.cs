@@ -20,7 +20,7 @@ public class UserAchievementConfiguration : IEntityTypeConfiguration<UserAchieve
         builder.Property(ua => ua.UnlockedAt)
                .HasColumnName("unlocked_at")
                .HasDefaultValueSql("CURRENT_TIMESTAMP")
-               .HasColumnType("timestamp without time zone");
+               .HasColumnType("timestamp with time zone");
 
         builder.HasIndex(ua => ua.UserId);
         builder.HasIndex(ua => ua.AchievementId);
