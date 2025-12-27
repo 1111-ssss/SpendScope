@@ -38,7 +38,7 @@ namespace Application.Service.Profiles.Handlers
             if (extension != ".png" && extension != ".jpg" && extension != ".jpeg")
                 return Result<UpdateAvatarResponse>.Failed(ErrorCode.BadRequest, "Файл должен иметь расширение .png, .jpg или .jpeg");
 
-            var user = await _users.GetByIdAsync(userId, ct);
+            var user = await _users.GetByIdAsync(userId, [u => u.Profile], ct);
             if (user == null)
                 return Result<UpdateAvatarResponse>.Failed(ErrorCode.NotFound, "Пользователь не найден");
 
@@ -86,13 +86,16 @@ namespace Application.Service.Profiles.Handlers
         }
         public async Task<Result<bool>> DeleteAvatar(EntityId<User> userId, string avatarPath, CancellationToken ct = default)
         {
-            var user = await _users.GetByIdAsync(userId, ct);
+            var user = await _users.GetByIdAsync(userId, [u => u.Profile], ct);
             if (user == null)
                 return Result<bool>.Failed(ErrorCode.NotFound, "Пользователь не найден");
 
             if (!Directory.Exists(avatarPath))
                 Directory.CreateDirectory(avatarPath);
             var avatarFilePath = Path.Combine(avatarPath, $"{userId}.png");
+            var profile = user.Profile;
+            if (profile != null)
+                profile.UpdateAvatar(null);
             if (File.Exists(avatarFilePath))
             {
                 try

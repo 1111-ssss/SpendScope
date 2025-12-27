@@ -19,7 +19,7 @@ namespace Application.Service.Profiles.Handlers
         }
         public async Task<Result<GetProfileResponse>> Handle(EntityId<User> userId, CancellationToken ct = default)
         {
-            var user = await _users.GetByIdAsync(userId, ct);
+            var user = await _users.GetByIdAsync(userId, [u => u.Profile], ct);
 
             if (user == null)
                 return Result<GetProfileResponse>.Failed(ErrorCode.NotFound, "Пользователь не найден");

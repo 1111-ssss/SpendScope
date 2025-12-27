@@ -4,6 +4,7 @@ using Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Ardalis.Specification;
 using Ardalis.Specification.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Infrastructure.Repositories
 {
@@ -24,6 +25,22 @@ namespace Infrastructure.Repositories
         public virtual Task<T?> GetByIdAsync(EntityId<T> id, CancellationToken ct = default)
         {
             return _dbSet.FirstOrDefaultAsync(e => EF.Property<EntityId<T>>(e, "Id") == id, ct);
+        }
+        public virtual async Task<T?> GetByIdAsync(
+            EntityId<T> id,
+            Expression<Func<T, object>>[] includes,
+            CancellationToken ct = default)
+        {
+            IQueryable<T> query = _dbSet;
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+            return await query
+                .FirstOrDefaultAsync(e => EF.Property<EntityId<T>>(e, "Id") == id, ct);
         }
         public virtual Task UpdateAsync(T entity, CancellationToken ct = default)
         {

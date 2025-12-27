@@ -11,9 +11,9 @@ namespace Domain.Entities
         public string? Bio { get; internal set; }
         public DateTime? LastOnline { get; internal set; }
         private Profile() { }
-        public static Profile Create(EntityId<User> userId)
+        public static Profile Create()
         {
-            return new Profile { UserId = userId };
+            return new Profile();
         }
         public void Update(string? displayName, string? bio)
         {

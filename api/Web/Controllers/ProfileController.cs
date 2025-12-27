@@ -30,7 +30,7 @@ public class ProfileController : ControllerBase
     /// <summary>
     /// Получение профиля пользователя
     /// </summary>
-    [HttpGet("get/{userId}")]
+    [HttpGet("{userId}")]
     public async Task<IActionResult> Get(int userId)
     {
         var id = new EntityId<User>(userId);
@@ -109,6 +109,7 @@ public class ProfileController : ControllerBase
     public async Task<IActionResult> GetAvatar(int userId)
     {
         var fullFilePath = Path.Combine(_avatarPath, $"{userId}.png");
+        Console.WriteLine(fullFilePath);
         if (!System.IO.File.Exists(fullFilePath))
         {
             var defaultAvatarPath = Path.Combine(_avatarPath, "default-avatar.png");

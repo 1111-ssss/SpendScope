@@ -27,13 +27,12 @@ namespace Domain.Entities
         {
             var user = new User
             {
-                Id = EntityId<User>.Empty,
                 Username = username.Trim(),
                 Email = email.Trim(),
                 PasswordHash = passwordHash,
                 CreatedAt = DateTime.UtcNow,
                 IsAdmin = isAdmin,
-                Profile = Profile.Create(EntityId<User>.Empty)
+                Profile = Profile.Create()
             };
             return user;
         }

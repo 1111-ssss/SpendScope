@@ -24,7 +24,10 @@ namespace Domain.Entities
                 IconUrl = iconUrl
             };
         }
-
+        public void UpdateIcon(string? iconUrl)
+        {
+            IconUrl = iconUrl;
+        }
         public void UnlockForUser(EntityId<User> userId, DateTime unlockedAt)
         {
             if (_userAchievements.All(ua => ua.UserId != userId))

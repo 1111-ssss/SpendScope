@@ -14,8 +14,8 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         services.AddDbContext<AppDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
-            .LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information));
+            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+            // .LogTo(Console.WriteLine, Microsoft.Extensions.Logging.LogLevel.Information));
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<AppDbContext>());
         services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
