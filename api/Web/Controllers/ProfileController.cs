@@ -31,10 +31,10 @@ public class ProfileController : ControllerBase
     /// Получение профиля пользователя
     /// </summary>
     [HttpGet("{userId}")]
-    public async Task<IActionResult> Get(int userId)
+    public async Task<IActionResult> Get(int userId, CancellationToken ct)
     {
         var id = new EntityId<User>(userId);
-        var result = await _getProfileHandler.Handle(id);
+        var result = await _getProfileHandler.Handle(id, ct);
 
         if (result.IsSuccess)
         {
@@ -48,7 +48,7 @@ public class ProfileController : ControllerBase
     /// Изменение профиля пользователя
     /// </summary>
     [HttpPost("update")]
-    public async Task<IActionResult> Update([FromBody] UpdateProfileRequest request)
+    public async Task<IActionResult> Update([FromBody] UpdateProfileRequest request, CancellationToken ct)
     {
         var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(userIdString))
@@ -57,7 +57,7 @@ public class ProfileController : ControllerBase
         }
         var userId = new EntityId<User>(int.Parse(userIdString));
 
-        var result = await _updateProfileHandler.Handle(request, userId);
+        var result = await _updateProfileHandler.Handle(request, userId, ct);
 
         if (result.IsSuccess)
         {
@@ -68,7 +68,9 @@ public class ProfileController : ControllerBase
     }
 
     [HttpPost("updateAvatar")]
-    public async Task<IActionResult> UpdateAvatar(IFormFile file)
+    [RequestFormLimits(MultipartBodyLengthLimit = 8_000_000)]
+    [RequestSizeLimit(8_000_000)]
+    public async Task<IActionResult> UpdateAvatar(IFormFile file, CancellationToken ct)
     {
         var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(userIdString))
@@ -77,7 +79,7 @@ public class ProfileController : ControllerBase
         }
         var userId = new EntityId<User>(int.Parse(userIdString));
 
-        var result = await _updateAvatarHandler.Handle(userId, file, _avatarPath);
+        var result = await _updateAvatarHandler.Handle(userId, file, _avatarPath, ct);
 
         if (result.IsSuccess)
         {
@@ -87,7 +89,7 @@ public class ProfileController : ControllerBase
         return result.ToActionResult();
     }
     [HttpPost("deleteAvatar")]
-    public async Task<IActionResult> DeleteAvatar()
+    public async Task<IActionResult> DeleteAvatar(CancellationToken ct)
     {
         var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (string.IsNullOrEmpty(userIdString))
@@ -96,7 +98,7 @@ public class ProfileController : ControllerBase
         }
         var userId = new EntityId<User>(int.Parse(userIdString));
 
-        var result = await _updateAvatarHandler.DeleteAvatar(userId, _avatarPath);
+        var result = await _updateAvatarHandler.DeleteAvatar(userId, _avatarPath, ct);
 
         if (result.IsSuccess)
         {
@@ -106,7 +108,7 @@ public class ProfileController : ControllerBase
         return result.ToActionResult();
     }
     [HttpGet("getAvatar/{userId}")]
-    public async Task<IActionResult> GetAvatar(int userId)
+    public async Task<IActionResult> GetAvatar(int userId, CancellationToken ct)
     {
         var fullFilePath = Path.Combine(_avatarPath, $"{userId}.png");
         Console.WriteLine(fullFilePath);

@@ -1,10 +1,10 @@
 using Domain.Abstractions.Result;
 
-namespace Application.Abstractions.Auth
+namespace Infrastructure.Abstractions.Interfaces.Auth
 {
     public interface IPasswordHasher
     {
         Result<string> Hash(string password);
-        bool Verify(string password, string hash);
+        Result Verify(string password, string hash);
     }
 }

@@ -31,9 +31,6 @@ namespace Application.Service.Profiles.Handlers
             if (file == null || file.Length == 0)
                 return Result<UpdateAvatarResponse>.Failed(ErrorCode.BadRequest, "Файл не загружен");
 
-            if (file.Length > 8 * 1024 * 1024)
-                return Result<UpdateAvatarResponse>.Failed(ErrorCode.BadRequest, "Файл слишком большой (максимум 8 МБ)");
-
             var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
             if (extension != ".png" && extension != ".jpg" && extension != ".jpeg")
                 return Result<UpdateAvatarResponse>.Failed(ErrorCode.BadRequest, "Файл должен иметь расширение .png, .jpg или .jpeg");

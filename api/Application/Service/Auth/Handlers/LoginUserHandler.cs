@@ -39,7 +39,7 @@ namespace Application.Service.Auth.Handlers
             }
 
             if (user == null)
-                return Result<string>.Failed(ErrorCode.UserNotFound, "Пользователь не найден");
+                return Result<string>.Failed(ErrorCode.BadRequest, "Пользователь не найден");
 
             bool verifyPass = _hasher.Verify(request.Password, user.PasswordHash);
 

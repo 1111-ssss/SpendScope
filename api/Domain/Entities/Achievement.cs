@@ -5,7 +5,7 @@ namespace Domain.Entities
 {
     public class Achievement : IAggregateRoot
     {
-        public int Id { get; private set; }
+        public EntityId<Achievement> Id { get; private set; }
         public string Name { get; private set; } = default!;
         public string? Description { get; private set; }
         public string? IconUrl { get; private set; }

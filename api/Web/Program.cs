@@ -1,22 +1,71 @@
 using Infrastructure;
 using Logger;
-using Microsoft.EntityFrameworkCore;
-using Application.Service.Auth;
-using Application.Abstractions.Auth;
-using Infrastructure.Interfaces;
+// using Application.Abstractions.Auth;
 using Application.Service.Auth.Handlers;
-using Application.Service.Auth.Helpers;
-using Application.Abstractions.Interfaces;
-using Infrastructure.Repositories;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Options;
+// using Application.Service.Auth.Helpers;
 using Application.Service.Versions.Handlers;
 using Application.Service.Profiles.Handlers;
 using Application.Service.Profiles.Helpers;
+using Application.Service.Achievements.Handlers;
+using Application.Service.Follows.Handlers;
+using Microsoft.OpenApi;
+using MediatR;
+using Application.Common.Behaviors;
+using Application;
+using FluentValidation;
+using Infrastructure.Abstractions.Interfaces.Auth;
+using Infrastructure.Services.Auth;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Infrastructure.DataBase.Context;
+using Microsoft.EntityFrameworkCore;
+using Application.Abstractions.DataBase;
+using Infrastructure.UnitOfWork;
+using Application.Abstractions.Repository;
+using Infrastructure.DataBase.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
-var config = builder.Configuration;
 
+//Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "SpendScope API", Version = "v1" });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT"
+    });
+});
+
+builder.Services.AddControllers();
+
+//for CurrentUserService
+builder.Services.AddHttpContextAccessor();
+
+//MediatR + FluentValidation
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(AssemblyMarker).Assembly);
+
+    cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+});
+
+//FluentValidation
+builder.Services.AddValidatorsFromAssemblyContaining<AssemblyMarker>();
+
+//Auth
+builder.Services.AddScoped<IJwtGenerator, JwtGenerator>();
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+
+
+//Services
+var config = builder.Configuration;
 builder.Services.AddScoped<RegisterUserHandler>();
 builder.Services.AddScoped<LoginUserHandler>();
 builder.Services.AddScoped<UploadApkHandler>();
@@ -24,42 +73,72 @@ builder.Services.AddScoped<GetLatestHandler>();
 builder.Services.AddScoped<GetProfileHandler>();
 builder.Services.AddScoped<UpdateAvatarHandler>();
 builder.Services.AddScoped<UpdateProfileHandler>();
+builder.Services.AddScoped<GetProfileHandler>();
+builder.Services.AddScoped<AddAchievementHandle>();
+builder.Services.AddScoped<AchievementIconHandle>();
+builder.Services.AddScoped<GetAchievementHandle>();
+builder.Services.AddScoped<GetFollowsHandler>();
+builder.Services.AddScoped<FollowHandler>();
 builder.Services.AddScoped<ProfileValidator>();
-builder.Services.AddScoped<IPasswordHasher, Argon2PasswordHasher>();
+// builder.Services.AddScoped<IPasswordHasher, Argon2PasswordHasher>();
 builder.Services.AddScoped<IJwtGenerator, JwtGenerator>();
 builder.Services.AddScoped(typeof(ICustomLogger<>), typeof(ConsoleLogger<>));
-builder.Services.AddAuth(config);
+// builder.Services.AddAuth(config);
 
-builder.Services.AddOpenApi();
 
-builder.Services.AddControllers();
+//Authentication + Authorization
+var jwtSettings = builder.Configuration.GetSection("Jwt");
+var key = Encoding.UTF8.GetBytes(jwtSettings["Key"] ?? throw new ArgumentNullException("Jwt:Key пустой в конфигурации"));
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-// builder.Logging.AddConsole();
-
-builder.Services.AddLogging(logging =>
+builder.Services.AddAuthentication(options =>
 {
-    logging.ClearProviders();
-    logging.AddConsole();
-    logging.AddDebug();
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ClockSkew = TimeSpan.Zero
+    };
 });
-
-builder.Services.AddDataAccess(config);
-
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy =>
         policy.RequireRole("Admin"));
 });
 
+//DbContext
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
+
+//UnitOfWork
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+//Repository
+builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+
+
+builder.Services.AddDataAccess(config);
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "SpendScopeApi v1");
+        c.RoutePrefix = string.Empty;
+    });
 }
 
 app.UseHttpsRedirection();
@@ -80,6 +159,12 @@ var avatarPath = builder.Configuration["AppStorage:AvatarPath"]
 if (!Directory.Exists(avatarPath))
 {
     Directory.CreateDirectory(avatarPath);
+}
+var iconPath = builder.Configuration["AppStorage:AchievementsPath"]
+                     ?? Path.Combine(Directory.GetCurrentDirectory(), "AchievementsStorage");
+if (!Directory.Exists(iconPath))
+{
+    Directory.CreateDirectory(iconPath);
 }
 
 app.Run();

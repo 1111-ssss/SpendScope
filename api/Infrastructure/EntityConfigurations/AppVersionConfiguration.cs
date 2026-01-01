@@ -13,6 +13,7 @@ public class AppVersionConfiguration : IEntityTypeConfiguration<AppVersion>
         builder.Property(av => av.Id)
                .HasColumnName("id")
                .HasDefaultValueSql("nextval('appversions_id_seq'::regclass)")
+               .HasConversion(id => id.Value, value => new EntityId<AppVersion>(value))
                .ValueGeneratedOnAdd();
 
         builder.Property(av => av.Branch)

@@ -1,12 +1,12 @@
 namespace Domain.Abstractions.Result
 {
-    public interface IResultT
+    public interface IResultBase
     {
         bool IsSuccess { get; }
         ErrorCode? Error { get; }
         string? Message { get; }
     }
-    public sealed class Result : IResultT
+    public sealed class Result : IResultBase
     {
         public bool IsSuccess => Error is null;
         public ErrorCode? Error { get; }
@@ -19,7 +19,7 @@ namespace Domain.Abstractions.Result
         public static Result Success() => new();
         public static Result Failed(ErrorCode errorCode, string? message) => new(errorCode, message);
     }
-    public sealed class Result<T> : IResultT
+    public sealed class Result<T> : IResultBase
     {
         public Result(T value)
         {

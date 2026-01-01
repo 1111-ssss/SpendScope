@@ -5,9 +5,16 @@ using Microsoft.EntityFrameworkCore;
 using Ardalis.Specification;
 using Ardalis.Specification.EntityFrameworkCore;
 using System.Linq.Expressions;
+using Npgsql.Replication;
 
 namespace Infrastructure.Repositories
 {
+    // public class BaseRepository<T> : Ardalis.Specification.EntityFrameworkCore.RepositoryBase<T>, Ardalis.Specification.IRepositoryBase<T> where T : class
+    // {
+    //     public BaseRepository(DbContext dbContext) : base(dbContext)
+    //     {
+    //     }
+    // }
     public abstract class RepositoryBase<T> : IRepository<T> where T : class, IAggregateRoot
     {
         private readonly AppDbContext _context;
@@ -25,6 +32,11 @@ namespace Infrastructure.Repositories
         public virtual Task<T?> GetByIdAsync(EntityId<T> id, CancellationToken ct = default)
         {
             return _dbSet.FirstOrDefaultAsync(e => EF.Property<EntityId<T>>(e, "Id") == id, ct);
+        }
+        public virtual async Task<int> DeleteWhereAsync(ISpecification<T> spec, CancellationToken ct = default)
+        {
+            var query = SpecificationEvaluator.Default.GetQuery(_dbSet.AsQueryable(), spec);
+            return await query.ExecuteDeleteAsync(ct);
         }
         public virtual async Task<T?> GetByIdAsync(
             EntityId<T> id,

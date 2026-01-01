@@ -2,11 +2,9 @@ namespace Domain.Abstractions.Result
 {
     public enum ErrorCode
     {
-        // special
-        None = 0,
-        Unknown = 1,
+        Unknown = 0,
 
-        // HTTP-like common errors
+        // дефолтные коды ошибок
         BadRequest = 400,
         ValidationFailed = 422,
         Unauthorized = 401,
@@ -17,12 +15,10 @@ namespace Domain.Abstractions.Result
         InternalServerError = 500,
         ServiceUnavailable = 503,
 
-        // Application / domain specific (>=1000)
-        UserAlreadyExists = 1001,
-        InvalidEmail = 1002,
-        UserNotFound = 1003,
-        TokenExpired = 1005,
-        NotAllowed = 1006,
-        
+        // кастомные коды ошибок
+        // InvalidUsernameOrPassword = 1001,
+        // TokenExpired = 1002,
+        // UserNotFound = 1003,
+        // UserAlreadyExists = 1004,
     }
 }

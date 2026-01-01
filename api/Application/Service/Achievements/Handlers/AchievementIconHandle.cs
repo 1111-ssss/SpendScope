@@ -26,15 +26,13 @@ namespace Application.Service.Achievements.Handlers
         }
         public async Task<Result<GetAchievementResponse>> Handle(EntityId<Achievement> achId, IFormFile file, string achPath, CancellationToken ct = default)
         {
-            var ach = await _ach.GetByIdAsync(achId, ct);
+            var ach = await _ach.GetByIdAsync((int)achId, ct);
+            
             if (ach == null)
                 return Result<GetAchievementResponse>.Failed(ErrorCode.BadRequest, "Достижение не найдено");
 
             if (file == null || file.Length == 0)
                 return Result<GetAchievementResponse>.Failed(ErrorCode.BadRequest, "Файл не загружен");
-
-            if (file.Length > 8 * 1024 * 1024)
-                return Result<GetAchievementResponse>.Failed(ErrorCode.BadRequest, "Файл слишком большой (максимум 8 МБ)");
 
             var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
             if (extension != ".png" && extension != ".jpg" && extension != ".jpeg")
@@ -61,7 +59,7 @@ namespace Application.Service.Achievements.Handlers
                 return Result<GetAchievementResponse>.Failed(ErrorCode.BadRequest, "Невалидное или повреждённое изображение");
             }
             
-            ach.UpdateIcon(iconPath);
+            ach.UpdateIcon($"achievements/{achId}.png");
             try
             {
                 await _db.SaveChangesAsync(ct);

@@ -5,7 +5,7 @@ namespace Domain.Entities
 {
     public class AppVersion : IAggregateRoot
     {
-        public int Id { get; private set; }
+        public EntityId<AppVersion> Id { get; private set; }
         public string Branch { get; private set; } = default!;
         public int Build { get; private set; }
         public DateTime UploadedAt { get; private set; }

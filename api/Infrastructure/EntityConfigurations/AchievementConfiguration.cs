@@ -12,6 +12,7 @@ public class AchievementConfiguration : IEntityTypeConfiguration<Achievement>
 
         builder.Property(a => a.Id)
                .HasColumnName("id")
+               .HasConversion(id => id.Value, value => new EntityId<Achievement>(value))
                .ValueGeneratedOnAdd();
 
         builder.Property(a => a.Name)

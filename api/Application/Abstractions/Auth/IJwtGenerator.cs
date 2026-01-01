@@ -1,9 +1,11 @@
-using System;
+using Application.Features.Auth;
+using Domain.Abstractions.Result;
+using Domain.Entities;
 
-namespace Application.Abstractions.Auth
+namespace Infrastructure.Abstractions.Interfaces.Auth
 {
     public interface IJwtGenerator
     {
-        string GenerateToken(int userId, string username, bool isAdmin = false);
+        Result<AuthResponse> GenerateToken(User user);
     }
 }
