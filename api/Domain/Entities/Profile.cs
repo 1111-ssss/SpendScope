@@ -15,22 +15,18 @@ namespace Domain.Entities
         {
             return new Profile();
         }
-        public void Update(string? displayName, string? bio)
+        public void Update(string? displayName = null, string? bio = null, string? avatarUrl = null)
         {
             if (displayName != null)
                 DisplayName = displayName;
             if (bio != null)
                 Bio = bio;
+            if (avatarUrl != null)
+                AvatarUrl = avatarUrl;
             LastOnline = DateTime.UtcNow;
         }
         public void UpdateLastOnline()
         {
-            LastOnline = DateTime.UtcNow;
-        }
-        public void UpdateAvatar(string? avatarUrl)
-        {
-            if (avatarUrl != null)
-                AvatarUrl = avatarUrl;
             LastOnline = DateTime.UtcNow;
         }
     }

@@ -2,7 +2,7 @@ using Ardalis.Specification;
 using Domain.Entities;
 using Domain.ValueObjects;
 
-namespace Domain.Specifications
+namespace Domain.Specifications.Follows
 {
     public class FollowExistsSpec : Specification<Follow>
     {

@@ -1,34 +1,27 @@
 using Microsoft.AspNetCore.Mvc;
-using Application.Service.Auth.Handlers;
-using Application.DTO.Auth;
-using Application.Service.Profiles.Handlers;
-using Application.DTO.Profile;
 using System.Security.Claims;
 using Domain.ValueObjects;
 using Domain.Entities;
 using Application.Service.Follows.Handlers;
+using MediatR;
+using Application.Features.Follows.GetFollowers;
+using Application.Features.Follows.GetFollowing;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/follow")]
 [Tags("Подписки")]
+[ApiVersion("1.0")]
 public class FollowController : ControllerBase
 {
-    private readonly GetFollowsHandler _getFollows;
-    private readonly FollowHandler _follow;
-    public FollowController(GetFollowsHandler getFollowsHandler, FollowHandler followHandler)
+    private readonly IMediator _mediator;
+    public FollowController(IMediator mediator)
     {
-        _follow = followHandler;
-        _getFollows = getFollowsHandler;
+        _mediator = mediator;
     }
-
-    /// <summary>
-    /// Получение подписок пользователя
-    /// </summary>
-    [HttpGet("getFollowers")]
-    public async Task<IActionResult> GetFollowers([FromQuery] int userId, CancellationToken ct)
+    [HttpGet("{userId}/followers")]
+    public async Task<IActionResult> GetFollowers(int userId, CancellationToken ct)
     {
-        var id = new EntityId<User>(userId);
-        var result = await _getFollows.GetFollowers(id, ct);
+        var result = await _mediator.Send(new GetFollowersQuery(userId), ct);
 
         if (result.IsSuccess)
         {
@@ -37,14 +30,10 @@ public class FollowController : ControllerBase
 
         return result.ToActionResult();
     }
-    /// <summary>
-    /// Получение подписок пользователя
-    /// </summary>
-    [HttpGet("getFollowing")]
-    public async Task<IActionResult> GetFollowing([FromQuery] int userId, CancellationToken ct)
+    [HttpGet("{userId}/following")]
+    public async Task<IActionResult> GetFollowing(int userId, CancellationToken ct)
     {
-        var id = new EntityId<User>(userId);
-        var result = await _getFollows.GetFollowing(id, ct);
+        var result = await _mediator.Send(new GetFollowingQuery(userId), ct);
 
         if (result.IsSuccess)
         {
@@ -53,9 +42,6 @@ public class FollowController : ControllerBase
 
         return result.ToActionResult();
     }
-    /// <summary>
-    /// Подписка на пользователя
-    /// </summary>
     [HttpPost("users/{userToFollow}/follow")]
     public async Task<IActionResult> Follow(int userToFollow, CancellationToken ct)
     {

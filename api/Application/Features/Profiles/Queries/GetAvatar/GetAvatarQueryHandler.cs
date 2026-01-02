@@ -1,0 +1,58 @@
+using Application.Abstractions.DataBase;
+using Application.Abstractions.Repository;
+using Application.Abstractions.Storage;
+using Application.Common.Responses;
+using Domain.Abstractions.Result;
+using Domain.Entities;
+using MediatR;
+using Microsoft.Extensions.Logging;
+
+namespace Application.Features.Profiles.GetAvatar
+{
+    public class GetAvatarQueryHandler : IRequestHandler<GetAvatarQuery, Result<FileDownloadResponse>>
+    {
+        private readonly IUnitOfWork _uow;
+        private readonly IBaseRepository<Profile> _profileRepository;
+        private readonly IBaseRepository<User> _userRepository;
+        private readonly IFileStorage _fileStorage;
+        private readonly ILogger<GetAvatarQueryHandler> _logger;
+        public GetAvatarQueryHandler(
+            IUnitOfWork uow,
+            IBaseRepository<Profile> profileRepository,
+            IBaseRepository<User> userRepository,
+            IFileStorage fileStorage,
+            ILogger<GetAvatarQueryHandler> logger)
+        {
+            _uow = uow;
+            _profileRepository = profileRepository;
+            _userRepository = userRepository;
+            _fileStorage = fileStorage;
+            _logger = logger;
+        }
+        public async Task<Result<FileDownloadResponse>> Handle(GetAvatarQuery request, CancellationToken ct)
+        {
+            var user = await _userRepository.GetByIdAsync(request.UserId, ct);
+
+            if (user == null)
+                return Result<FileDownloadResponse>.Failed(ErrorCode.NotFound, "Пользователь не найден");
+
+            // var profile = await _profileRepository.GetByIdAsync(user.Id, ct);
+            var profile = user.Profile;
+
+            if (profile == null)
+                return Result<FileDownloadResponse>.Failed(ErrorCode.NotFound, "Профиль пользователя не найден");
+
+            _logger.LogInformation($"User: {user.Username}, Profile: {profile}");
+
+            var avatarPath = _fileStorage.GetFilePath(profile.AvatarUrl ?? "avatars/default-avatar.png");
+
+            if (avatarPath == null)
+                return Result<FileDownloadResponse>.Failed(ErrorCode.NotFound, "Аватар пользователя не найден");
+
+            return Result<FileDownloadResponse>.Success(new FileDownloadResponse(
+                FilePath: avatarPath,
+                ContentType: "image/png"
+            ));
+        }
+    }
+}

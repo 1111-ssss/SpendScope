@@ -52,15 +52,18 @@ namespace Application.Features.Achievements.UpdateAchievement
             {
                 await _uow.SaveChangesAsync(ct);
 
-                if (request.Image != null)
-                {
-                    var result = await _imageFormatter.FormatImage(request.Image, ach.IconUrl!, ct);
-                }
-                return Result<AchievementResponse>.Success(new AchievementResponse(
+                var response = new AchievementResponse(
                     Name: ach.Name,
                     Description: ach.Description ?? "",
                     IconUrl: ach.IconUrl ?? "achievements/default-icon.png"
-                ));
+                );
+
+                if (request.Image != null)
+                {
+                    var result = await _imageFormatter.FormatImage(request.Image, ach.IconUrl!, ct);
+                    return result.Bind(() => response);
+                }
+                return Result<AchievementResponse>.Success(response);
             }
             catch (Exception ex)
             {

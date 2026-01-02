@@ -35,7 +35,7 @@ namespace Application.Features.Achievements.AchievementIcon
             if (ach == null)
                 return Result<FileDownloadResponse>.Failed(ErrorCode.NotFound, "Достижение не найдено");
 
-            var iconPath = _fileStorage.GetFilePath(ach.IconUrl ?? "");
+            var iconPath = _fileStorage.GetFilePath(ach.IconUrl ?? "achievements/default-icon.png");
 
             if (iconPath == null)
                 return Result<FileDownloadResponse>.Failed(ErrorCode.NotFound, "Иконка достижения не найдена");
