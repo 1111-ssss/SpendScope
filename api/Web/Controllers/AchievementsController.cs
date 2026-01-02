@@ -112,10 +112,13 @@ using Application.DTO.Achievement;
 using MediatR;
 using Application.Features.Achievements.AchievementInfo;
 using Application.Features.Achievements.AchievementIcon;
+using Application.Features.Achievements.AddAchievement;
+using Application.Features.Achievements.UpdateAchievement;
 
 [ApiController]
 [Route("api/achievements")]
 [Tags("Достижения")]
+[ApiVersion("1.0")]
 public class AchievementsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -130,7 +133,7 @@ public class AchievementsController : ControllerBase
 
         if (result.IsSuccess)
         {
-            return PhysicalFile(result.Value.FilePath, "image/png");
+            return PhysicalFile(result.Value.FilePath, result.Value.ContentType);
         }
 
         return NotFound("Файл не найден");
@@ -147,11 +150,11 @@ public class AchievementsController : ControllerBase
 
         return result.ToActionResult();
     }
-    [HttpPost("addAchievement")]
+    [HttpPost("add")]
     [Authorize(Policy = "AdminOnly")]
-    public async Task<IActionResult> AddAchievement([FromBody] AddAchievementRequest achData, CancellationToken ct)
+    public async Task<IActionResult> AddAchievement([FromForm] AddAchievementCommand command, CancellationToken ct)
     {
-        var result = await _addAchievement.Handle(achData, ct);
+        var result = await _mediator.Send(command, ct);
 
         if (result.IsSuccess)
         {
@@ -160,14 +163,13 @@ public class AchievementsController : ControllerBase
 
         return result.ToActionResult();
     }
-    [HttpPost("addAchievementIcon")]
+    [HttpPatch("update")]
     [Authorize(Policy = "AdminOnly")]
     [RequestFormLimits(MultipartBodyLengthLimit = 8_000_000)]
     [RequestSizeLimit(8_000_000)]
-    public async Task<IActionResult> AddAchievementIcon([FromForm] int achId, IFormFile file, CancellationToken ct)
+    public async Task<IActionResult> UpdateAchievement([FromForm] UpdateAchievementCommand command, CancellationToken ct)
     {
-        var id = new EntityId<Achievement>(achId);
-        var result = await _achievementIcon.Handle(id, file, _achPath, ct);
+        var result = await _mediator.Send(command, ct);
 
         if (result.IsSuccess)
         {

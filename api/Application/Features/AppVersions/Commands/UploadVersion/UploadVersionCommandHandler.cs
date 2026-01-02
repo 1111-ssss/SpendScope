@@ -37,9 +37,9 @@ namespace Application.Features.AppVersions.UploadVersion
             var safeBranch = Path.GetFileName(request.Branch);
             var safeBuild = Path.GetFileName(request.Build.ToString());
 
-            var versionPath = await _fileStorage.SaveFileAsync(
+            await _fileStorage.SaveFileAsync(
                 request.File,
-                Path.Combine(safeBranch, safeBuild),
+                Path.Combine("app", safeBranch, safeBuild),
                 ct
             );
 

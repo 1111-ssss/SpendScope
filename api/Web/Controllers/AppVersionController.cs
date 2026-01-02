@@ -99,6 +99,7 @@ using Microsoft.AspNetCore.Mvc;
 [Route("api/versions")]
 [Authorize]
 [Tags("Версии приложения")]
+[ApiVersion("1.0")]
 public class AppVersionController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -123,13 +124,7 @@ public class AppVersionController : ControllerBase
 
         if (result.IsSuccess)
         {
-            switch (result.Value.FileType)
-            {
-                case ".apk":
-                    return PhysicalFile(result.Value.FilePath, "application/vnd.android.package-archive", "SpendScope.apk");
-                case ".ipa":
-                    return PhysicalFile(result.Value.FilePath, "application/octet-stream", "SpendScope.ipa");
-            }
+            return PhysicalFile(result.Value.FilePath, result.Value.ContentType, result.Value.FileName);
         }
 
         return NotFound("Файл не найден");

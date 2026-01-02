@@ -24,9 +24,14 @@ namespace Domain.Entities
                 IconUrl = iconUrl
             };
         }
-        public void UpdateIcon(string? iconUrl)
+        public void Update(string? name = null, string? description = null, string? iconUrl = null)
         {
-            IconUrl = iconUrl;
+            if (name != null)
+                Name = name;
+            if (description != null)
+                Description = description;
+            if (iconUrl != null)
+                IconUrl = iconUrl;
         }
         public void UnlockForUser(EntityId<User> userId, DateTime unlockedAt)
         {
