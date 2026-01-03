@@ -6,67 +6,71 @@ using Application.Features.Achievements.AchievementIcon;
 using Application.Features.Achievements.AddAchievement;
 using Application.Features.Achievements.UpdateAchievement;
 
-[ApiController]
-[Route("api/achievements")]
-[Tags("Достижения")]
-[ApiVersion("1.0")]
-public class AchievementsController : ControllerBase
+namespace Web.Controllers
 {
-    private readonly IMediator _mediator;
-    public AchievementsController(IMediator mediator)
+    [ApiController]
+    [Route("api/achievements")]
+    [Tags("Достижения")]
+    [Authorize]
+    [ApiVersion("1.0")]
+    public class AchievementsController : ControllerBase
     {
-        _mediator = mediator;
-    }
-    [HttpGet("{achId}/icon")]
-    public async Task<IActionResult> GetIcon(int achId, CancellationToken ct)
-    {
-        var result = await _mediator.Send(new AchievementIconQuery(achId), ct);
-
-        if (result.IsSuccess)
+        private readonly IMediator _mediator;
+        public AchievementsController(IMediator mediator)
         {
-            return PhysicalFile(result.Value.FilePath, result.Value.ContentType);
+            _mediator = mediator;
         }
-
-        return NotFound("Файл не найден");
-    }
-    [HttpGet("{achId}")]
-    public async Task<IActionResult> Get(int achId, CancellationToken ct)
-    {
-        var result = await _mediator.Send(new AchievementInfoQuery(achId), ct);
-
-        if (result.IsSuccess)
+        [HttpGet("{achId}/icon")]
+        public async Task<IActionResult> GetIcon(int achId, CancellationToken ct)
         {
-            return Ok(result.Value);
+            var result = await _mediator.Send(new AchievementIconQuery(achId), ct);
+
+            if (result.IsSuccess)
+            {
+                return PhysicalFile(result.Value.FilePath, result.Value.ContentType);
+            }
+
+            return NotFound("Файл не найден");
         }
-
-        return result.ToActionResult();
-    }
-    [HttpPost("add")]
-    [Authorize(Policy = "AdminOnly")]
-    public async Task<IActionResult> AddAchievement([FromForm] AddAchievementCommand command, CancellationToken ct)
-    {
-        var result = await _mediator.Send(command, ct);
-
-        if (result.IsSuccess)
+        [HttpGet("{achId}")]
+        public async Task<IActionResult> Get(int achId, CancellationToken ct)
         {
-            return Ok(result.Value);
+            var result = await _mediator.Send(new AchievementInfoQuery(achId), ct);
+
+            if (result.IsSuccess)
+            {
+                return Ok(result.Value);
+            }
+
+            return result.ToActionResult();
         }
-
-        return result.ToActionResult();
-    }
-    [HttpPatch("update")]
-    [Authorize(Policy = "AdminOnly")]
-    [RequestFormLimits(MultipartBodyLengthLimit = 8_000_000)]
-    [RequestSizeLimit(8_000_000)]
-    public async Task<IActionResult> UpdateAchievement([FromForm] UpdateAchievementCommand command, CancellationToken ct)
-    {
-        var result = await _mediator.Send(command, ct);
-
-        if (result.IsSuccess)
+        [HttpPost("add")]
+        [Authorize(Policy = "AdminOnly")]
+        public async Task<IActionResult> AddAchievement([FromForm] AddAchievementCommand command, CancellationToken ct)
         {
-            return Ok(result.Value);
-        }
+            var result = await _mediator.Send(command, ct);
 
-        return result.ToActionResult();
+            if (result.IsSuccess)
+            {
+                return Ok(result.Value);
+            }
+
+            return result.ToActionResult();
+        }
+        [HttpPatch("update")]
+        [Authorize(Policy = "AdminOnly")]
+        [RequestFormLimits(MultipartBodyLengthLimit = 8_000_000)]
+        [RequestSizeLimit(8_000_000)]
+        public async Task<IActionResult> UpdateAchievement([FromForm] UpdateAchievementCommand command, CancellationToken ct)
+        {
+            var result = await _mediator.Send(command, ct);
+
+            if (result.IsSuccess)
+            {
+                return Ok(result.Value);
+            }
+
+            return result.ToActionResult();
+        }
     }
 }
