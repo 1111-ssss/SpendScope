@@ -15,15 +15,15 @@ namespace Infrastructure.Services.Storage
         public FileStorage(IConfiguration config, ILogger<FileStorage> logger)
         {
             _logger = logger;
-            _basePath = config["FileStorage:BasePath"] ?? throw new ArgumentNullException("BasePath не указан");
-            Directory.CreateDirectory(_basePath);
+            _basePath = config["AppStorage:BasePath"] ?? throw new ArgumentNullException("BasePath не указан");
+            if (!Directory.Exists(_basePath))
+                Directory.CreateDirectory(_basePath);
         }
-        public async Task<string> SaveFileAsync(IFormFile file, string subDirectory, CancellationToken ct = default)
+        public async Task<string> SaveFileAsync(IFormFile file, string subDirectory, string fileName, CancellationToken ct = default)
         {
             var directory = Path.Combine(_basePath, subDirectory);
             Directory.CreateDirectory(directory);
 
-            var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
             var fullPath = Path.Combine(directory, fileName);
 
             await using var stream = File.Create(fullPath);

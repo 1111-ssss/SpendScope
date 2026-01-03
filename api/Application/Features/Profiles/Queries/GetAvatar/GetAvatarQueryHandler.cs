@@ -4,6 +4,7 @@ using Application.Abstractions.Storage;
 using Application.Common.Responses;
 using Domain.Abstractions.Result;
 using Domain.Entities;
+using Domain.Specifications.Profiles;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -31,7 +32,7 @@ namespace Application.Features.Profiles.GetAvatar
         }
         public async Task<Result<FileDownloadResponse>> Handle(GetAvatarQuery request, CancellationToken ct)
         {
-            var user = await _userRepository.GetByIdAsync(request.UserId, ct);
+            var user = await _userRepository.FirstOrDefaultAsync(new UserByIdWithProfileSpec(request.UserId), ct);
 
             if (user == null)
                 return Result<FileDownloadResponse>.Failed(ErrorCode.NotFound, "Пользователь не найден");

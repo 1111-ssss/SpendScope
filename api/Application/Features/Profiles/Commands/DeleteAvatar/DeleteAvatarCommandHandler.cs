@@ -6,6 +6,7 @@ using Application.Common.Responses;
 using Application.Features.Profiles.Common;
 using Domain.Abstractions.Result;
 using Domain.Entities;
+using Domain.Specifications.Profiles;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -36,11 +37,11 @@ namespace Application.Features.Profiles.DeleteAvatar
         }
         public async Task<Result<ProfileResponse>> Handle(DeleteAvatarCommand request, CancellationToken ct)
         {
-            var userId = _currentUserService.UserId;
+            var userId = _currentUserService.GetUserId();
             if (userId == null || !userId.Value.Equals(request.UserId))
                 return Result<ProfileResponse>.Failed(ErrorCode.Unauthorized, "Не удалось определить пользователя");
 
-            var user = await _userRepository.GetByIdAsync(userId.Value, ct);
+            var user = await _userRepository.FirstOrDefaultAsync(new UserByIdWithProfileSpec(request.UserId), ct);
 
             if (user == null)
                 return Result<ProfileResponse>.Failed(ErrorCode.NotFound, "Пользователь не найден");

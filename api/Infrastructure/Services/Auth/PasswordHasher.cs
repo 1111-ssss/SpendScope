@@ -1,9 +1,8 @@
 using System.Security.Cryptography;
 using System.Text;
 using Konscious.Security.Cryptography;
-using Microsoft.Extensions.Configuration;
 using Domain.Abstractions.Result;
-using Infrastructure.Abstractions.Interfaces.Auth;
+using Application.Abstractions.Auth;
 
 namespace Infrastructure.Services.Auth
 {

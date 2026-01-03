@@ -1,10 +1,10 @@
 using FluentValidation;
 
-namespace Application.Features.Profiles.DeleteAvatar
+namespace Application.Features.Follows.FollowUser
 {
-    public class DeleteAvatarCommandValidator : AbstractValidator<DeleteAvatarCommand>
+    public class FollowUserCommandValidator : AbstractValidator<FollowUserCommand>
     {
-        public DeleteAvatarCommandValidator()
+        public FollowUserCommandValidator()
         {
             RuleFor(x => x.UserId)
                 .NotEmpty().WithMessage("Идентификатор пользователя обязателен")

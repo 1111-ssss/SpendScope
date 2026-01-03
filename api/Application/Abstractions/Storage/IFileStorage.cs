@@ -4,7 +4,7 @@ namespace Application.Abstractions.Storage
 {
     public interface IFileStorage
     {
-        Task<string> SaveFileAsync(IFormFile file, string subDirectory, CancellationToken ct = default);
+        Task<string> SaveFileAsync(IFormFile file, string subDirectory, string fileName, CancellationToken ct = default);
         Task DeleteFileAsync(string filePath, CancellationToken ct = default);
         string? GetFilePath(string? relativePath);
     }

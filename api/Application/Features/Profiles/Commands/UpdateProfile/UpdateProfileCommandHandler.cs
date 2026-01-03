@@ -5,6 +5,7 @@ using Application.Abstractions.Storage;
 using Application.Features.Profiles.Common;
 using Domain.Abstractions.Result;
 using Domain.Entities;
+using Domain.Specifications.Profiles;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -39,11 +40,11 @@ namespace Application.Features.Profiles.UpdateProfile
         }
         public async Task<Result<ProfileResponse>> Handle(UpdateProfileCommand request, CancellationToken ct)
         {
-            var userId = _currentUserService.UserId;
+            var userId = _currentUserService.GetUserId();
             if (userId == null)
                 return Result<ProfileResponse>.Failed(ErrorCode.Unauthorized, "Не удалось определить пользователя");
 
-            var user = await _userRepository.GetByIdAsync(userId.Value, ct);
+            var user = await _userRepository.FirstOrDefaultAsync(new UserByIdWithProfileSpec(userId.Value), ct);
 
             if (user == null)
                 return Result<ProfileResponse>.Failed(ErrorCode.NotFound, "Пользователь не найден");

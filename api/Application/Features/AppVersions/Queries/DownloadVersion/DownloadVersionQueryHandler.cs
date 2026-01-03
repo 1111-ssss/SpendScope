@@ -31,7 +31,9 @@ namespace Application.Features.AppVersions.DownloadVersion
 
         public async Task<Result<FileDownloadResponse>> Handle(DownloadVersionQuery request, CancellationToken ct)
         {
-            var filePath = _fileStorage.GetFilePath(Path.Combine(request.Branch, request.Build.ToString()));
+            var filePath = _fileStorage.GetFilePath(
+                Path.Combine("app", request.Branch, request.Build.ToString(), request.FileType == "apk" ? "SpendScope.apk" : "SpendScope.ipa")
+            );
 
             if (filePath == null)
                 return Result<FileDownloadResponse>.Failed(ErrorCode.NotFound, "Версия не найдена");

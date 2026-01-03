@@ -3,7 +3,7 @@ using Application.Abstractions.Repository;
 using Domain.Abstractions.Result;
 using Domain.Entities;
 using Domain.Specifications.Auth;
-using Infrastructure.Abstractions.Interfaces.Auth;
+using Application.Abstractions.Auth;
 using MediatR;
 
 namespace Application.Features.Auth.Login;

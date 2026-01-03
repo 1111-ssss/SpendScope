@@ -1,11 +1,10 @@
-using Application.Features.AppVersions.DownloadVersion;
 using FluentValidation;
 
-namespace Application.Features.AppVersions.GetLatestVersion
+namespace Application.Features.AppVersions.DeleteVersion
 {
-    public class DownloadVersionQueryValidator : AbstractValidator<DownloadVersionQuery>
+    public class DeleteVersionCommandValidator : AbstractValidator<DeleteVersionCommand>
     {
-        public DownloadVersionQueryValidator()
+        public DeleteVersionCommandValidator()
         {
             RuleFor(x => x.Branch)
                 .NotEmpty().WithMessage("Ветка обязательна")
@@ -14,10 +13,6 @@ namespace Application.Features.AppVersions.GetLatestVersion
             RuleFor(x => x.Build)
                 .NotEmpty().WithMessage("Билд обязателен")
                 .GreaterThan(0).WithMessage("Билд должен быть больше 0");
-            RuleFor(x => x.FileType)
-                .NotEmpty().WithMessage("Тип файла обязателен")
-                .Must(fileType => fileType == "apk" || fileType == "ipa")
-                .WithMessage("Тип файла должен быть apk или ipa");
         }
     }
 }

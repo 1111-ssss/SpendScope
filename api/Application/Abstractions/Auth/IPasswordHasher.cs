@@ -1,6 +1,6 @@
 using Domain.Abstractions.Result;
 
-namespace Infrastructure.Abstractions.Interfaces.Auth
+namespace Application.Abstractions.Auth
 {
     public interface IPasswordHasher
     {

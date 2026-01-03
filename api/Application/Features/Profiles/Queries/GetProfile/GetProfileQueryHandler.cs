@@ -3,6 +3,7 @@ using Application.Abstractions.Repository;
 using Application.Features.Profiles.Common;
 using Domain.Abstractions.Result;
 using Domain.Entities;
+using Domain.ValueObjects;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -28,7 +29,7 @@ namespace Application.Features.Profiles.GetProfile
         }
         public async Task<Result<ProfileResponse>> Handle(GetProfileQuery request, CancellationToken ct)
         {
-            var user = await _userRepository.GetByIdAsync(request.UserId, ct);
+            var user = await _userRepository.GetByIdAsync((EntityId<User>)request.UserId, ct);
 
             if (user == null)
                 return Result<ProfileResponse>.Failed(ErrorCode.NotFound, "Пользователь не найден");

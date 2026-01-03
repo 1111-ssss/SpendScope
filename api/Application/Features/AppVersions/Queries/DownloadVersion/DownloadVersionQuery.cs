@@ -4,5 +4,5 @@ using MediatR;
 
 namespace Application.Features.AppVersions.DownloadVersion
 {
-    public record DownloadVersionQuery(string Branch, int Build) : IRequest<Result<FileDownloadResponse>>;
+    public record DownloadVersionQuery(string Branch, int Build, string FileType) : IRequest<Result<FileDownloadResponse>>;
 }

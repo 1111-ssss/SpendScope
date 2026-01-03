@@ -1,4 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Application.Abstractions.Auth;
 using Microsoft.AspNetCore.Http;
@@ -12,10 +11,10 @@ namespace Infrastructure.Services.Auth
         {
             _httpContextAccessor = httpContextAccessor;
         }
-        public int? UserId => int.TryParse(
-            _httpContextAccessor.HttpContext?.User.FindFirst(JwtRegisteredClaimNames.NameId)?.Value,
+        public int? GetUserId() => int.TryParse(
+            _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
             out var id
         ) ? id : null;
-        public bool IsAdmin => _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Role)?.Value == "Admin";
+        public bool IsAdmin() => _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Role)?.Value == "Admin";
     }
 }

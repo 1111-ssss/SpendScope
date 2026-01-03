@@ -1,7 +1,7 @@
 using Application.Features.Auth;
 using Domain.Abstractions.Result;
 using Domain.Entities;
-using Infrastructure.Abstractions.Interfaces.Auth;
+using Application.Abstractions.Auth;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -23,7 +23,7 @@ public class JwtGenerator : IJwtGenerator
     {
         var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
+            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
         };
         if (user.IsAdmin)
             claims.Add(new Claim(ClaimTypes.Role, "Admin"));

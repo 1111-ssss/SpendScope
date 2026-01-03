@@ -4,7 +4,7 @@ using Application.Abstractions.Repository;
 using Application.Abstractions.Storage;
 using Domain.Abstractions.Result;
 using Domain.Entities;
-using Domain.ValueObjects;
+using Domain.Specifications.AppVersions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -34,27 +34,44 @@ namespace Application.Features.AppVersions.UploadVersion
 
         public async Task<Result<AppVersionResponse>> Handle(UploadVersionCommand request, CancellationToken ct)
         {
+            var appVer = await _appVersionRepository.FirstOrDefaultAsync(new AppVersionExistsSpec(request.Branch, request.Build), ct);
+            if (appVer != null)
+                return Result<AppVersionResponse>.Failed(ErrorCode.BadRequest, "Версия уже существует");
+
+            var userId = _currentUserService.GetUserId();
+            if (userId == null)
+                return Result<AppVersionResponse>.Failed(ErrorCode.Unauthorized, "Не удалось определить пользователя");
+
             var safeBranch = Path.GetFileName(request.Branch);
             var safeBuild = Path.GetFileName(request.Build.ToString());
+
+            var fileName = Path.GetExtension(request.File.FileName) switch
+            {
+                ".apk" => "SpendScope.apk",
+                ".ipa" => "SpendScope.ipa",
+                _ => null
+            };
+            if (fileName == null)
+                return Result<AppVersionResponse>.Failed(ErrorCode.BadRequest, "Неизвестный тип файла");
 
             await _fileStorage.SaveFileAsync(
                 request.File,
                 Path.Combine("app", safeBranch, safeBuild),
+                fileName,
                 ct
             );
-
-            var userId = _currentUserService.UserId;
 
             var appVersion = AppVersion.Create(
                 branch: request.Branch,
                 build: request.Build,
-                uploadedBy: (EntityId<User>?)userId ?? EntityId<User>.Empty,
+                uploadedBy: userId.Value,
                 changelog: request.Changelog
             );
 
             await _appVersionRepository.AddAsync(appVersion, ct);
 
-            try {
+            try
+            {
                 await _uow.SaveChangesAsync(ct);
             }
             catch (Exception ex)
