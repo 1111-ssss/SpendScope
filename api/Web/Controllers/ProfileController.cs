@@ -54,7 +54,7 @@ namespace Web.Controllers
                 return PhysicalFile(result.Value.FilePath, result.Value.ContentType);
             }
 
-            return NotFound("Файл не найден");
+            return result.ToActionResult();
         }
         [HttpDelete("{userId}/avatar")]
         public async Task<IActionResult> DeleteAvatar(int userId, CancellationToken ct)

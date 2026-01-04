@@ -1,10 +1,9 @@
-using System.Net;
 using Application.Abstractions.DataBase;
 using Application.Abstractions.Repository;
 using Application.Abstractions.Storage;
-using Application.Common.Responses;
 using Domain.Abstractions.Result;
 using Domain.Entities;
+using Domain.ValueObjects;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -33,7 +32,7 @@ namespace Application.Features.Achievements.UpdateAchievement
 
         public async Task<Result<AchievementResponse>> Handle(UpdateAchievementCommand request, CancellationToken ct)
         {
-            var ach = await _achievementRepository.GetByIdAsync(request.AchievementId, ct);
+            var ach = await _achievementRepository.GetByIdAsync((EntityId<Achievement>)request.AchievementId, ct);
 
             if (ach == null)
                 return Result<AchievementResponse>.Failed(ErrorCode.NotFound, "Достижение не найдено");

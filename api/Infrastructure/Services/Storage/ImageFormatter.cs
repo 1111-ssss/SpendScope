@@ -1,6 +1,7 @@
 using Application.Abstractions.Storage;
 using Domain.Abstractions.Result;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
@@ -9,10 +10,14 @@ namespace Infrastructure.Services.Storage
 {
     public class ImageFormatter : IImageFormatter
     {
+        private readonly string _basePath;
         private readonly ILogger<ImageFormatter> _logger;
-        public ImageFormatter(ILogger<ImageFormatter> logger)
+        public ImageFormatter(IConfiguration config, ILogger<ImageFormatter> logger)
         {
             _logger = logger;
+            _basePath = config["AppStorage:BasePath"] ?? throw new ArgumentNullException("BasePath не указан");
+            if (!Directory.Exists(_basePath))
+                Directory.CreateDirectory(_basePath);
         }
         public async Task<Result> FormatImage(IFormFile file, string savePath, CancellationToken ct = default)
         {
@@ -25,7 +30,7 @@ namespace Infrastructure.Services.Storage
                     Mode = ResizeMode.Max
                 }));
 
-                await image.SaveAsPngAsync(savePath, ct);
+                await image.SaveAsPngAsync(Path.Combine(_basePath, savePath), ct);
                 return Result.Success();
             }
             catch (Exception ex)

@@ -49,13 +49,10 @@ namespace Application.Features.Profiles.UpdateProfile
             if (user == null)
                 return Result<ProfileResponse>.Failed(ErrorCode.NotFound, "Пользователь не найден");
 
-            // var profile = await _profileRepository.GetByIdAsync(user.Id, ct);
             var profile = user.Profile;
 
             if (profile == null)
                 return Result<ProfileResponse>.Failed(ErrorCode.NotFound, "Профиль пользователя не найден");
-
-            _logger.LogInformation($"User: {user.Username}, Profile: {profile}");
 
             var avatarPath = _fileStorage.GetFilePath(profile.AvatarUrl);
             if (avatarPath == null && request.Image != null)

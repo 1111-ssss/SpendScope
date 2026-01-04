@@ -13,19 +13,16 @@ namespace Application.Features.Profiles.GetAvatar
     public class GetAvatarQueryHandler : IRequestHandler<GetAvatarQuery, Result<FileDownloadResponse>>
     {
         private readonly IUnitOfWork _uow;
-        private readonly IBaseRepository<Profile> _profileRepository;
         private readonly IBaseRepository<User> _userRepository;
         private readonly IFileStorage _fileStorage;
         private readonly ILogger<GetAvatarQueryHandler> _logger;
         public GetAvatarQueryHandler(
             IUnitOfWork uow,
-            IBaseRepository<Profile> profileRepository,
             IBaseRepository<User> userRepository,
             IFileStorage fileStorage,
             ILogger<GetAvatarQueryHandler> logger)
         {
             _uow = uow;
-            _profileRepository = profileRepository;
             _userRepository = userRepository;
             _fileStorage = fileStorage;
             _logger = logger;
@@ -37,15 +34,12 @@ namespace Application.Features.Profiles.GetAvatar
             if (user == null)
                 return Result<FileDownloadResponse>.Failed(ErrorCode.NotFound, "Пользователь не найден");
 
-            // var profile = await _profileRepository.GetByIdAsync(user.Id, ct);
             var profile = user.Profile;
 
             if (profile == null)
                 return Result<FileDownloadResponse>.Failed(ErrorCode.NotFound, "Профиль пользователя не найден");
 
-            _logger.LogInformation($"User: {user.Username}, Profile: {profile}");
-
-            var avatarPath = _fileStorage.GetFilePath(profile.AvatarUrl ?? "avatars/default-avatar.png");
+            var avatarPath = _fileStorage.GetFilePath(profile.AvatarUrl, "avatars/default-avatar.png");
 
             if (avatarPath == null)
                 return Result<FileDownloadResponse>.Failed(ErrorCode.NotFound, "Аватар пользователя не найден");

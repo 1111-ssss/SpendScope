@@ -40,14 +40,26 @@ namespace Infrastructure.Services.Storage
             _logger.LogInformation($"Удаление файла {fullPath}");
             File.Delete(fullPath);
         }
-        public string? GetFilePath(string? relativePath)
+        public string? GetFilePath(string? relativePath, string? defaultDirectory = null)
         {
-            if (relativePath == null)
+            if (string.IsNullOrEmpty(relativePath) && string.IsNullOrEmpty(defaultDirectory))
                 return null;
-            var fullPath = Path.Combine(_basePath, relativePath);
-            if (!File.Exists(fullPath))
-                return null;
-            return fullPath;
+
+            if (!string.IsNullOrEmpty(relativePath))
+            {
+                string fullPath = Path.Combine(_basePath, relativePath);
+                if (File.Exists(fullPath))
+                    return fullPath;
+            }
+
+            if (!string.IsNullOrEmpty(defaultDirectory))
+            {
+                string fallbackPath = Path.Combine(_basePath, defaultDirectory);
+                if (File.Exists(fallbackPath))
+                    return fallbackPath;
+            }
+
+            return null;
         }
     }
 }

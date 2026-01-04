@@ -30,7 +30,7 @@ namespace Web.Controllers
                 return PhysicalFile(result.Value.FilePath, result.Value.ContentType);
             }
 
-            return NotFound("Файл не найден");
+            return result.ToActionResult();
         }
         [HttpGet("{achId}")]
         public async Task<IActionResult> Get(int achId, CancellationToken ct)

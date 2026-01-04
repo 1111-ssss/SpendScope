@@ -4,6 +4,7 @@ using Application.Abstractions.Storage;
 using Application.Common.Responses;
 using Domain.Abstractions.Result;
 using Domain.Entities;
+using Domain.ValueObjects;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -30,12 +31,12 @@ namespace Application.Features.Achievements.AchievementIcon
 
         public async Task<Result<FileDownloadResponse>> Handle(AchievementIconQuery request, CancellationToken ct)
         {
-            var ach = await _achievementRepository.GetByIdAsync(request.AchievementId, ct);
+            var ach = await _achievementRepository.GetByIdAsync((EntityId<Achievement>)request.AchievementId, ct);
 
             if (ach == null)
                 return Result<FileDownloadResponse>.Failed(ErrorCode.NotFound, "Достижение не найдено");
 
-            var iconPath = _fileStorage.GetFilePath(ach.IconUrl ?? "achievements/default-icon.png");
+            var iconPath = _fileStorage.GetFilePath(ach.IconUrl, "achievements/default-icon.png");
 
             if (iconPath == null)
                 return Result<FileDownloadResponse>.Failed(ErrorCode.NotFound, "Иконка достижения не найдена");

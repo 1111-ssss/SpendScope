@@ -3,6 +3,7 @@ using Application.Abstractions.Repository;
 using Application.Abstractions.Storage;
 using Domain.Abstractions.Result;
 using Domain.Entities;
+using Domain.ValueObjects;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -25,7 +26,7 @@ namespace Application.Features.Achievements.AchievementInfo
 
         public async Task<Result<AchievementResponse>> Handle(AchievementInfoQuery request, CancellationToken ct)
         {
-            var ach = await _achievementRepository.GetByIdAsync(request.AchievementId, ct);
+            var ach = await _achievementRepository.GetByIdAsync((EntityId<Achievement>)request.AchievementId, ct);
 
             if (ach == null)
                 return Result<AchievementResponse>.Failed(ErrorCode.NotFound, "Достижение не найдено");
