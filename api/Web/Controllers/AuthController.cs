@@ -2,12 +2,14 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Application.Features.Auth.Login;
 using Application.Features.Auth.Register;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Web.Controllers
 {
     [ApiController]
     [Route("api/auth")]
     [Tags("Аутентификация и авторизация")]
+    [EnableRateLimiting("DefaultLimiter")]
     [ApiVersion("1.0")]
     public class AuthController : ControllerBase
     {

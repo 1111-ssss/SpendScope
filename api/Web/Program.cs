@@ -1,6 +1,7 @@
 using Microsoft.OpenApi;
 using Application.DI;
 using Infrastructure.DI;
+using Web.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +35,9 @@ builder.Services.AddInfrastructure(builder.Configuration);
 //Jwt + Policy
 builder.Services.AddAuth(builder.Configuration);
 
+//RateLimit
+builder.Services.AddRateLimit();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -49,6 +53,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRateLimiter();
 app.MapControllers();
 
 app.InitStorage(app.Configuration);

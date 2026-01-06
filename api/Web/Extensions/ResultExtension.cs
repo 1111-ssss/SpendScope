@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Domain.Abstractions.Result;
 
+namespace Web;
 public static class ResultExtensions
 {
     public static IActionResult ToActionResult(this IResultBase result)

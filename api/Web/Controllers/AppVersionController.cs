@@ -5,6 +5,7 @@ using Application.Features.AppVersions.UploadVersion;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Web.Controllers
 {
@@ -12,6 +13,7 @@ namespace Web.Controllers
     [Route("api/versions")]
     [Authorize]
     [Tags("Версии приложения")]
+    [EnableRateLimiting("DefaultLimiter")]
     [ApiVersion("1.0")]
     public class AppVersionController : ControllerBase
     {
