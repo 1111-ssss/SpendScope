@@ -4,6 +4,7 @@ using Application.Features.AppVersions.GetLatestVersion;
 using Application.Features.AppVersions.UploadVersion;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Web.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 

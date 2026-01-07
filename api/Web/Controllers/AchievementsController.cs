@@ -5,6 +5,7 @@ using Application.Features.Achievements.AchievementInfo;
 using Application.Features.Achievements.AchievementIcon;
 using Application.Features.Achievements.AddAchievement;
 using Application.Features.Achievements.UpdateAchievement;
+using Web.Extensions;
 
 namespace Web.Controllers
 {

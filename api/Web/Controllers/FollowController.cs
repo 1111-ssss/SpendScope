@@ -4,6 +4,7 @@ using Application.Features.Follows.GetFollowers;
 using Application.Features.Follows.GetFollowing;
 using Application.Features.Follows.FollowUser;
 using Application.Features.Follows.UnFollowUser;
+using Web.Extensions;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Controllers
