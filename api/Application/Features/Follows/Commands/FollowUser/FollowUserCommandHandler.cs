@@ -3,6 +3,7 @@ using Application.Abstractions.DataBase;
 using Application.Abstractions.Repository;
 using Domain.Abstractions.Result;
 using Domain.Entities;
+using Domain.Specifications.Follows;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -27,14 +28,25 @@ namespace Application.Features.Follows.FollowUser
         }
         public async Task<Result> Handle(FollowUserCommand request, CancellationToken ct)
         {
-            var userId = _currentUserService.GetUserId();
-            if (userId == null)
+            var currentUserId = _currentUserService.GetUserId();
+            if (currentUserId == null)
                 return Result.Failed(ErrorCode.Unauthorized, "Не удалось определить пользователя");
 
-            await _followRepository.AddAsync(
-                Follow.Create(userId.Value, request.UserId),
-                ct
-            );
+            if (currentUserId.Value == request.UserId)
+                return Result.Failed(ErrorCode.BadRequest, "Нельзя подписаться на самого себя");
+
+            var existingFollow = await _followRepository.FirstOrDefaultAsync(
+                new FollowExistsSpec(currentUserId.Value, request.UserId),
+                ct);
+
+            if (existingFollow != null)
+            {
+                return Result.Success();
+            }
+
+            var follow = Follow.Create(currentUserId.Value, request.UserId);
+            await _followRepository.AddAsync(follow, ct);
+
             try
             {
                 await _uow.SaveChangesAsync(ct);

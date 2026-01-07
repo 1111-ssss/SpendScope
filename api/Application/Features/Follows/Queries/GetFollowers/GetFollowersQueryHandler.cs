@@ -31,31 +31,27 @@ namespace Application.Features.Follows.GetFollowers
         {
             var followers = await _followRepository.ListAsync(new FollowersByUserIdSpec(request.UserId), ct);
 
-            if (followers == null)
-                return Result<ProfilesListResponse>.Failed(ErrorCode.NotFound, "Пользователь не найден");
-
-            var responseList = new List<ProfileResponse>();
-
-            foreach (var us in followers)
+            if (!followers.Any())
             {
-                var user = await _userRepository.GetByIdAsync(us.FollowedId, ct);
-                if (user != null)
-                {
-                    var profile = user.Profile;
-                    if (profile != null)
-                    {
-                        responseList.Add(new ProfileResponse(
-                            DisplayName: profile.DisplayName ?? user.Username,
-                            AvatarUrl: profile.AvatarUrl ?? "avatars/default-avatar.png",
-                            Bio: profile.Bio ?? "",
-                            LastOnline: profile.LastOnline ?? user.CreatedAt
-                        ));
-                    }
-                }
+                return Result<ProfilesListResponse>.Success(new ProfilesListResponse(Profiles: Array.Empty<ProfileResponse>()));
             }
 
+            var followerIds = followers.Select(f => f.FollowerId).ToList();
+
+            var users = await _userRepository.ListAsync(new UsersWithProfileByIdsSpec(followerIds), ct);
+
+            var profiles = users
+                .Where(u => u.Profile != null)
+                .Select(u => new ProfileResponse(
+                    DisplayName: u.Profile.DisplayName ?? u.Username,
+                    AvatarUrl: u.Profile.AvatarUrl ?? "avatars/default-avatar.png",
+                    Bio: u.Profile.Bio ?? "",
+                    LastOnline: u.Profile.LastOnline ?? u.CreatedAt
+                ))
+                .ToArray();
+
             return Result<ProfilesListResponse>.Success(new ProfilesListResponse(
-                Profiles: responseList.ToArray()
+                Profiles: profiles
             ));
         }
     }

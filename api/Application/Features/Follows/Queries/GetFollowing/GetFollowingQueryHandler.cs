@@ -29,33 +29,27 @@ namespace Application.Features.Follows.GetFollowing
         }
         public async Task<Result<ProfilesListResponse>> Handle(GetFollowingQuery request, CancellationToken ct)
         {
-            var followers = await _followRepository.ListAsync(new FollowingByUserIdSpec(request.UserId), ct);
+            var following = await _followRepository.ListAsync(new FollowingByUserIdSpec(request.UserId), ct);
 
-            if (followers == null)
-                return Result<ProfilesListResponse>.Failed(ErrorCode.NotFound, "Пользователь не найден");
+            if (!following.Any())
+                return Result<ProfilesListResponse>.Success(new ProfilesListResponse(Profiles: Array.Empty<ProfileResponse>()));
 
-            var responseList = new List<ProfileResponse>();
+            var followerIds = following.Select(f => f.FollowerId).ToList();
 
-            foreach (var us in followers)
-            {
-                var user = await _userRepository.GetByIdAsync(us.FollowerId, ct);
-                if (user != null)
-                {
-                    var profile = user.Profile;
-                    if (profile != null)
-                    {
-                        responseList.Add(new ProfileResponse(
-                            DisplayName: profile.DisplayName ?? user.Username,
-                            AvatarUrl: profile.AvatarUrl ?? "avatars/default-avatar.png",
-                            Bio: profile.Bio ?? "",
-                            LastOnline: profile.LastOnline ?? user.CreatedAt
-                        ));
-                    }
-                }
-            }
+            var users = await _userRepository.ListAsync(new UsersWithProfileByIdsSpec(followerIds), ct);
+
+            var profiles = users
+                .Where(u => u.Profile != null)
+                .Select(u => new ProfileResponse(
+                    DisplayName: u.Profile.DisplayName ?? u.Username,
+                    AvatarUrl: u.Profile.AvatarUrl ?? "avatars/default-avatar.png",
+                    Bio: u.Profile.Bio ?? "",
+                    LastOnline: u.Profile.LastOnline ?? u.CreatedAt
+                ))
+                .ToArray();
 
             return Result<ProfilesListResponse>.Success(new ProfilesListResponse(
-                Profiles: responseList.ToArray()
+                Profiles: profiles
             ));
         }
     }

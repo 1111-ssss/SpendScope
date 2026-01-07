@@ -28,11 +28,21 @@ namespace Application.Features.Follows.UnFollowUser
         }
         public async Task<Result> Handle(UnFollowUserCommand request, CancellationToken ct)
         {
-            var userId = _currentUserService.GetUserId();
-            if (userId == null)
+            var currentUserId = _currentUserService.GetUserId();
+            if (currentUserId == null)
                 return Result.Failed(ErrorCode.Unauthorized, "Не удалось определить пользователя");
 
-            await _followRepository.DeleteRangeAsync( new FollowExistsSpec(userId.Value, request.UserId), ct);
+            if (currentUserId.Value == request.UserId)
+                return Result.Failed(ErrorCode.BadRequest, "Нельзя отписаться от самого себя");
+
+            var existingFollow = await _followRepository.FirstOrDefaultAsync(new FollowExistsSpec(currentUserId.Value, request.UserId), ct);
+
+            if (existingFollow == null)
+            {
+                return Result.Success();
+            }
+
+            await _followRepository.DeleteAsync(existingFollow, ct);
 
             try
             {
