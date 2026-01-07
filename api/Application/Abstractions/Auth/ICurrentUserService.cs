@@ -1,8 +1,7 @@
-namespace Application.Abstractions.Auth
+namespace Application.Abstractions.Auth;
+
+public interface ICurrentUserService
 {
-    public interface ICurrentUserService
-    {
-        int? GetUserId();
-        bool IsAdmin();
-    }
+    int? GetUserId();
+    bool IsAdmin();
 }

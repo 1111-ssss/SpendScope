@@ -2,10 +2,9 @@ using Application.Features.Auth;
 using Domain.Abstractions.Result;
 using Domain.Entities;
 
-namespace Application.Abstractions.Auth
+namespace Application.Abstractions.Auth;
+
+public interface IJwtGenerator
 {
-    public interface IJwtGenerator
-    {
-        Result<AuthResponse> GenerateToken(User user);
-    }
+    Result<AuthResponse> GenerateToken(User user);
 }

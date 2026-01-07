@@ -38,6 +38,9 @@ builder.Services.AddAuth(builder.Configuration);
 //RateLimit
 builder.Services.AddRateLimit();
 
+//Serilog
+builder.Host.UseCustomSerilog();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -55,7 +58,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseRateLimiter();
 app.MapControllers();
-
-app.InitStorage(app.Configuration);
 
 app.Run();

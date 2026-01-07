@@ -1,10 +1,9 @@
 using Domain.Abstractions.Result;
 using Microsoft.AspNetCore.Http;
 
-namespace Application.Abstractions.Storage
+namespace Application.Abstractions.Storage;
+
+public interface IImageFormatter
 {
-    public interface IImageFormatter
-    {
-        Task<Result> FormatImage(IFormFile file, string savePath, CancellationToken ct = default);
-    }
+    Task<Result> FormatImage(IFormFile file, string savePath, CancellationToken ct = default);
 }

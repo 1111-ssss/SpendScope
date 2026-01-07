@@ -1,6 +1,5 @@
-namespace Domain.Abstractions.Interfaces
+namespace Domain.Abstractions.Interfaces;
+
+public interface IAggregateRoot
 {
-    public interface IAggregateRoot
-    {
-    }
 }

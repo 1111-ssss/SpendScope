@@ -1,14 +1,13 @@
 using FluentValidation;
 
-namespace Application.Features.Follows.FollowUser
+namespace Application.Features.Follows.FollowUser;
+
+public class FollowUserCommandValidator : AbstractValidator<FollowUserCommand>
 {
-    public class FollowUserCommandValidator : AbstractValidator<FollowUserCommand>
+    public FollowUserCommandValidator()
     {
-        public FollowUserCommandValidator()
-        {
-            RuleFor(x => x.UserId)
-                .NotEmpty().WithMessage("Идентификатор пользователя обязателен")
-                .GreaterThan(0).WithMessage("Идентификатор пользователя должен быть больше 0");
-        }
+        RuleFor(x => x.UserId)
+            .NotEmpty().WithMessage("Идентификатор пользователя обязателен")
+            .GreaterThan(0).WithMessage("Идентификатор пользователя должен быть больше 0");
     }
 }

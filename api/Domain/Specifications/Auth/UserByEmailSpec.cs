@@ -1,15 +1,14 @@
 using Ardalis.Specification;
 using Domain.Entities;
 
-namespace Domain.Specifications.Auth
+namespace Domain.Specifications.Auth;
+
+public class UserByEmailSpec : Specification<User>
 {
-    public class UserByEmailSpec : Specification<User>
+    public UserByEmailSpec(string email)
     {
-        public UserByEmailSpec(string email)
-        {
-            Query.Where(e =>
-                e.Email == email
-            );
-        }
+        Query.Where(e =>
+            e.Email == email
+        );
     }
 }

@@ -7,67 +7,46 @@ using Application.Features.Follows.UnFollowUser;
 using Web.Extensions;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Web.Controllers
+namespace Web.Controllers;
+
+[ApiController]
+[Route("api/follows")]
+[Tags("Подписки")]
+[Authorize]
+[ApiVersion("1.0")]
+public class FollowController : ControllerBase
 {
-    [ApiController]
-    [Route("api/follows")]
-    [Tags("Подписки")]
-    [Authorize]
-    [ApiVersion("1.0")]
-    public class FollowController : ControllerBase
+    private readonly IMediator _mediator;
+    public FollowController(IMediator mediator)
     {
-        private readonly IMediator _mediator;
-        public FollowController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-        [HttpGet("{userId}/followers")]
-        public async Task<IActionResult> GetFollowers(int userId, CancellationToken ct)
-        {
-            var result = await _mediator.Send(new GetFollowersQuery(userId), ct);
+        _mediator = mediator;
+    }
+    [HttpGet("{userId}/followers")]
+    public async Task<IActionResult> GetFollowers(int userId, CancellationToken ct)
+    {
+        var result = await _mediator.Send(new GetFollowersQuery(userId), ct);
 
-            if (result.IsSuccess)
-            {
-                return Ok(result.Value);
-            }
+        return result.ToActionResult();
+    }
+    [HttpGet("{userId}/following")]
+    public async Task<IActionResult> GetFollowing(int userId, CancellationToken ct)
+    {
+        var result = await _mediator.Send(new GetFollowingQuery(userId), ct);
 
-            return result.ToActionResult();
-        }
-        [HttpGet("{userId}/following")]
-        public async Task<IActionResult> GetFollowing(int userId, CancellationToken ct)
-        {
-            var result = await _mediator.Send(new GetFollowingQuery(userId), ct);
+        return result.ToActionResult();
+    }
+    [HttpPost("{userId}")]
+    public async Task<IActionResult> Follow(int userId, CancellationToken ct)
+    {
+        var result = await _mediator.Send(new FollowUserCommand(userId), ct);
 
-            if (result.IsSuccess)
-            {
-                return Ok(result.Value);
-            }
+        return result.ToActionResult();
+    }
+    [HttpDelete("{userId}")]
+    public async Task<IActionResult> Unfollow(int userId, CancellationToken ct)
+    {
+        var result = await _mediator.Send(new UnFollowUserCommand(userId), ct);
 
-            return result.ToActionResult();
-        }
-        [HttpPost("{userId}")]
-        public async Task<IActionResult> Follow(int userId, CancellationToken ct)
-        {
-            var result = await _mediator.Send(new FollowUserCommand(userId), ct);
-
-            if (result.IsSuccess)
-            {
-                return Ok(result);
-            }
-
-            return result.ToActionResult();
-        }
-        [HttpDelete("{userId}")]
-        public async Task<IActionResult> Unfollow(int userId, CancellationToken ct)
-        {
-            var result = await _mediator.Send(new UnFollowUserCommand(userId), ct);
-
-            if (result.IsSuccess)
-            {
-                return Ok(result);
-            }
-
-            return result.ToActionResult();
-        }
+        return result.ToActionResult();
     }
 }

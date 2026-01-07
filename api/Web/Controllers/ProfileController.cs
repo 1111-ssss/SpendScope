@@ -7,67 +7,51 @@ using Application.Features.Profiles.DeleteAvatar;
 using Web.Extensions;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Web.Controllers
+namespace Web.Controllers;
+
+[ApiController]
+[Route("api/profile")]
+[Tags("Профиль пользователя")]
+[Authorize]
+[ApiVersion("1.0")]
+public class ProfileController : ControllerBase
 {
-    [ApiController]
-    [Route("api/profile")]
-    [Tags("Профиль пользователя")]
-    [Authorize]
-    [ApiVersion("1.0")]
-    public class ProfileController : ControllerBase
+    private readonly IMediator _mediator;
+    public ProfileController(IMediator mediator)
     {
-        private readonly IMediator _mediator;
-        public ProfileController(IMediator mediator)
+        _mediator = mediator;
+    }
+    [HttpGet("{userId}")]
+    public async Task<IActionResult> Get(int userId, CancellationToken ct)
+    {
+        var result = await _mediator.Send(new GetProfileQuery(userId), ct);
+
+        return result.ToActionResult();
+    }
+    [HttpPatch("update")]
+    public async Task<IActionResult> Update([FromForm] UpdateProfileCommand command, CancellationToken ct)
+    {
+        var result = await _mediator.Send(command, ct);
+
+        return result.ToActionResult();
+    }
+    [HttpGet("{userId}/avatar")]
+    public async Task<IActionResult> GetAvatar(int userId, CancellationToken ct)
+    {
+        var result = await _mediator.Send(new GetAvatarQuery(userId), ct);
+
+        if (result.IsSuccess)
         {
-            _mediator = mediator;
+            return PhysicalFile(result.Value.FilePath, result.Value.ContentType);
         }
-        [HttpGet("{userId}")]
-        public async Task<IActionResult> Get(int userId, CancellationToken ct)
-        {
-            var result = await _mediator.Send(new GetProfileQuery(userId), ct);
 
-            if (result.IsSuccess)
-            {
-                return Ok(result.Value);
-            }
+        return result.ToActionResult();
+    }
+    [HttpDelete("{userId}/avatar")]
+    public async Task<IActionResult> DeleteAvatar(int userId, CancellationToken ct)
+    {
+        var result = await _mediator.Send(new DeleteAvatarCommand(userId), ct);
 
-            return result.ToActionResult();
-        }
-        [HttpPatch("update")]
-        public async Task<IActionResult> Update([FromForm] UpdateProfileCommand command, CancellationToken ct)
-        {
-            var result = await _mediator.Send(command, ct);
-
-            if (result.IsSuccess)
-            {
-                return Ok(result.Value);
-            }
-
-            return result.ToActionResult();
-        }
-        [HttpGet("{userId}/avatar")]
-        public async Task<IActionResult> GetAvatar(int userId, CancellationToken ct)
-        {
-            var result = await _mediator.Send(new GetAvatarQuery(userId), ct);
-
-            if (result.IsSuccess)
-            {
-                return PhysicalFile(result.Value.FilePath, result.Value.ContentType);
-            }
-
-            return result.ToActionResult();
-        }
-        [HttpDelete("{userId}/avatar")]
-        public async Task<IActionResult> DeleteAvatar(int userId, CancellationToken ct)
-        {
-            var result = await _mediator.Send(new DeleteAvatarCommand(userId), ct);
-
-            if (result.IsSuccess)
-            {
-                return Ok(result.Value);
-            }
-
-            return result.ToActionResult();
-        }
+        return result.ToActionResult();
     }
 }

@@ -10,41 +10,40 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Infrastructure.DI
+namespace Infrastructure.DI;
+
+public static class DependencyInjection
 {
-    public static class DependencyInjection
+    public static IServiceCollection AddInfrastructure(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
-        public static IServiceCollection AddInfrastructure(
-            this IServiceCollection services,
-            IConfiguration configuration)
-        {
-            //Database
-            services.AddDataAccess(configuration);
+        //Database
+        services.AddDataAccess(configuration);
 
-            //Auth
-            services.AddScoped<IJwtGenerator, JwtGenerator>();
-            services.AddScoped<IPasswordHasher, PasswordHasher>();
-            services.AddScoped<ICurrentUserService, CurrentUserService>();
+        //Auth
+        services.AddScoped<IJwtGenerator, JwtGenerator>();
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
 
-            //Storage services
-            services.AddScoped<IFileStorage, FileStorage>();
-            services.AddScoped<IImageFormatter, ImageFormatter>();
+        //Storage services
+        services.AddScoped<IFileStorage, FileStorage>();
+        services.AddScoped<IImageFormatter, ImageFormatter>();
 
-            return services;
-        }
-        public static IServiceCollection AddDataAccess(
-            this IServiceCollection services,
-            IConfiguration configuration)
-        {
-            services.AddDbContext<AppDbContext>(options =>
-                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+        return services;
+    }
+    public static IServiceCollection AddDataAccess(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.AddDbContext<AppDbContext>(options =>
+            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<AppDbContext>());
-            //services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<AppDbContext>());
+        //services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+        services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 
-            return services;
-        }
+        return services;
     }
 }

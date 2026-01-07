@@ -1,7 +1,6 @@
 using FluentValidation;
 
-namespace Application.Features.Follows.UnFollowUser
-{
+namespace Application.Features.Follows.UnFollowUser;
     public class UnFollowUserCommandValidator : AbstractValidator<UnFollowUserCommand>
     {
         public UnFollowUserCommandValidator()
@@ -11,4 +10,3 @@ namespace Application.Features.Follows.UnFollowUser
                 .GreaterThan(0).WithMessage("Идентификатор пользователя должен быть больше 0");
         }
     }
-}

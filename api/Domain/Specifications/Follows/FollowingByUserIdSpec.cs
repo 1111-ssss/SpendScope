@@ -2,13 +2,12 @@ using Ardalis.Specification;
 using Domain.Entities;
 using Domain.ValueObjects;
 
-namespace Domain.Specifications.Follows
+namespace Domain.Specifications.Follows;
+
+public class FollowingByUserIdSpec : Specification<Follow>
 {
-    public class FollowingByUserIdSpec : Specification<Follow>
+    public FollowingByUserIdSpec(EntityId<User> userId)
     {
-        public FollowingByUserIdSpec(EntityId<User> userId)
-        {
-            Query.Where(x => x.FollowerId == userId);
-        }
+        Query.Where(x => x.FollowerId == userId);
     }
 }

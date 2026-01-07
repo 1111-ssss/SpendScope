@@ -1,15 +1,14 @@
 using Ardalis.Specification;
 using Domain.Entities;
 
-namespace Domain.Specifications.AppVersions
+namespace Domain.Specifications.AppVersions;
+
+public class AppVersionExistsSpec : Specification<AppVersion>
 {
-    public class AppVersionExistsSpec : Specification<AppVersion>
+    public AppVersionExistsSpec(string branch, int build)
     {
-        public AppVersionExistsSpec(string branch, int build)
-        {
-            Query
-                .Where(v => v.Branch == branch && v.Build == build)
-                .Take(1);
-        }
+        Query
+            .Where(v => v.Branch == branch && v.Build == build)
+            .Take(1);
     }
 }

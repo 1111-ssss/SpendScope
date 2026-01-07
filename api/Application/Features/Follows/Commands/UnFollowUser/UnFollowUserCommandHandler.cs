@@ -7,8 +7,7 @@ using Domain.Specifications.Follows;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Application.Features.Follows.UnFollowUser
-{
+namespace Application.Features.Follows.UnFollowUser;
     public class UnFollowUserCommandHandler : IRequestHandler<UnFollowUserCommand, Result>
     {
         private readonly IUnitOfWork _uow;
@@ -57,4 +56,3 @@ namespace Application.Features.Follows.UnFollowUser
             return Result.Success();
         }
     }
-}
