@@ -50,7 +50,7 @@ public class GetLogsQueryHandler : IRequestHandler<GetLogsQuery, Result<LogListR
         return Result<LogListResponse>.Success(new LogListResponse(
             TotalCount: totalCount,
             PageSize: request.PageSize,
-            CurrentPage: request.Page / request.PageSize + 1,
+            CurrentPage: request.Page,
             TotalPages: (int)Math.Ceiling((double)totalCount / request.PageSize),
             Items: logsResponse
         ));
