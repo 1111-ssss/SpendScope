@@ -9,8 +9,9 @@ public class LogEntryConfiguration : IEntityTypeConfiguration<LogEntry>
 {
        public void Configure(EntityTypeBuilder<LogEntry> builder)
        {
+              builder.ToTable("logs");
+
               builder.HasKey(l => l.Id);
-              builder.ToTable("log_entries");
 
               builder.Property(l => l.Id)
                      .HasColumnName("id")
@@ -25,16 +26,18 @@ public class LogEntryConfiguration : IEntityTypeConfiguration<LogEntry>
 
               builder.Property(l => l.Level)
                      .HasColumnName("level")
-                     .HasMaxLength(20)
+                     .HasColumnType("integer")
                      .IsRequired();
 
               builder.Property(l => l.Message)
                      .HasColumnName("message")
-                     .HasMaxLength(255)
                      .IsRequired();
 
               builder.Property(l => l.Exception)
-                     .HasColumnName("exception")
-                     .HasMaxLength(255);
+                     .HasColumnName("exception");
+
+              builder.Property(l => l.Properties)
+                     .HasColumnName("log_event")
+                     .HasColumnType("jsonb");
        }
 }

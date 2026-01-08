@@ -1,12 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using MediatR;
-using Application.Features.Profiles.GetProfile;
-using Application.Features.Profiles.UpdateProfile;
-using Application.Features.Profiles.GetAvatar;
-using Application.Features.Profiles.DeleteAvatar;
+using MediatR; 
 using Web.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Application.Features.Logging.GetLogs;
+using Application.Features.Logging.ClearLogs;
 
 namespace Web.Controllers;
 
@@ -26,6 +23,13 @@ public class LoggingController : ControllerBase
     public async Task<IActionResult> Get([FromQuery] GetLogsQuery query, CancellationToken ct)
     {
         var result = await _mediator.Send(query, ct);
+
+        return result.ToActionResult();
+    }
+    [HttpDelete]
+    public async Task<IActionResult> ClearLogs([FromBody] ClearLogsCommand? command, CancellationToken ct)
+    {
+        var result = await _mediator.Send(command ?? new ClearLogsCommand(), ct);
 
         return result.ToActionResult();
     }

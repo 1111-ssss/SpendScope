@@ -23,8 +23,6 @@ public partial class AppDbContext : DbContext, IUnitOfWork
         OnModelCreatingPartial(modelBuilder);
     }
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
-
-
     public async Task<int> GetTrackedEntitiesCountAsync()
     {
         return ChangeTracker.Entries().Count();

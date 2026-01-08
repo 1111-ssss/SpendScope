@@ -3,4 +3,12 @@ using MediatR;
 
 namespace Application.Features.Logging.GetLogs;
 
-public record GetLogsQuery(string? Level = null, string MinimalLevel = "Information", int Skip = 0, int Take = 50) : IRequest<Result<List<LogResponse>>>;
+public record GetLogsQuery(
+    int? Level = null,
+    int MinimalLevel = 2,
+    int Page = 1,
+    int PageSize = 50,
+    string OrderBy = "Timestamp",
+    bool IsDesc = true,
+    string? Search = null
+) : IRequest<Result<LogListResponse>>;

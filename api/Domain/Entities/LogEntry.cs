@@ -7,8 +7,9 @@ public class LogEntry : IAggregateRoot
 {
     public EntityId<LogEntry> Id { get; set; }
     public DateTime? Timestamp { get; set; } = DateTime.UtcNow;
-    public string Level { get; set; } = "Debug";
+    public int Level { get; set; } = 1;
     public string Message { get; set; } = "Сообщение пустое";
     public string? Exception { get; set; }
+    public string Properties { get; set; } = String.Empty;
     private LogEntry() { }
 }
