@@ -23,7 +23,7 @@ public class LoggingController : ControllerBase
     public async Task<IActionResult> Get([FromQuery] GetLogsQuery query, CancellationToken ct)
     {
         var result = await _mediator.Send(query, ct);
-
+        
         return result.ToActionResult();
     }
     [HttpDelete]
@@ -31,6 +31,6 @@ public class LoggingController : ControllerBase
     {
         var result = await _mediator.Send(command ?? new ClearLogsCommand(), ct);
 
-        return result.ToActionResult();
+        return result.ToActionResult(); 
     }
 }
