@@ -15,5 +15,6 @@ public class CurrentUserService : ICurrentUserService
         _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
         out var id
     ) ? id : null;
+    public string GetUserIp() => _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString() ?? "";
     public bool IsAdmin() => _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.Role)?.Value == "Admin";
 }

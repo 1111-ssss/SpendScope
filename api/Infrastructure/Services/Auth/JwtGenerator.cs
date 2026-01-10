@@ -14,9 +14,11 @@ public class JwtGenerator : IJwtGenerator
 {
     private readonly IConfiguration _config;
     private readonly string _key;
-    public JwtGenerator(IConfiguration config)
+    private readonly ICurrentUserService _currentUserService;
+    public JwtGenerator(IConfiguration config, ICurrentUserService currentUserService)
     {
         _config = config;
+        _currentUserService = currentUserService;
         _key = _config["Jwt:Key"] ?? throw new ArgumentNullException("Jwt:Key пустой в конфигурации");
     }
     public Result<AuthResponse> GenerateToken(User user)
@@ -24,6 +26,7 @@ public class JwtGenerator : IJwtGenerator
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new Claim("ip", _currentUserService.GetUserIp()),
         };
         if (user.IsAdmin)
             claims.Add(new Claim(ClaimTypes.Role, "Admin"));

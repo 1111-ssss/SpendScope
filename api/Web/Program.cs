@@ -2,6 +2,7 @@ using Microsoft.OpenApi;
 using Application.DI;
 using Infrastructure.DI;
 using Web.Extensions;
+using Web.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +56,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
+app.UseIPValidation();
 app.UseAuthorization();
 app.UseRateLimiter();
 app.MapControllers();
