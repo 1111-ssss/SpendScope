@@ -32,7 +32,7 @@ public class DeleteVersionCommandHandler : IRequestHandler<DeleteVersionCommand,
     {
         var appVer = await _appVersionRepository.FirstOrDefaultAsync(new AppVersionExistsSpec(request.Branch, request.Build), ct);
         if (appVer == null)
-            return Result.Failed(ErrorCode.BadRequest, "Версия не существует");
+            return Result.BadRequest("Версия не существует");
 
         var safeBranch = Path.GetFileName(request.Branch);
         var safeBuild = Path.GetFileName(request.Build.ToString());
@@ -48,7 +48,7 @@ public class DeleteVersionCommandHandler : IRequestHandler<DeleteVersionCommand,
         catch (Exception ex)
         {
             _logger.LogError(ex, "Ошибка при удалении версии из базы данных");
-            return Result.Failed(ErrorCode.InternalServerError, "Ошибка при удалении версии из базы данных");
+            return Result.InternalServerError("Ошибка при удалении версии из базы данных");
         }
 
         return Result.Success();

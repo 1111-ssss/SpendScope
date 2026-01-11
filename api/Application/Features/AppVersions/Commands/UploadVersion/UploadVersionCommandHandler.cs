@@ -35,11 +35,11 @@ public class UploadVersionCommandHandler : IRequestHandler<UploadVersionCommand,
     {
         var appVer = await _appVersionRepository.FirstOrDefaultAsync(new AppVersionExistsSpec(request.Branch, request.Build), ct);
         if (appVer != null)
-            return Result<AppVersionResponse>.Failed(ErrorCode.BadRequest, "Версия уже существует");
+            return Result.BadRequest("Версия уже существует");
 
         var userId = _currentUserService.GetUserId();
         if (userId == null)
-            return Result<AppVersionResponse>.Failed(ErrorCode.Unauthorized, "Не удалось определить пользователя");
+            return Result.Unauthorized("Не удалось определить пользователя");
 
         var safeBranch = Path.GetFileName(request.Branch);
         var safeBuild = Path.GetFileName(request.Build.ToString());
@@ -51,7 +51,7 @@ public class UploadVersionCommandHandler : IRequestHandler<UploadVersionCommand,
             _ => null
         };
         if (fileName == null)
-            return Result<AppVersionResponse>.Failed(ErrorCode.BadRequest, "Неизвестный тип файла");
+            return Result.BadRequest("Неверный формат файла");
 
         await _fileStorage.SaveFileAsync(
             request.File,
@@ -76,7 +76,7 @@ public class UploadVersionCommandHandler : IRequestHandler<UploadVersionCommand,
         catch (Exception ex)
         {
             _logger.LogError(ex, "Ошибка при сохранении версии в базе данных");
-            return Result<AppVersionResponse>.Failed(ErrorCode.InternalServerError, "Ошибка при сохранении версии в базе данных");
+            return Result.InternalServerError("Ошибка при сохранении версии в базе данных");
         }
 
         return Result<AppVersionResponse>.Success(new AppVersionResponse(

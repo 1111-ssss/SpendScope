@@ -35,7 +35,7 @@ public class UpdateAchievementCommandHandler : IRequestHandler<UpdateAchievement
         var ach = await _achievementRepository.GetByIdAsync((EntityId<Achievement>)request.AchievementId, ct);
 
         if (ach == null)
-            return Result<AchievementResponse>.Failed(ErrorCode.NotFound, "Достижение не найдено");
+            return Result.NotFound("Достижение не найдено");
 
         var iconPath = _fileStorage.GetFilePath(ach.IconUrl);
         if (iconPath == null && request.Image != null)
@@ -67,7 +67,7 @@ public class UpdateAchievementCommandHandler : IRequestHandler<UpdateAchievement
         catch (Exception ex)
         {
             _logger.LogError(ex, "Ошибка при обновлении достижения");
-            return Result<AchievementResponse>.Failed(ErrorCode.InternalServerError, "Ошибка при обновлении достижения");
+            return Result.InternalServerError("Ошибка при обновлении достижения");
         }
     }
 }

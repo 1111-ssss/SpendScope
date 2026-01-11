@@ -40,13 +40,13 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, R
             var message = existingUser.Username == request.Username
                 ? "Пользователь с таким логином уже существует"
                 : "Пользователь с таким email уже существует";
-            return Result<AuthResponse>.Failed(ErrorCode.BadRequest, message);
+            return Result.BadRequest(message);
         }
 
         var passwordHash = _passwordHasher.Hash(request.Password);
 
         if (!passwordHash.IsSuccess)
-            return Result<AuthResponse>.Failed(ErrorCode.BadRequest, "Ошибка хеширования пароля");
+            return Result.BadRequest("Ошибка хеширования пароля");
 
         var user = User.Create(request.Username, request.Email, passwordHash.Value);
         await _userRepository.AddAsync(user, ct);
@@ -57,13 +57,13 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, R
         catch (Exception e)
         {
             _logger.LogError(e, "Ошибка сохранения пользователя");
-            return Result<AuthResponse>.Failed(ErrorCode.InternalServerError, "Ошибка сохранения пользователя");
+            return Result.InternalServerError("Ошибка сохранения пользователя");
         }
 
         var result = _jwtGenerator.GenerateToken(user);
 
         if (!result.IsSuccess)
-            return Result<AuthResponse>.Failed(ErrorCode.InternalServerError, "Ошибка генерации токена");
+            return Result.InternalServerError("Ошибка генерации токена");
 
         return result;
     }

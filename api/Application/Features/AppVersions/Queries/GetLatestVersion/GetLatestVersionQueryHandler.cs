@@ -28,7 +28,7 @@ public class GetLatestVersionQueryHandler : IRequestHandler<GetLatestVersionQuer
         var appVer = await _appVersionRepository.FirstOrDefaultAsync(new AppVersionByBranchSpec(request.Branch), ct);
 
         if (appVer == null)
-            return Result<AppVersionResponse>.Failed(ErrorCode.BadRequest, "Версия не найдена");
+            return Result.BadRequest("Версия не найдена");
 
         return Result<AppVersionResponse>.Success(new AppVersionResponse(
             Branch: appVer.Branch,

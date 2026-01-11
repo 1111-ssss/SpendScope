@@ -32,15 +32,15 @@ public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, Result<
         var user = await _userRepository.FirstOrDefaultAsync(new UserByUsernameOrEmailSpec(request.Identifier), ct);
 
         if (user == null)
-            return Result<AuthResponse>.Failed(ErrorCode.BadRequest, "Неверный логин или пароль");
+            return Result.BadRequest("Неверный логин или пароль");
 
         if (!_passwordHasher.Verify(request.Password, user.PasswordHash).IsSuccess)
-            return Result<AuthResponse>.Failed(ErrorCode.BadRequest, "Неверный логин или пароль");
+            return Result.BadRequest("Неверный логин или пароль");
 
         var result = _jwtGenerator.GenerateToken(user);
         if (!result.IsSuccess)
-            return Result<AuthResponse>.Failed(ErrorCode.InternalServerError, "Ошибка генерации токена");
-
+            return Result.InternalServerError("Ошибка генерации токена");
+            
         return result;
     }
 }

@@ -41,17 +41,17 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand,
     {
         var userId = _currentUserService.GetUserId();
         if (userId == null)
-            return Result<ProfileResponse>.Failed(ErrorCode.Unauthorized, "Не удалось определить пользователя");
+            return Result.Unauthorized("Не удалось определить пользователя");
 
         var user = await _userRepository.FirstOrDefaultAsync(new UserByIdWithProfileSpec(userId.Value), ct);
 
         if (user == null)
-            return Result<ProfileResponse>.Failed(ErrorCode.NotFound, "Пользователь не найден");
+            return Result.NotFound("Пользователь не найден");
 
         var profile = user.Profile;
 
         if (profile == null)
-            return Result<ProfileResponse>.Failed(ErrorCode.NotFound, "Профиль пользователя не найден");
+            return Result.NotFound("Профиль пользователя не найден");
 
         var avatarPath = _fileStorage.GetFilePath(profile.AvatarUrl);
         if (avatarPath == null && request.Image != null)
@@ -84,7 +84,7 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand,
         catch (Exception ex)
         {
             _logger.LogError(ex, "Ошибка при обновлении достижения");
-            return Result<ProfileResponse>.Failed(ErrorCode.InternalServerError, "Ошибка при обновлении достижения");
+            return Result.InternalServerError("Ошибка при обновлении достижения");
         }
     }
 }

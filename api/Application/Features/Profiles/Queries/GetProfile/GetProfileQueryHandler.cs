@@ -28,12 +28,12 @@ public class GetProfileQueryHandler : IRequestHandler<GetProfileQuery, Result<Pr
         var user = await _userRepository.FirstOrDefaultAsync(new UserByIdWithProfileSpec(request.UserId), ct);
 
         if (user == null)
-            return Result<ProfileResponse>.Failed(ErrorCode.NotFound, "Пользователь не найден");
+            return Result.NotFound("Пользователь не найден");
 
         var profile = user.Profile;
 
         if (profile == null)
-            return Result<ProfileResponse>.Failed(ErrorCode.NotFound, "Профиль пользователя не найден");
+            return Result.NotFound("Профиль пользователя не найден");
 
         return Result<ProfileResponse>.Success(new ProfileResponse(
             DisplayName: profile.DisplayName ?? user.Username,

@@ -33,12 +33,12 @@ public class AchievementIconQueryHandler : IRequestHandler<AchievementIconQuery,
         var ach = await _achievementRepository.GetByIdAsync((EntityId<Achievement>)request.AchievementId, ct);
 
         if (ach == null)
-            return Result<FileDownloadResponse>.Failed(ErrorCode.NotFound, "Достижение не найдено");
+            return Result.NotFound("Достижение не найдено");
 
         var iconPath = _fileStorage.GetFilePath(ach.IconUrl, "achievements/default-icon.png");
 
         if (iconPath == null)
-            return Result<FileDownloadResponse>.Failed(ErrorCode.NotFound, "Иконка достижения не найдена");
+            return Result.NotFound("Иконка достижения не найдена");
 
         return Result<FileDownloadResponse>.Success(new FileDownloadResponse(
             FilePath: iconPath,

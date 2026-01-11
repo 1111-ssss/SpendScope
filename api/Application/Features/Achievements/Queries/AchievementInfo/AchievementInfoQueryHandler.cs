@@ -29,7 +29,7 @@ public class AchievementInfoQueryHandler : IRequestHandler<AchievementInfoQuery,
         var ach = await _achievementRepository.GetByIdAsync((EntityId<Achievement>)request.AchievementId, ct);
 
         if (ach == null)
-            return Result<AchievementResponse>.Failed(ErrorCode.NotFound, "Достижение не найдено");
+            return Result.NotFound("Достижение не найдено");
 
         return Result<AchievementResponse>.Success(new AchievementResponse(
             Name: ach.Name,

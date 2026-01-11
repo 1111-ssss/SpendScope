@@ -36,7 +36,7 @@ public class ImageFormatter : IImageFormatter
         catch (Exception ex)
         {
             _logger.LogError(ex, "Ошибка при обработке изображения");
-            return Result.Failed(ErrorCode.BadRequest, "Невалидное или повреждённое изображение");
+            return Result.BadRequest("Невалидное или повреждённое изображение");
         }
     }
 }

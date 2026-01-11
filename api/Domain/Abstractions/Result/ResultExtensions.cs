@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Domain.Abstractions.Result;
 
 public static class ResultExtensions
@@ -11,4 +13,13 @@ public static class ResultExtensions
         
         return Result<TOut>.Failed(source.Error!.Value, source.Message ?? "Неизвестная ошибка");
     }
+    // public static Result<TOut> Map<TIn, TOut>(this Result<TIn> source, Func<TIn, TOut> mapper)
+    // {
+    //     if (!source.IsSuccess)
+    //     {
+    //         return source;
+    //     }
+        
+    //     return Result<TOut>.Success(mapper(source.Value));
+    // }
 }

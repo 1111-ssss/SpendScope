@@ -32,17 +32,17 @@ public class GetAvatarQueryHandler : IRequestHandler<GetAvatarQuery, Result<File
         var user = await _userRepository.FirstOrDefaultAsync(new UserByIdWithProfileSpec(request.UserId), ct);
 
         if (user == null)
-            return Result<FileDownloadResponse>.Failed(ErrorCode.NotFound, "Пользователь не найден");
+            return Result.NotFound("Пользователь не найден");
 
         var profile = user.Profile;
 
         if (profile == null)
-            return Result<FileDownloadResponse>.Failed(ErrorCode.NotFound, "Профиль пользователя не найден");
+            return Result.NotFound("Профиль пользователя не найден");
 
         var avatarPath = _fileStorage.GetFilePath(profile.AvatarUrl, "avatars/default-avatar.png");
 
         if (avatarPath == null)
-            return Result<FileDownloadResponse>.Failed(ErrorCode.NotFound, "Аватар пользователя не найден");
+            return Result.NotFound("Аватар пользователя не найден");
 
         return Result<FileDownloadResponse>.Success(new FileDownloadResponse(
             FilePath: avatarPath,

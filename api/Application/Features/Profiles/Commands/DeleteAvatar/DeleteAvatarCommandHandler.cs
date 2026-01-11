@@ -35,24 +35,24 @@ public class DeleteAvatarCommandHandler : IRequestHandler<DeleteAvatarCommand, R
     {
         var userId = _currentUserService.GetUserId();
         if (userId == null || !userId.Value.Equals(request.UserId))
-            return Result<ProfileResponse>.Failed(ErrorCode.Unauthorized, "Не удалось определить пользователя");
+            return Result.Unauthorized("Не удалось определить пользователя");
 
         var user = await _userRepository.FirstOrDefaultAsync(new UserByIdWithProfileSpec(request.UserId), ct);
 
         if (user == null)
-            return Result<ProfileResponse>.Failed(ErrorCode.NotFound, "Пользователь не найден");
+            return Result.NotFound("Пользователь не найден");
 
         var profile = user.Profile;
 
         if (profile == null)
-            return Result<ProfileResponse>.Failed(ErrorCode.NotFound, "Профиль пользователя не найден");
+            return Result.NotFound("Профиль пользователя не найден");
 
         _logger.LogInformation($"User: {user.Username}, Profile: {profile}");
 
         var avatarPath = _fileStorage.GetFilePath(profile.AvatarUrl);
 
         if (avatarPath == null)
-            return Result<ProfileResponse>.Failed(ErrorCode.NotFound, "Аватар пользователя не найден");
+            return Result.NotFound("Аватар пользователя не найден");
 
         await _fileStorage.DeleteFileAsync(avatarPath, ct);
 

@@ -30,10 +30,10 @@ public class FollowUserCommandHandler : IRequestHandler<FollowUserCommand, Resul
     {
         var currentUserId = _currentUserService.GetUserId();
         if (currentUserId == null)
-            return Result.Failed(ErrorCode.Unauthorized, "Не удалось определить пользователя");
+            return Result.Unauthorized("Не удалось определить пользователя");
 
         if (currentUserId.Value == request.UserId)
-            return Result.Failed(ErrorCode.BadRequest, "Нельзя подписаться на самого себя");
+            return Result.BadRequest("Нельзя подписаться на самого себя");
 
         var existingFollow = await _followRepository.FirstOrDefaultAsync(
             new FollowExistsSpec(currentUserId.Value, request.UserId),
@@ -54,7 +54,7 @@ public class FollowUserCommandHandler : IRequestHandler<FollowUserCommand, Resul
         catch (Exception ex)
         {
             _logger.LogError(ex, "Ошибка при добавлении подписки на пользователя");
-            return Result.Failed(ErrorCode.InternalServerError, "Ошибка при добавлении подписки на пользователя");
+            return Result.InternalServerError("Ошибка при добавлении подписки на пользователя");
         }
 
         return Result.Success();

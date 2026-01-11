@@ -30,7 +30,7 @@ public class ClearLogsCommandHandler : IRequestHandler<ClearLogsCommand, Result<
         catch (Exception ex)
         {
             _logger.LogError(ex, "Ошибка при очистке логов");
-            return Result<ClearLogsResponse>.Failed(ErrorCode.InternalServerError, "Ошибка при очистке логов");
+            return Result.InternalServerError("Ошибка при очистке логов");
         }
 
         return Result<ClearLogsResponse>.Success(new ClearLogsResponse(deletedCount));

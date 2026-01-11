@@ -29,10 +29,10 @@ namespace Application.Features.Follows.UnFollowUser;
         {
             var currentUserId = _currentUserService.GetUserId();
             if (currentUserId == null)
-                return Result.Failed(ErrorCode.Unauthorized, "Не удалось определить пользователя");
+                return Result.Unauthorized("Не удалось определить пользователя");
 
             if (currentUserId.Value == request.UserId)
-                return Result.Failed(ErrorCode.BadRequest, "Нельзя отписаться от самого себя");
+                return Result.BadRequest("Нельзя отписаться от самого себя");
 
             var existingFollow = await _followRepository.FirstOrDefaultAsync(new FollowExistsSpec(currentUserId.Value, request.UserId), ct);
 
@@ -50,7 +50,7 @@ namespace Application.Features.Follows.UnFollowUser;
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Ошибка при удалении подписки пользователя");
-                return Result.Failed(ErrorCode.InternalServerError, "Ошибка при удалении подписки пользователя");
+                return Result.InternalServerError("Ошибка при удалении подписки пользователя");
             }
 
             return Result.Success();

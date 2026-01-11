@@ -32,7 +32,7 @@ public class SyncExpensesCommandHandler : IRequestHandler<SyncExpensesCommand, R
     {
         var userId = _currentUserService.GetUserId();
         if (userId == null)
-            return Result<SyncExpensesResponse>.Failed(ErrorCode.Unauthorized, "Не удалось определить пользователя");
+            return Result.Unauthorized();
 
         var existingExpenses = await _expenseRepository.ListAsync(new ExpensesWithUserIdSpec(userId.Value), ct);
 
@@ -78,7 +78,7 @@ public class SyncExpensesCommandHandler : IRequestHandler<SyncExpensesCommand, R
         catch (Exception ex)
         {
             _logger.LogError(ex, "Ошибка при синхронизации данных");
-            return Result<SyncExpensesResponse>.Failed(ErrorCode.InternalServerError, $"Ошибка при синхронизации данных");
+            return Result.InternalServerError("Ошибка при синхронизации данных");
         }
         
         return Result<SyncExpensesResponse>.Success(new SyncExpensesResponse(

@@ -34,12 +34,12 @@ where TResponse : class, IResultBase
                         .MakeGenericType(valueType)
                         .GetMethod(nameof(Result<object>.Failed), new[] { typeof(ErrorCode), typeof(string) });
 
-                    var failedResult = failedMethod!.Invoke(null, new object[] { ErrorCode.BadRequest, errorMessage });
+                    var failedResult = failedMethod!.Invoke(null, new object[] { ErrorCode.ValidationFailed, errorMessage });
 
                     return (TResponse)failedResult!;
                 }
 
-                return (TResponse)(object)Result.Failed(ErrorCode.BadRequest, errorMessage);
+                return (TResponse)(object)Result.ValidationFailed(errorMessage);
             }
         }
 

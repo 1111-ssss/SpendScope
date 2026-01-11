@@ -34,7 +34,7 @@ public class DownloadVersionQueryHandler : IRequestHandler<DownloadVersionQuery,
         );
 
         if (filePath == null)
-            return Result<FileDownloadResponse>.Failed(ErrorCode.NotFound, "Версия не найдена");
+            return Result.NotFound("Версия не найдена");
 
         var contentType = Path.GetExtension(filePath) switch
         {
@@ -44,7 +44,7 @@ public class DownloadVersionQueryHandler : IRequestHandler<DownloadVersionQuery,
         };
 
         if (contentType == null)
-            return Result<FileDownloadResponse>.Failed(ErrorCode.BadRequest, "Неизвестный тип файла");
+            return Result.BadRequest("Неизвестный тип файла");
 
         return Result<FileDownloadResponse>.Success(new FileDownloadResponse(
             FilePath: filePath,

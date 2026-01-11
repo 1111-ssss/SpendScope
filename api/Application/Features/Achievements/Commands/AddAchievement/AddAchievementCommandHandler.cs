@@ -57,7 +57,7 @@ public class AddAchievementCommandHandler : IRequestHandler<AddAchievementComman
         catch (Exception ex)
         {
             _logger.LogError(ex, "Ошибка при сохранении достижения");
-            return Result<AchievementResponse>.Failed(ErrorCode.InternalServerError, "Ошибка при сохранении достижения");
+            return Result.InternalServerError("Ошибка при сохранении достижения");
         }
     }
 }
