@@ -1,0 +1,1 @@
+public record SyncExpensesResponse(int TotalCount, int Kept, int Removed);

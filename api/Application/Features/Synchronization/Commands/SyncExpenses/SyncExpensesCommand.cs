@@ -4,4 +4,4 @@ using MediatR;
 
 namespace Application.Features.Synchronization.Sync;
 
-public record SyncExpensesCommand(Expense[] Expenses) : IRequest<Result>;
+public record SyncExpensesCommand(Expense[] Expenses) : IRequest<Result<SyncExpensesResponse>>;
