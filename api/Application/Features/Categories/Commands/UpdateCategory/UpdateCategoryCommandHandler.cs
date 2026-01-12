@@ -43,8 +43,11 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
         category.Update(name: request.Name, description: request.Description);
 
         var iconPath = category.IconUrl;
-        if (request.IconFile != null && category.IconUrl == null)
+        if (request.IconFile != null && iconPath == null)
+        {
             iconPath = $"categories/{Guid.NewGuid()}.png";
+            category.Update(iconUrl: iconPath);
+        }
 
         await _categoryRepository.UpdateAsync(category, ct);
 
@@ -55,7 +58,7 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
             if (request.IconFile != null)
             {
                 var result = await _imageFormatter.FormatImageAsync(request.IconFile, iconPath!, ct);
-                
+
                 return result.Bind(() => new CategoryResponse(
                     Category: category
                 ));
