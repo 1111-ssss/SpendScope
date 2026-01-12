@@ -3,6 +3,8 @@ using MediatR;
 using Web.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Application.Features.Synchronization.Sync;
+using Microsoft.AspNetCore.RateLimiting;
+using Application.Features.Synchronization.GetExpenses;
 
 namespace Web.Controllers;
 
@@ -18,10 +20,18 @@ public class SyncController : ControllerBase
     {
         _mediator = mediator;
     }
+    [EnableRateLimiting("StrictLimiter")]
     [HttpPost]
     public async Task<IActionResult> Sync([FromBody] SyncExpensesCommand command, CancellationToken ct)
     {
         var result = await _mediator.Send(command, ct);
+
+        return result.ToActionResult(); 
+    }
+    [HttpGet]
+    public async Task<IActionResult> GetExpenses(GetExpensesQuery query, CancellationToken ct)
+    {
+        var result = await _mediator.Send(query, ct);
 
         return result.ToActionResult(); 
     }

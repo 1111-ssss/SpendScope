@@ -76,7 +76,7 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand,
 
             if (request.Image != null)
             {
-                var result = await _imageFormatter.FormatImage(request.Image, profile.AvatarUrl!, ct);
+                var result = await _imageFormatter.FormatImageAsync(request.Image, profile.AvatarUrl!, ct);
                 return result.Bind(() => response);
             }
             return Result<ProfileResponse>.Success(response);

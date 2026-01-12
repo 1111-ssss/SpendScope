@@ -59,7 +59,7 @@ public class UpdateAchievementCommandHandler : IRequestHandler<UpdateAchievement
 
             if (request.Image != null)
             {
-                var result = await _imageFormatter.FormatImage(request.Image, ach.IconUrl!, ct);
+                var result = await _imageFormatter.FormatImageAsync(request.Image, ach.IconUrl!, ct);
                 return result.Bind(() => response);
             }
             return Result<AchievementResponse>.Success(response);

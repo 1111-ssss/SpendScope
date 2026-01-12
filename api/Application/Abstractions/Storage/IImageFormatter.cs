@@ -5,5 +5,5 @@ namespace Application.Abstractions.Storage;
 
 public interface IImageFormatter
 {
-    Task<Result> FormatImage(IFormFile file, string savePath, CancellationToken ct = default);
+    Task<Result> FormatImageAsync(IFormFile file, string savePath, CancellationToken ct = default);
 }

@@ -19,7 +19,7 @@ public class ImageFormatter : IImageFormatter
         if (!Directory.Exists(_basePath))
             Directory.CreateDirectory(_basePath);
     }
-    public async Task<Result> FormatImage(IFormFile file, string savePath, CancellationToken ct = default)
+    public async Task<Result> FormatImageAsync(IFormFile file, string savePath, CancellationToken ct = default)
     {
         try
         {

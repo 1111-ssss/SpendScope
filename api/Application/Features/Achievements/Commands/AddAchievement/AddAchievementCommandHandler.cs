@@ -46,7 +46,7 @@ public class AddAchievementCommandHandler : IRequestHandler<AddAchievementComman
         {
             await _uow.SaveChangesAsync(ct);
 
-            var result = await _imageFormatter.FormatImage(request.Image, $"achievements/{iconName}", ct);
+            var result = await _imageFormatter.FormatImageAsync(request.Image, $"achievements/{iconName}", ct);
 
             return result.Bind(() => new AchievementResponse(
                 Name: ach.Name,
