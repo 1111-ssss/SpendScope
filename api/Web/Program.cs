@@ -1,7 +1,8 @@
 using Microsoft.OpenApi;
 using Application.DI;
 using Infrastructure.DI;
-using Web.Extensions;
+using Web.Extensions.DependencyInjection;
+using Web.Extensions.Middleware;
 using Web.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,7 +23,11 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+//Controllers
 builder.Services.AddControllers();
+
+//CorrelationId + Security Headers
+builder.Services.AddCorrelationId();
 
 //for CurrentUserService
 builder.Services.AddHttpContextAccessor();
@@ -55,6 +60,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCorrelationAndSecurityHeaders(app.Environment);
+
 app.UseAuthentication();
 app.UseIPValidation();
 app.UseAuthorization();

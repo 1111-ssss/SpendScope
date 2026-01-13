@@ -15,14 +15,12 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
     private readonly IBaseRepository<Category> _categoryRepository;
     private readonly ILogger<UpdateCategoryCommandHandler> _logger;
     private readonly ICurrentUserService _currentUserService;
-    private readonly IFileStorage _fileStorage;
     private readonly IImageFormatter _imageFormatter;
     public UpdateCategoryCommandHandler(
         IUnitOfWork uow,
         IBaseRepository<Category> categoryRepository,
         ILogger<UpdateCategoryCommandHandler> logger,
         ICurrentUserService currentUserService,
-        IFileStorage fileStorage,
         IImageFormatter imageFormatter
     )
     {
@@ -30,7 +28,6 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
         _categoryRepository = categoryRepository;
         _logger = logger;
         _currentUserService = currentUserService;
-        _fileStorage = fileStorage;
         _imageFormatter = imageFormatter;
     }
     public async Task<Result<CategoryResponse>> Handle(UpdateCategoryCommand request, CancellationToken ct)

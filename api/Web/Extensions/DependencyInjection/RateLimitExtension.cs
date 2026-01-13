@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
 
-namespace Web.Extensions;
+namespace Web.Extensions.DependencyInjection;
 
 public static class RateLimitExtension
 {

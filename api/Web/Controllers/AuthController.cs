@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Application.Features.Auth.Login;
 using Application.Features.Auth.Register;
-using Web.Extensions;
+using Web.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.RateLimiting;
 
 namespace Web.Controllers;

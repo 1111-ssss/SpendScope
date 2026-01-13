@@ -4,7 +4,7 @@ using Application.Features.Profiles.GetProfile;
 using Application.Features.Profiles.UpdateProfile;
 using Application.Features.Profiles.GetAvatar;
 using Application.Features.Profiles.DeleteAvatar;
-using Web.Extensions;
+using Web.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Web.Controllers;

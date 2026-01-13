@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MediatR; 
-using Web.Extensions;
+using Web.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authorization;
 using Application.Features.Logging.GetLogs;
 using Application.Features.Logging.ClearLogs;
