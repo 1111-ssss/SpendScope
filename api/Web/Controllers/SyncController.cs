@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR; 
 using Web.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authorization;
-using Application.Features.Synchronization.Sync;
+using Application.Features.Synchronization.SyncExpenses;
 using Microsoft.AspNetCore.RateLimiting;
 using Application.Features.Synchronization.GetExpenses;
 

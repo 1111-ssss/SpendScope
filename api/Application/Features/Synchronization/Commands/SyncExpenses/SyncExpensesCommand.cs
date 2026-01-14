@@ -1,7 +1,7 @@
 using Domain.Abstractions.Result;
-using Domain.Entities;
 using MediatR;
 
-namespace Application.Features.Synchronization.Sync;
+namespace Application.Features.Synchronization.SyncExpenses;
 
-public record SyncExpensesCommand(Expense[] Expenses) : IRequest<Result<SyncExpensesResponse>>;
+public record ExpenseDTO(int LocalId, float Amount, DateTime DateTime, int CategoryId, string Note);
+public record SyncExpensesCommand(ExpenseDTO[] Expenses) : IRequest<Result<SyncExpensesResponse>>;

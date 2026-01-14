@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Application.Features.Synchronization.Sync;
+namespace Application.Features.Synchronization.SyncExpenses;
 
 public class SyncExpensesCommandValidator : AbstractValidator<SyncExpensesCommand>
 {

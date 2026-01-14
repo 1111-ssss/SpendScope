@@ -57,7 +57,10 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
                 var result = await _imageFormatter.FormatImageAsync(request.IconFile, iconPath!, ct);
 
                 return result.Bind(() => new CategoryResponse(
-                    Category: category
+                    Id: category.Id,
+                    Name: category.Name,
+                    Description: category.Description ?? "",
+                    IconUrl: category.IconUrl ?? "categories/default.png"
                 ));
             }
         }
@@ -68,7 +71,10 @@ public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryComman
         }
 
         return Result<CategoryResponse>.Success(new CategoryResponse(
-            Category: category
+            Id: category.Id,
+            Name: category.Name,
+            Description: category.Description ?? "",
+            IconUrl: category.IconUrl ?? "categories/default.png"
         ));
     }
 }

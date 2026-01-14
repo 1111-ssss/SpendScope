@@ -34,9 +34,15 @@ public class GetExpensesQueryHandler : IRequestHandler<GetExpensesQuery, Result<
             return Result.Unauthorized();
 
         var expenses = await _expenseRepository.ListAsync(new ExpensesWithUserIdSpec(userId.Value), ct);
+
+        List<ExpenseDTO> dtos = new();
+        foreach (var expense in expenses)
+        {
+            dtos.Add(ExpenseDTO.FromEntity(expense));
+        }
         
         return Result<GetExpensesResponse>.Success(new GetExpensesResponse(
-            Expenses: expenses.ToArray(),
+            Expenses: dtos.ToArray(),
             TotalCount: expenses.Count
         ));
     }

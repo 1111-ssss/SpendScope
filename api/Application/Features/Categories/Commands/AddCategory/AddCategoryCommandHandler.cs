@@ -43,9 +43,22 @@ public class AddCategoryCommandHandler : IRequestHandler<AddCategoryCommand, Res
         }
         
         await _categoryRepository.AddAsync(category, ct);
+
+        try
+        {
+            await _uow.SaveChangesAsync(ct);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Ошибка при добавлении категории");
+            return Result.InternalServerError("Ошибка при добавлении категории");
+        }
         
         return Result<CategoryResponse>.Success(new CategoryResponse(
-            Category: category
+            Id: category.Id,
+            Name: category.Name,
+            Description: category.Description ?? "",
+            IconUrl: category.IconUrl ?? "categories/default.png"
         ));
     }
 }

@@ -49,6 +49,6 @@ public class Achievement : IAggregateRoot
 public class UserAchievement
 {
     public EntityId<User> UserId { get; init; }
-    public int AchievementId { get; init; }
+    public EntityId<Achievement> AchievementId { get; init; }
     public DateTime? UnlockedAt { get; init; }
 }

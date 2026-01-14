@@ -14,7 +14,6 @@ public class AppVersionConfiguration : IEntityTypeConfiguration<AppVersion>
 
               builder.Property(av => av.Id)
                      .HasColumnName("id")
-                     .HasDefaultValueSql("nextval('appversions_id_seq'::regclass)")
                      .HasConversion(id => id.Value, value => new EntityId<AppVersion>(value))
                      .ValueGeneratedOnAdd();
 
@@ -39,9 +38,7 @@ public class AppVersionConfiguration : IEntityTypeConfiguration<AppVersion>
 
               builder.Property(av => av.UploadedBy)
                      .HasColumnName("uploaded_by")
-                     .HasConversion(
-                         id => id.HasValue ? id.Value.Value : (int?)null,
-                         value => value.HasValue ? new EntityId<User>(value.Value) : (EntityId<User>?)null)
+                     .HasConversion(id => id.HasValue ? id.Value.Value : (int?)null, value => value.HasValue ? new EntityId<User>(value.Value) : (EntityId<User>?)null)
                      .IsRequired(false);
 
               builder.HasIndex(av => av.UploadedBy);

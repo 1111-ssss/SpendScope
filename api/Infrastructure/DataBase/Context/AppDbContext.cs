@@ -17,6 +17,9 @@ public partial class AppDbContext : DbContext, IUnitOfWork
     public virtual DbSet<User> Users { get; set; }
     public virtual DbSet<UserAchievement> UserAchievements { get; set; }
     public virtual DbSet<LogEntry> LogEntries { get; set; }
+    public virtual DbSet<Expense> Expenses { get; set; }
+    public virtual DbSet<Category> Categories { get; set; }
+    public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);

@@ -8,7 +8,7 @@ using Domain.ValueObjects;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Application.Features.Synchronization.Sync;
+namespace Application.Features.Synchronization.SyncExpenses;
 
 public class SyncExpensesCommandHandler : IRequestHandler<SyncExpensesCommand, Result<SyncExpensesResponse>>
 {
@@ -41,13 +41,14 @@ public class SyncExpensesCommandHandler : IRequestHandler<SyncExpensesCommand, R
 
         foreach (var dto in request.Expenses)
         {
+            var expenseDateTime = dto.DateTime.ToUniversalTime();
             if (existingDict.TryGetValue(dto.LocalId, out var existing))
             {
-                existing.Update(dto.Amount, dto.CategoryId, dto.DateTime, dto.Note);
+                existing.Update(dto.Amount, dto.CategoryId, expenseDateTime, dto.Note);
             }
             else
             {
-                var newExpense = Expense.Create(dto.Amount, (EntityId<User>)userId, dto.LocalId, dto.CategoryId, dto.DateTime, dto.Note);
+                var newExpense = Expense.Create(dto.Amount, (EntityId<User>)userId, dto.LocalId, dto.CategoryId, expenseDateTime, dto.Note);
                 newExpenses.Add(newExpense);
                 existingDict[dto.LocalId] = newExpense;
             }

@@ -17,7 +17,8 @@ public class UserAchievementConfiguration : IEntityTypeConfiguration<UserAchieve
                      .HasConversion(id => id.Value, value => new EntityId<User>(value));
 
               builder.Property(ua => ua.AchievementId)
-                     .HasColumnName("achievement_id");
+                     .HasColumnName("achievement_id")
+                     .HasConversion(id => id.Value, value => new EntityId<Achievement>(value));
 
               builder.Property(ua => ua.UnlockedAt)
                      .HasColumnName("unlocked_at")
