@@ -13,20 +13,26 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, R
 {
     private readonly IUnitOfWork _uow;
     private readonly IBaseRepository<User> _userRepository;
+    private readonly IBaseRepository<RefreshToken> _refreshTokenRepository;
     private readonly IJwtGenerator _jwtGenerator;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly ICurrentUserService _currentUserService;
     private readonly ILogger<RegisterUserCommandHandler> _logger;
     public RegisterUserCommandHandler(
         IUnitOfWork uow,
         IJwtGenerator jwtGenerator,
         IBaseRepository<User> userRepository,
+        IBaseRepository<RefreshToken> refreshTokenRepository,
         IPasswordHasher passwordHasher,
+        ICurrentUserService currentUserService,
         ILogger<RegisterUserCommandHandler> logger)
     {
         _uow = uow;
         _userRepository = userRepository;
+        _refreshTokenRepository = refreshTokenRepository;
         _jwtGenerator = jwtGenerator;
         _passwordHasher = passwordHasher;
+        _currentUserService = currentUserService;
         _logger = logger;
     }
 
@@ -44,27 +50,38 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, R
         }
 
         var passwordHash = _passwordHasher.Hash(request.Password);
-
         if (!passwordHash.IsSuccess)
             return Result.BadRequest("Ошибка хеширования пароля");
 
         var user = User.Create(request.Username, request.Email, passwordHash.Value);
+
         await _userRepository.AddAsync(user, ct);
+
         try
         {
             await _uow.SaveChangesAsync(ct);
+
+            var result = _jwtGenerator.GenerateToken(user);
+            if (!result.IsSuccess)
+                return Result.InternalServerError("Ошибка генерации токена");
+
+            var refreshToken = RefreshToken.Create(
+                result.Value.RefreshToken,
+                DateTime.UtcNow.AddDays(7),
+                _currentUserService.GetUserIp(),
+                user.Id
+            );
+
+            await _refreshTokenRepository.AddAsync(refreshToken, ct);
+
+            await _uow.SaveChangesAsync(ct);
+
+            return result;
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Ошибка сохранения пользователя");
             return Result.InternalServerError("Ошибка сохранения пользователя");
         }
-
-        var result = _jwtGenerator.GenerateToken(user);
-
-        if (!result.IsSuccess)
-            return Result.InternalServerError("Ошибка генерации токена");
-
-        return result;
     }
 }

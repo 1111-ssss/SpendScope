@@ -7,6 +7,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Security.Cryptography;
+using Domain.ValueObjects;
+using Application.Abstractions.Repository;
+using Domain.Specifications.Auth;
 
 namespace Infrastructure.Services.Auth;
 
@@ -14,11 +18,17 @@ public class JwtGenerator : IJwtGenerator
 {
     private readonly IConfiguration _config;
     private readonly string _key;
+    private readonly IBaseRepository<RefreshToken> _refreshTokenRepository;
     private readonly ICurrentUserService _currentUserService;
-    public JwtGenerator(IConfiguration config, ICurrentUserService currentUserService)
+    public JwtGenerator(
+        IConfiguration config,
+        ICurrentUserService currentUserService,
+        IBaseRepository<RefreshToken> refreshTokenRepository
+    )
     {
         _config = config;
         _currentUserService = currentUserService;
+        _refreshTokenRepository = refreshTokenRepository;
         _key = _config["Jwt:Key"] ?? throw new ArgumentNullException("Jwt:Key пустой в конфигурации");
     }
     public Result<AuthResponse> GenerateToken(User user)
@@ -44,12 +54,22 @@ public class JwtGenerator : IJwtGenerator
             signingCredentials: creds
         );
 
+        var refreshToken = GenerateRefreshToken();
+
         return Result<AuthResponse>.Success(new AuthResponse
         {
             JwtToken = new JwtSecurityTokenHandler().WriteToken(token),
             ExpiresAt = DateTime.UtcNow.AddMinutes(
                 (token.ValidTo - token.ValidFrom).TotalMinutes
-            )
+            ),
+            RefreshToken = refreshToken
         });
+    }
+    public string GenerateRefreshToken()
+    {
+        var randomNumber = new byte[32];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+        return Convert.ToBase64String(randomNumber);
     }
 }

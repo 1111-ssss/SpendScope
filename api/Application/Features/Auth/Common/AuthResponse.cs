@@ -1,3 +1,3 @@
 namespace Application.Features.Auth;
 
-public record AuthResponse(string JwtToken = default!, DateTime ExpiresAt = default!);
+public record AuthResponse(string JwtToken = default!, DateTime ExpiresAt = default!, string RefreshToken = default!);
