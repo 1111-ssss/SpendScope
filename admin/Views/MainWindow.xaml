@@ -1,0 +1,25 @@
+﻿<Window
+    x:Class="admin.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:admin.Views"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="Панель администратора"
+    Width="1280"
+    Height="720"
+    WindowStartupLocation="CenterScreen">
+
+    <ui:NavigationView PaneDisplayMode="LeftFluent"
+        MenuItemsSource="{Binding ViewModel.NavigationItems, Mode=OneWay}"
+        FooterMenuItemsSource="{Binding ViewModel.NavigationFooter, Mode=OneWay}"
+    />
+</Window>
+
+<!--<ui:NavigationViewItem
+        Content="Users"
+        Icon="{ui:SymbolIcon People24}"
+        Command="{Binding NavigateToUsers}" />
+<ui:NavigationViewItem
+        Content="Logs"
+        Icon="{ui:SymbolIcon History24}"
+        Command="{Binding NavigateToReports}" />-->

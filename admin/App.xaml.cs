@@ -1,47 +1,51 @@
-﻿using admin.MVVM.ViewModels;
-using admin.MVVM.Views;
+﻿using admin.ViewModels;
+using admin.Views;
+using admin.Views.Pages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Windows;
+using Wpf.Ui.DependencyInjection;
 
-namespace admin
+namespace admin;
+
+public partial class App : Application
 {
-    public partial class App : Application
+    private readonly IHost _host;
+
+    public App()
     {
-        private readonly IHost _host;
+        _host = Host.CreateDefaultBuilder()
+            .ConfigureServices(services =>
+            {
+                _ = services.AddNavigationViewPageProvider();
 
-        public App()
-        {
-            _host = Host.CreateDefaultBuilder()
-                .ConfigureServices(services =>
-                {
-                    // ViewModels
-                    services.AddSingleton<MainViewModel>();
-                    services.AddTransient<DashboardPageViewModel>();
+                // ViewModels
+                services.AddSingleton<MainWindowViewModel>();
 
-                    // // Окна/страницы
-                    services.AddSingleton<MainWindow>();
-                    services.AddSingleton<DashboardPage>();
+                // Views
+                services.AddSingleton<MainWindow>();
+                services.AddSingleton<HomeView>();
+                services.AddSingleton<SettingsView>();
 
-                    // Здесь позже добавим сервисы, Refit и т.д.
-                })
-                .Build();
-        }
+                // Services
+                //
+            })
+            .Build();
+    }
 
-        protected override async void OnStartup(StartupEventArgs e)
-        {
-            await _host.StartAsync();
+    protected override async void OnStartup(StartupEventArgs e)
+    {
+        await _host.StartAsync();
 
-            var mainWindow = _host.Services.GetRequiredService<MainWindow>();
-            mainWindow.Show();
+        //var mainWindow = _host.Services.GetRequiredService<MainWindow>();
+        //mainWindow.Show();
 
-            base.OnStartup(e);
-        }
+        base.OnStartup(e);
+    }
 
-        protected override async void OnExit(ExitEventArgs e)
-        {
-            await _host.StopAsync();
-            base.OnExit(e);
-        }
+    protected override async void OnExit(ExitEventArgs e)
+    {
+        await _host.StopAsync();
+        base.OnExit(e);
     }
 }
