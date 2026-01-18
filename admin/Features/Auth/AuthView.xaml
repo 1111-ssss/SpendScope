@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="admin.Features.Auth.AuthView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:admin.Features.Auth"
+    xmlns:pages="clr-namespace:admin.Features.Auth.Pages"
+    >
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type pages:LoginViewModel}">
+            <pages:LoginView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type pages:RegisterViewModel}">
+            <pages:RegisterView />
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type pages:AuthSettingsViewModel}">
+            <pages:AuthSettingsView />
+        </DataTemplate>
+    </UserControl.Resources>
+    <ContentControl Content="{Binding CurrentPage}" />
+</UserControl>

@@ -1,9 +1,15 @@
-﻿using admin.Views;
+﻿using admin.Core.Interfaces;
+using admin.Features.Auth;
+using admin.Features.Home;
+using admin.Shell;
+using admin.Shell.ViewModel;
+using admin.Shell.Views;
 using Microsoft.Extensions.Hosting;
 using System.Windows;
 using Wpf.Ui;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace admin.Services;
+namespace admin.Infrastructure.Services;
 public class ApplicationHostService(IServiceProvider serviceProvider) : IHostedService
 {
     private INavigationWindow? _navigationWindow;
@@ -22,12 +28,10 @@ public class ApplicationHostService(IServiceProvider serviceProvider) : IHostedS
     {
         await Task.CompletedTask;
 
-        if (!Application.Current.Windows.OfType<MainWindow>().Any())
+        if (!Application.Current.Windows.OfType<MainWindowView>().Any())
         {
             _navigationWindow = (serviceProvider.GetService(typeof(INavigationWindow)) as INavigationWindow)!;
             _navigationWindow!.ShowWindow();
-
-            _ = _navigationWindow.Navigate(typeof(Views.Pages.HomeView));
         }
 
         await Task.CompletedTask;

@@ -1,7 +1,7 @@
-﻿using admin.Abstractions;
+﻿using admin.Core.Abstractions;
 using CommunityToolkit.Mvvm.Input;
 
-namespace admin.ViewModels;
+namespace admin.Features.Home;
 public partial class HomeViewModel : BaseViewModel
 {
     [RelayCommand]

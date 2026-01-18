@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.2" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.2" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.2" />
     <PackageReference Include="Refit" Version="9.0.2" />
@@ -26,6 +27,20 @@
     <Resource Include="Resources\application-icon.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Core\Model\" />
+    <Folder Include="Core\Enums\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Features\Auth\Pages\AuthSettingsView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Features\Auth\Pages\RegisterView.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
 </Project>

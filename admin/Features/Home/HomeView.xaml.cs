@@ -1,7 +1,6 @@
-﻿using admin.ViewModels;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
-namespace admin.Views.Pages;
+namespace admin.Features.Home;
 
 public partial class HomeView : Page
 {

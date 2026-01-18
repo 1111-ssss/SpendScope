@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Wpf.Ui.Abstractions.Controls;
 
-namespace admin.Abstractions;
+namespace admin.Core.Abstractions;
 public abstract class BaseViewModel : ObservableObject, INavigationAware
 {
     public virtual Task OnNavigatedToAsync()

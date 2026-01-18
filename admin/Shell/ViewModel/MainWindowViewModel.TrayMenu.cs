@@ -1,9 +1,10 @@
-﻿using admin.Views.Pages;
+﻿using admin.Features.Home;
+using admin.Features.Settings;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace admin.ViewModels.MainWindow;
+namespace admin.Shell.ViewModel;
 public partial class MainWindowViewModel
 {
     private static Dictionary<string, Type> _appPages = new() {

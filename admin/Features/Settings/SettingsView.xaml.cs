@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace admin.Views.Pages;
+namespace admin.Features.Settings;
 
 public partial class SettingsView : Page
 {

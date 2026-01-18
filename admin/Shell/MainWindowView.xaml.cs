@@ -1,17 +1,19 @@
-﻿using admin.ViewModels.MainWindow;
+﻿using admin.Shell.ViewModel;
+using admin.Shell.Views;
 using System.Windows;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
-using Wpf.Ui.Controls;
 using Wpf.Ui.Appearance;
+using Wpf.Ui.Controls;
 
-namespace admin.Views
+namespace admin.Shell
 {
-    public partial class MainWindow : INavigationWindow
+    public partial class MainWindowView : FluentWindow, INavigationWindow
     {
         public MainWindowViewModel ViewModel { get; }
+        private INavigationView _rootNavigation { get; set; }
 
-        public MainWindow(MainWindowViewModel viewModel, INavigationService navigationService)
+        public MainWindowView(MainWindowViewModel viewModel, INavigationService navigationService)
         {
             ViewModel = viewModel;
             DataContext = this;
@@ -20,14 +22,14 @@ namespace admin.Views
 
             InitializeComponent();
 
-            navigationService.SetNavigationControl(RootNavigation);
+            _rootNavigation = viewModel.RootNavigation;
         }
-        public INavigationView GetNavigation() => RootNavigation;
+        public INavigationView GetNavigation() => _rootNavigation;
 
-        public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
+        public bool Navigate(Type pageType) => _rootNavigation.Navigate(pageType);
 
         public void SetPageService(INavigationViewPageProvider navigationViewPageProvider) =>
-            RootNavigation.SetPageProviderService(navigationViewPageProvider);
+            _rootNavigation.SetPageProviderService(navigationViewPageProvider);
 
         public void ShowWindow() => Show();
 
@@ -38,11 +40,6 @@ namespace admin.Views
             base.OnClosed(e);
 
             Application.Current.Shutdown();
-        }
-
-        INavigationView INavigationWindow.GetNavigation()
-        {
-            throw new NotImplementedException();
         }
 
         public void SetServiceProvider(IServiceProvider serviceProvider)
