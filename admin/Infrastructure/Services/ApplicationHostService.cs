@@ -1,13 +1,7 @@
-﻿using admin.Core.Interfaces;
-using admin.Features.Auth;
-using admin.Features.Home;
-using admin.Shell;
-using admin.Shell.ViewModel;
-using admin.Shell.Views;
+﻿using admin.Shell;
 using Microsoft.Extensions.Hosting;
 using System.Windows;
 using Wpf.Ui;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace admin.Infrastructure.Services;
 public class ApplicationHostService(IServiceProvider serviceProvider) : IHostedService

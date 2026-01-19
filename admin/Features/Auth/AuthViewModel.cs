@@ -1,50 +1,67 @@
 ﻿using admin.Core.Abstractions;
-using admin.Features.Auth.Pages;
+using admin.Core.Interfaces;
 using admin.Shell.ViewModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-namespace admin.Features.Auth;
+using Wpf.Ui;
+
+namespace admin.Features.Auth.Pages;
 
 public partial class AuthViewModel : BaseViewModel
 {
     [ObservableProperty]
-    private object _currentPage;
+    private string _identifier = String.Empty;
 
-    private LoginViewModel _loginVM;
-    private RegisterViewModel _registerVM;
-    private AuthSettingsViewModel _settingsVM;
+    [ObservableProperty]
+    private string _email = String.Empty;
 
-    //private MainWindowViewModel _mainWindowVM;
-    private readonly Action _onSuccessfulLogin;
-    public AuthViewModel(
-        //MainWindowViewModel mainViewModel,
-        Action onSuccessfulLogin,
-        LoginViewModel loginVM,
-        RegisterViewModel registerVM,
-        AuthSettingsViewModel settingsVM
-    )
+    [ObservableProperty]
+    private string _password = String.Empty;
+
+    [ObservableProperty]
+    private string _serverUrl = String.Empty;
+
+    [ObservableProperty]
+    private bool _rememberCredentials = true;
+
+    private IAuthService _authService;
+    private INavigationService _navigationService;
+    public AuthViewModel()
     {
-        CurrentPage = loginVM;
-
-        //_mainWindowVM = mainViewModel;
-        _onSuccessfulLogin = onSuccessfulLogin;
-        _loginVM = loginVM;
-        _registerVM = registerVM;
-        _settingsVM = settingsVM;
+        _authService = App.GetRequiredService<IAuthService>();
+        _navigationService = App.GetRequiredService<INavigationService>();
     }
 
     [RelayCommand]
-    private void NavigateToLogin() => CurrentPage = _loginVM;
+    private void NavigateToLogin() => _navigationService.Navigate(typeof(AuthLoginPage));
+    [RelayCommand]
+    private void NavigateToRegister() => _navigationService.Navigate(typeof(AuthRegisterPage));
 
     [RelayCommand]
-    private void NavigateToReigster() => CurrentPage = _registerVM;
+    private void NavigateToSettings() => _navigationService.Navigate(typeof(AuthSettingsPage));
 
     [RelayCommand]
-    private void NavigateToSettings() => CurrentPage = _settingsVM;
+    private void Login()
+    {
+        //var result = _authService.Login(Identifier, Password);
 
-    //[RelayCommand]
-    //private void NavigateToMainWindow() => _mainWindowVM.NavigateToMainWindow();
+        //throw new NotImplementedException();
+        var mainVM = App.GetRequiredService<MainWindowViewModel>();
 
+        mainVM.NavigateToMainWindow();
+    }
     [RelayCommand]
-    private void OnSuccessfulLogin() => _onSuccessfulLogin.Invoke();
+    private void Register()
+    {
+        var result = _authService.Register(Identifier, Email, Password);
+
+        throw new NotImplementedException();
+    }
+    [RelayCommand]
+    private void ChangeSettings()
+    {
+        //var result = _authService.ChangeSettings(_serverUrl, _rememberCredentials);
+
+        throw new NotImplementedException();
+    }
 }

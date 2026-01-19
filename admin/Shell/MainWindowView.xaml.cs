@@ -1,5 +1,6 @@
-﻿using admin.Shell.ViewModel;
-using admin.Shell.Views;
+﻿using admin.Features.Auth.Pages;
+using admin.Features.Home;
+using admin.Shell.ViewModel;
 using System.Windows;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
@@ -11,27 +12,30 @@ namespace admin.Shell
     public partial class MainWindowView : FluentWindow, INavigationWindow
     {
         public MainWindowViewModel ViewModel { get; }
-        private INavigationView _rootNavigation { get; set; }
 
         public MainWindowView(MainWindowViewModel viewModel, INavigationService navigationService)
         {
             ViewModel = viewModel;
-            DataContext = this;
+            DataContext = viewModel;
 
             SystemThemeWatcher.Watch(this);
 
             InitializeComponent();
 
-            _rootNavigation = viewModel.RootNavigation;
+            navigationService.SetNavigationControl(RootNavigation);
         }
-        public INavigationView GetNavigation() => _rootNavigation;
+        public INavigationView GetNavigation() => RootNavigation;
 
-        public bool Navigate(Type pageType) => _rootNavigation.Navigate(pageType);
+        public bool Navigate(Type pageType) => RootNavigation.Navigate(pageType);
 
         public void SetPageService(INavigationViewPageProvider navigationViewPageProvider) =>
-            _rootNavigation.SetPageProviderService(navigationViewPageProvider);
+            RootNavigation.SetPageProviderService(navigationViewPageProvider);
 
-        public void ShowWindow() => Show();
+        public void ShowWindow() {
+            Show();
+
+            ViewModel.InitNavigation();
+        }
 
         public void CloseWindow() => Close();
 

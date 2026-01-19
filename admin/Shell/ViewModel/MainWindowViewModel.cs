@@ -1,12 +1,10 @@
 using admin.Core.Interfaces;
-using admin.Features.Auth;
-using admin.Shell.Views;
+using admin.Features.Auth.Pages;
+using admin.Features.Home;
+using admin.Infrastructure.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Windows.Controls;
 using Wpf.Ui;
-using Wpf.Ui.Controls;
 
 namespace admin.Shell.ViewModel;
 
@@ -24,49 +22,37 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     private ObservableCollection<Wpf.Ui.Controls.MenuItem> _trayMenuItems = [];
 
-    [ObservableProperty]
-    private object _currentViewModel;
-
-    public INavigationView RootNavigation { get; set; }
-
     private INavigationService _navigationService;
     private IAuthService _authService;
-    private MainContentViewModel _mainContentViewModel;
     private bool _isLoaded = false;
 
-    public MainWindowViewModel(
-        AuthViewModel authViewModel,
-        ShellLoadingViewModel shellLoadingViewModel,
-        MainContentViewModel mainContentViewModel,
-        INavigationService navigationService,
-        IAuthService authService
-    )
+    private string CurrentWindow = string.Empty;
+
+    public MainWindowViewModel()
     {
-        _mainContentViewModel = mainContentViewModel;
-        _currentViewModel = shellLoadingViewModel;
-        _navigationService = navigationService;
-        _authService = authService;
+        _navigationService = App.GetRequiredService<INavigationService>();
+        _authService = App.GetRequiredService<IAuthService>();
 
         if (_isLoaded)
             return;
         
         if (!_authService.IsAuthenticated)
         {
-            CurrentViewModel = authViewModel;
-            ApplicationTitle = "Авторизация";
+            InitAuthViewModel();
             return;
         }
 
-        InitViewModel();
+        InitMainViewModel();
     }
 
-    public void OnLoginSuccess()
+    public void NavigateToAuthWindow()
     {
-        CurrentViewModel = _mainContentViewModel;
-        ApplicationTitle = "SpendScope";
-
-        Debug.WriteLine("Логин удался!!!111"); //dgdsgdffdjnfsdnjkkjjsgkdkjkjsdkgksksdkbdsfkjfkjfdnskfjksdkjfkdsbfsk,sdnfsjfkjsdkdsnkjf
+        InitAuthViewModel();
+        _navigationService.Navigate(typeof(AuthLoginPage));
     }
-
-    public void NavigateToMainWindow() => InitViewModel();
+    public void NavigateToMainWindow()
+    {
+        InitMainViewModel();
+        _navigationService.Navigate(typeof(HomePage));
+    }
 }

@@ -35,10 +35,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Features\Auth\Pages\AuthSettingsView.xaml.cs">
+    <Compile Update="Features\Auth\Pages\AuthSettingsPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Features\Auth\Pages\RegisterView.xaml.cs">
+    <Compile Update="Features\Auth\Pages\AuthRegisterPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

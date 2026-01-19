@@ -8,7 +8,7 @@
     xmlns:tray="http://schemas.lepo.co/wpfui/2022/xaml/tray"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
 
-    Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}"
+    Title="{Binding ApplicationTitle, Mode=OneWay}"
     Width="1280"
     Height="720"
     WindowStartupLocation="CenterScreen"
@@ -23,13 +23,28 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <ContentControl
-            Grid.Row="1"
-            Content="{Binding ViewModel.CurrentView}"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch" />
+        <ui:NavigationView
+                x:Name="RootNavigation"
+                Grid.Row="1"
+                PaneDisplayMode="LeftFluent"
+                MenuItemsSource="{Binding NavigationItems, Mode=OneWay}"
+                FooterMenuItemsSource="{Binding NavigationFooter, Mode=OneWay}"
+            >
+            <ui:NavigationView.AutoSuggestBox>
+                <ui:AutoSuggestBox x:Name="AutoSuggestBox" PlaceholderText="Search">
+                    <ui:AutoSuggestBox.Icon>
+                        <ui:IconSourceElement>
+                            <ui:SymbolIconSource Symbol="Search24" />
+                        </ui:IconSourceElement>
+                    </ui:AutoSuggestBox.Icon>
+                </ui:AutoSuggestBox>
+            </ui:NavigationView.AutoSuggestBox>
+            <ui:NavigationView.Header>
+                <ui:BreadcrumbBar Margin="42,32,0,0" FontSize="28" FontWeight="DemiBold" />
+            </ui:NavigationView.Header>
+        </ui:NavigationView>
         <ui:TitleBar
-          Title="{Binding ViewModel.ApplicationTitle, Mode=OneWay}"
+          Title="{Binding ApplicationTitle, Mode=OneWay}"
           Grid.Row="0"
           Icon="{ui:SymbolIcon Person24}"
         />
@@ -41,7 +56,7 @@
             TooltipText="SpendScope Admin"
         >
             <tray:NotifyIcon.Menu>
-                <ContextMenu ItemsSource="{Binding ViewModel.TrayMenuItems, Mode=OneWay}" />
+                <ContextMenu ItemsSource="{Binding TrayMenuItems, Mode=OneWay}" />
             </tray:NotifyIcon.Menu>
         </tray:NotifyIcon>
     </Grid>

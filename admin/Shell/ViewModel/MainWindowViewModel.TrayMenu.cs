@@ -1,4 +1,5 @@
-﻿using admin.Features.Home;
+﻿using admin.Features.Auth.Pages;
+using admin.Features.Home;
 using admin.Features.Settings;
 using System.Diagnostics;
 using System.Windows;
@@ -8,8 +9,12 @@ namespace admin.Shell.ViewModel;
 public partial class MainWindowViewModel
 {
     private static Dictionary<string, Type> _appPages = new() {
-        { "tray_home", typeof(HomeView) },
-        { "tray_settings", typeof(SettingsView) },
+        { "tray_home", typeof(HomePage) },
+        { "tray_settings", typeof(SettingsPage) },
+
+        { "tray_auth_login", typeof(AuthLoginPage) },
+        { "tray_auth_register", typeof(AuthRegisterPage) },
+        { "tray_auth_settings", typeof(AuthSettingsPage) },
     };
 
     private void OnTrayMenuItemClick(object sender, RoutedEventArgs e)
@@ -54,6 +59,7 @@ public partial class MainWindowViewModel
         {
             if (menuItem is MenuItem item)
             {
+                item.Click -= OnTrayMenuItemClick;
                 item.Click += OnTrayMenuItemClick;
             }
         }
