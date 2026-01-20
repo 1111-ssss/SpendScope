@@ -37,6 +37,7 @@ public class JwtGenerator : IJwtGenerator
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim("ip", _currentUserService.GetUserIp()),
+            new Claim(ClaimTypes.Name, user.Username),
         };
         if (user.IsAdmin)
             claims.Add(new Claim(ClaimTypes.Role, "Admin"));
