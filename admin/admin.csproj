@@ -18,6 +18,9 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.2" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.2" />
     <PackageReference Include="Refit" Version="9.0.2" />
+    <PackageReference Include="Refit.HttpClientFactory" Version="9.0.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
+    <PackageReference Include="System.Text.Json" Version="10.0.2" />
     <PackageReference Include="WPF-UI" Version="4.2.0" />
     <PackageReference Include="WPF-UI.DependencyInjection" Version="4.2.0" />
     <PackageReference Include="WPF-UI.Tray" Version="4.2.0" />
@@ -30,7 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Core\Model\" />
     <Folder Include="Core\Enums\" />
   </ItemGroup>
 

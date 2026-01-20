@@ -1,7 +1,7 @@
 using admin.Core.Interfaces;
 using admin.Features.Auth.Pages;
 using admin.Features.Home;
-using admin.Infrastructure.Services;
+using admin.Infrastructure.Http.Clients;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 using Wpf.Ui;
@@ -23,20 +23,23 @@ public partial class MainWindowViewModel : ObservableObject
     private ObservableCollection<Wpf.Ui.Controls.MenuItem> _trayMenuItems = [];
 
     private INavigationService _navigationService;
-    private IAuthService _authService;
+    private ICurrentUserService _currentUserService;
     private bool _isLoaded = false;
 
     private string CurrentWindow = string.Empty;
 
-    public MainWindowViewModel()
+    public MainWindowViewModel(
+        INavigationService navigationService,
+        ICurrentUserService currentUserService
+    )
     {
-        _navigationService = App.GetRequiredService<INavigationService>();
-        _authService = App.GetRequiredService<IAuthService>();
+        _navigationService = navigationService;
+        _currentUserService = currentUserService;
 
         if (_isLoaded)
             return;
         
-        if (!_authService.IsAuthenticated)
+        if (!_currentUserService.IsAuthenticated)
         {
             InitAuthViewModel();
             return;

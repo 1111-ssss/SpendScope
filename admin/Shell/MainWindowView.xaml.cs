@@ -13,7 +13,10 @@ namespace admin.Shell
     {
         public MainWindowViewModel ViewModel { get; }
 
-        public MainWindowView(MainWindowViewModel viewModel, INavigationService navigationService)
+        public MainWindowView(
+            MainWindowViewModel viewModel,
+            INavigationService navigationService
+        )
         {
             ViewModel = viewModel;
             DataContext = viewModel;

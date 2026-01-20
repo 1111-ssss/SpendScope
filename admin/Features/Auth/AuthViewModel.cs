@@ -1,8 +1,11 @@
 ﻿using admin.Core.Abstractions;
 using admin.Core.Interfaces;
+using admin.Features.Auth.DTO.Requests;
 using admin.Shell.ViewModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Refit;
+using System.Diagnostics;
 using Wpf.Ui;
 
 namespace admin.Features.Auth.Pages;
@@ -24,12 +27,25 @@ public partial class AuthViewModel : BaseViewModel
     [ObservableProperty]
     private bool _rememberCredentials = true;
 
-    private IAuthService _authService;
+    private IApiService _apiService;
+    private ITokenService _tokenService;
+    ICurrentUserService _currentUserService;
     private INavigationService _navigationService;
-    public AuthViewModel()
+    private MainWindowViewModel _mainWindowViewModel;
+
+    public AuthViewModel(
+        IApiService apiService,
+        INavigationService navigationService,
+        ITokenService tokenService,
+        ICurrentUserService currentUserService,
+        MainWindowViewModel mainWindowViewModel
+    )
     {
-        _authService = App.GetRequiredService<IAuthService>();
-        _navigationService = App.GetRequiredService<INavigationService>();
+        _mainWindowViewModel = mainWindowViewModel;
+        _apiService = apiService;
+        _tokenService = tokenService;
+        _currentUserService = currentUserService;
+        _navigationService = navigationService;
     }
 
     [RelayCommand]
@@ -41,21 +57,43 @@ public partial class AuthViewModel : BaseViewModel
     private void NavigateToSettings() => _navigationService.Navigate(typeof(AuthSettingsPage));
 
     [RelayCommand]
-    private void Login()
+    private async Task Login()
     {
-        //var result = _authService.Login(Identifier, Password);
+        try
+        {
+            var result = await _apiService.Auth.Login(
+                new LoginRequest(Identifier, Password)
+            );
 
-        //throw new NotImplementedException();
-        var mainVM = App.GetRequiredService<MainWindowViewModel>();
+            await _tokenService.SaveTokenAsync(result);
+            _currentUserService.SetFromToken(result.JwtToken);
 
-        mainVM.NavigateToMainWindow();
+            _mainWindowViewModel.NavigateToMainWindow();
+        }
+        catch (ApiException ex) {
+            //опааа у меня тоже есть птички
+            //только в отличии от твоих у них есть микрофоны петлички
+            //ты че упоротый
+        }
     }
     [RelayCommand]
-    private void Register()
+    private async Task Register()
     {
-        var result = _authService.Register(Identifier, Email, Password);
+        try
+        {
+            var result = await _apiService.Auth.Register(
+                new RegisterRequest(Identifier, Email, Password)
+            );
 
-        throw new NotImplementedException();
+            await _tokenService.SaveTokenAsync(result);
+            _currentUserService.SetFromToken(result.JwtToken);
+
+            _mainWindowViewModel.NavigateToMainWindow();
+        }
+        catch (ApiException ex)
+        {
+            //skip
+        }
     }
     [RelayCommand]
     private void ChangeSettings()

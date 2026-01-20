@@ -2,6 +2,8 @@
 using admin.Features.Auth.Pages;
 using admin.Features.Home;
 using admin.Features.Settings;
+using admin.Infrastructure.Http.Auth;
+using admin.Infrastructure.Http.Clients;
 using admin.Infrastructure.Services;
 using admin.Shell;
 using admin.Shell.ViewModel;
@@ -43,7 +45,27 @@ public static class ApplicationBootstrapper
 
                 //Services
                 services.AddSingleton<INavigationService, NavigationService>();
-                services.AddSingleton<IAuthService, AuthService>();
+                services.AddSingleton<IApiService, ApiService>();
+                services.AddSingleton<IStorageService, StorageService>();
+                services.AddSingleton<ICurrentUserService, CurrentUserService>();
+                services.AddSingleton<ITokenService, TokenService>();
+                services.AddSingleton<JwtAuthHandler>();
+
+                //Refit
+                services.AddHttpClient("NoAuthClient", client =>
+                {
+                    client.BaseAddress = new("http://127.0.0.1:5012/api/");
+                    client.Timeout = TimeSpan.FromSeconds(20);
+                })
+                //.AddHttpMessageHandler<JwtAuthHandler>()
+                .AddTypedClient<IAuthApi>(Refit.RestService.For<IAuthApi>);
+
+                //services.AddHttpClient("AuthClient", client =>
+                //{
+                //    client.BaseAddress = new("http://127.0.0.1:5012/api/");
+                //    client.Timeout = TimeSpan.FromSeconds(20);
+                //})
+                //.AddHttpMessageHandler<JwtAuthHandler>();
 
                 //Shell
                 services.AddSingleton<INavigationWindow, MainWindowView>();
@@ -59,7 +81,7 @@ public static class ApplicationBootstrapper
                 services.AddSingleton<HomeViewModel>();
                 services.AddSingleton<SettingsViewModel>();
 
-                // Views
+                // Pages
                 services.AddSingleton<HomePage>();
                 services.AddSingleton<SettingsPage>();
             })

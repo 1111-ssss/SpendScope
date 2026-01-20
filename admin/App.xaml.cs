@@ -17,8 +17,6 @@ public partial class App : Application
 
     private async void OnStartup(object sender, StartupEventArgs e)
     {
-        //base.OnStartup(e);
-
         await _host.StartAsync();
     }
     private async void OnExit(object sender, ExitEventArgs e)
@@ -26,7 +24,6 @@ public partial class App : Application
         await _host.StopAsync();
 
         _host.Dispose();
-        base.OnExit(e);
     }
 
     private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
