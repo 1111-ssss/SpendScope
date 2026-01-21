@@ -45,6 +45,7 @@ public static class ApplicationBootstrapper
 
                 //Services
                 services.AddSingleton<INavigationService, NavigationService>();
+                services.AddSingleton<IContentDialogService, ContentDialogService>();
                 services.AddSingleton<IApiService, ApiService>();
                 services.AddSingleton<IStorageService, StorageService>();
                 services.AddSingleton<ICurrentUserService, CurrentUserService>();
@@ -54,7 +55,7 @@ public static class ApplicationBootstrapper
                 //Refit
                 services.AddHttpClient("NoAuthClient", client =>
                 {
-                    client.BaseAddress = new("http://127.0.0.1:5012/api/");
+                    client.BaseAddress = new("http://127.0.0.1:5012/api");
                     client.Timeout = TimeSpan.FromSeconds(20);
                 })
                 //.AddHttpMessageHandler<JwtAuthHandler>()
@@ -62,7 +63,7 @@ public static class ApplicationBootstrapper
 
                 //services.AddHttpClient("AuthClient", client =>
                 //{
-                //    client.BaseAddress = new("http://127.0.0.1:5012/api/");
+                //    client.BaseAddress = new("http://127.0.0.1:5012/api");
                 //    client.Timeout = TimeSpan.FromSeconds(20);
                 //})
                 //.AddHttpMessageHandler<JwtAuthHandler>();

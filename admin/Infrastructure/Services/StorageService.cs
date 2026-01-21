@@ -1,5 +1,4 @@
-﻿using admin.Core.Abstractions;
-using admin.Core.Interfaces;
+﻿using admin.Core.Interfaces;
 using admin.Core.Model;
 
 namespace admin.Infrastructure.Services;

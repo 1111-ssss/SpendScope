@@ -1,7 +1,6 @@
 ﻿using System.Net;
-using System.Net.NetworkInformation;
 
-namespace Core.Model;
+namespace admin.Core.Model;
 
 public interface IResultBase
 {

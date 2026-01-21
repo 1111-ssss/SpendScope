@@ -8,11 +8,11 @@
         <TextBlock Text="Вход" FontSize="28" FontWeight="SemiBold" Margin="0,0,0,32"/>
 
         <ui:TextBox PlaceholderText="Имя пользователя или email"
-                    Text="{Binding Indentifier, UpdateSourceTrigger=PropertyChanged}"
+                    Text="{Binding Identifier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     Margin="0,0,0,16"/>
 
         <ui:PasswordBox PlaceholderText="Пароль"
-                         Password="{Binding Password, UpdateSourceTrigger=PropertyChanged}"
+                         Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          Margin="0,0,0,24"/>
 
         <ui:Button Content="Войти"

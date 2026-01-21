@@ -8,7 +8,7 @@
         <TextBlock Text="Настройки авторизации" FontSize="28" FontWeight="SemiBold" Margin="0,0,0,32"/>
 
         <ui:TextBox PlaceholderText="Адрес удаленного сервера (https://...)"
-                    Text="{Binding ServerUrl, UpdateSourceTrigger=PropertyChanged}"
+                    Text="{Binding ServerUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     Margin="0,0,0,24"/>
 
         <ui:ToggleSwitch Content="Запоминать логин и email"

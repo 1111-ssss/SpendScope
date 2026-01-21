@@ -1,5 +1,4 @@
-﻿using admin.Core.Abstractions;
-using admin.Core.Model;
+﻿using admin.Core.Model;
 
 namespace admin.Core.Interfaces;
 

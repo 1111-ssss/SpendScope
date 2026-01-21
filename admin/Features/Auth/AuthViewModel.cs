@@ -29,19 +29,16 @@ public partial class AuthViewModel : BaseViewModel
 
     private IApiService _apiService;
     private ITokenService _tokenService;
-    ICurrentUserService _currentUserService;
+    private ICurrentUserService _currentUserService;
     private INavigationService _navigationService;
-    private MainWindowViewModel _mainWindowViewModel;
 
     public AuthViewModel(
         IApiService apiService,
         INavigationService navigationService,
         ITokenService tokenService,
-        ICurrentUserService currentUserService,
-        MainWindowViewModel mainWindowViewModel
+        ICurrentUserService currentUserService
     )
     {
-        _mainWindowViewModel = mainWindowViewModel;
         _apiService = apiService;
         _tokenService = tokenService;
         _currentUserService = currentUserService;
@@ -59,7 +56,7 @@ public partial class AuthViewModel : BaseViewModel
     [RelayCommand]
     private async Task Login()
     {
-        try
+        await HandleHttpRequest(async () =>
         {
             var result = await _apiService.Auth.Login(
                 new LoginRequest(Identifier, Password)
@@ -68,18 +65,13 @@ public partial class AuthViewModel : BaseViewModel
             await _tokenService.SaveTokenAsync(result);
             _currentUserService.SetFromToken(result.JwtToken);
 
-            _mainWindowViewModel.NavigateToMainWindow();
-        }
-        catch (ApiException ex) {
-            //опааа у меня тоже есть птички
-            //только в отличии от твоих у них есть микрофоны петлички
-            //ты че упоротый
-        }
+            MainWindowViewModel.NavigateToAuthWindow();
+        });
     }
     [RelayCommand]
     private async Task Register()
     {
-        try
+        await HandleHttpRequest(async () =>
         {
             var result = await _apiService.Auth.Register(
                 new RegisterRequest(Identifier, Email, Password)
@@ -88,12 +80,8 @@ public partial class AuthViewModel : BaseViewModel
             await _tokenService.SaveTokenAsync(result);
             _currentUserService.SetFromToken(result.JwtToken);
 
-            _mainWindowViewModel.NavigateToMainWindow();
-        }
-        catch (ApiException ex)
-        {
-            //skip
-        }
+            MainWindowViewModel.NavigateToAuthWindow();
+        });
     }
     [RelayCommand]
     private void ChangeSettings()
