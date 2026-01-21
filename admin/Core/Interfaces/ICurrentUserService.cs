@@ -1,4 +1,7 @@
-﻿namespace admin.Core.Interfaces;
+﻿using admin.Core.Model;
+using admin.Features.Auth.DTO.Responses;
+
+namespace admin.Core.Interfaces;
 
 public interface ICurrentUserService
 {
@@ -6,5 +9,9 @@ public interface ICurrentUserService
     bool IsAdmin { get; }
     string? UserName { get; }
     string? UserId { get; }
-    void SetFromToken(string token);
+    Task LoginAsync(TokenInfo tokenInfo);
+    Task LoginAsync(AuthResponse response);
+    Task LogoutAsync();
+    //void NavigateToAuth();
+    //void NavigateToMain();
 }

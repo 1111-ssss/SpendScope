@@ -84,6 +84,8 @@ public class TokenService : ITokenService
 
         await _storage.SaveTokenAsync(info, ct);
     }
+    public async Task SaveTokenAsync(TokenInfo tokenInfo, CancellationToken ct = default) =>
+        await _storage.SaveTokenAsync(tokenInfo, ct);
 
     public Task ClearAsync(CancellationToken ct = default) => _storage.ClearTokenAsync(ct);
 }

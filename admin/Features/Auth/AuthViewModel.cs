@@ -28,21 +28,21 @@ public partial class AuthViewModel : BaseViewModel
     private bool _rememberCredentials = true;
 
     private IApiService _apiService;
-    private ITokenService _tokenService;
     private ICurrentUserService _currentUserService;
     private INavigationService _navigationService;
+    private IWindowNavigationController _windowNavigationController;
 
     public AuthViewModel(
         IApiService apiService,
         INavigationService navigationService,
-        ITokenService tokenService,
-        ICurrentUserService currentUserService
+        ICurrentUserService currentUserService,
+        IWindowNavigationController windowNavigationController
     )
     {
         _apiService = apiService;
-        _tokenService = tokenService;
         _currentUserService = currentUserService;
         _navigationService = navigationService;
+        _windowNavigationController = windowNavigationController;
     }
 
     [RelayCommand]
@@ -56,31 +56,27 @@ public partial class AuthViewModel : BaseViewModel
     [RelayCommand]
     private async Task Login()
     {
-        await HandleHttpRequest(async () =>
+        await HandleAction(async () =>
         {
             var result = await _apiService.Auth.Login(
                 new LoginRequest(Identifier, Password)
             );
 
-            await _tokenService.SaveTokenAsync(result);
-            _currentUserService.SetFromToken(result.JwtToken);
-
-            MainWindowViewModel.NavigateToAuthWindow();
+            await _currentUserService.LoginAsync(result);
+            _windowNavigationController.NavigateToMainWindow();
         });
     }
     [RelayCommand]
     private async Task Register()
     {
-        await HandleHttpRequest(async () =>
+        await HandleAction(async () =>
         {
             var result = await _apiService.Auth.Register(
                 new RegisterRequest(Identifier, Email, Password)
             );
 
-            await _tokenService.SaveTokenAsync(result);
-            _currentUserService.SetFromToken(result.JwtToken);
-
-            MainWindowViewModel.NavigateToAuthWindow();
+            await _currentUserService.LoginAsync(result);
+            _windowNavigationController.NavigateToAuthWindow();
         });
     }
     [RelayCommand]

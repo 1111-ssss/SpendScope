@@ -33,10 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Core\Enums\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Update="Features\Auth\Pages\AuthSettingsPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -1,19 +1,28 @@
 ﻿using admin.Core.Interfaces;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
+using admin.Core.Model;
+using admin.Features.Auth.DTO.Responses;
 
 namespace admin.Infrastructure.Services;
 
 public class CurrentUserService : ICurrentUserService
 {
     private readonly ITokenService _tokenService;
+    //private readonly IWindowNavigationController _windowNavigation;
     private ClaimsPrincipal? _currentPrincipal;
 
-    //потом мб ивент и тд и тп
+    /*TODO:
+     * сделать ивент для изменения jwt
+    */
 
-    public CurrentUserService(ITokenService tokenService)
+    public CurrentUserService(
+        ITokenService tokenService
+        //IWindowNavigationController windowNavigationController
+    )
     {
         _tokenService = tokenService;
+        //_windowNavigation = windowNavigationController;
 
         _ = InitializeAsync();
     }
@@ -26,7 +35,7 @@ public class CurrentUserService : ICurrentUserService
             SetFromToken(token);
         }
     }
-    public void SetFromToken(string token)
+    private void SetFromToken(string token)
     {
         try
         {
@@ -41,6 +50,25 @@ public class CurrentUserService : ICurrentUserService
         {
             _currentPrincipal = null;
         }
+    }
+    public async Task LoginAsync(TokenInfo tokenInfo)
+    {
+        await _tokenService.SaveTokenAsync(tokenInfo);
+        SetFromToken(tokenInfo.JwtToken);
+    }
+    public async Task LoginAsync(AuthResponse response)
+    {
+        var tokenInfo = new TokenInfo(
+            JwtToken: response.JwtToken,
+            RefreshToken: response.RefreshToken,
+            ExpiresAt: response.ExpiresAt
+        );
+        await LoginAsync(tokenInfo);
+    }
+    public async Task LogoutAsync()
+    {
+        await _tokenService.ClearAsync();
+        _currentPrincipal = null;
     }
 
     public bool IsAuthenticated => _currentPrincipal?.Identity?.IsAuthenticated ?? false;

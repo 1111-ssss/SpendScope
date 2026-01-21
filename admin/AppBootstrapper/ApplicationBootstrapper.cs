@@ -10,6 +10,7 @@ using admin.Shell.ViewModel;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System.IO;
 using Wpf.Ui;
 using Wpf.Ui.DependencyInjection;
@@ -43,6 +44,13 @@ public static class ApplicationBootstrapper
                 //Task bar
                 services.AddSingleton<ITaskBarService, TaskBarService>();
 
+                //Logging
+                services.AddLogging(conf =>
+                {
+                    conf.AddConsole();
+                    conf.AddDebug();
+                });
+
                 //Services
                 services.AddSingleton<INavigationService, NavigationService>();
                 services.AddSingleton<IContentDialogService, ContentDialogService>();
@@ -71,6 +79,7 @@ public static class ApplicationBootstrapper
                 //Shell
                 services.AddSingleton<INavigationWindow, MainWindowView>();
                 services.AddSingleton<MainWindowViewModel>();
+                services.AddSingleton<IWindowNavigationController, WindowNavigationController>();
 
                 //Auth
                 services.AddSingleton<AuthViewModel>();

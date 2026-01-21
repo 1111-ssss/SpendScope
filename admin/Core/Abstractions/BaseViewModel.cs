@@ -10,14 +10,15 @@ using Wpf.Ui.Extensions;
 namespace admin.Core.Abstractions;
 public abstract class BaseViewModel : ObservableObject, INavigationAware
 {
+    /*TODO:
+     * сделать IErrorHandler или тп, что будет хэндлить ошибки
+     * сделать ShowDialogService или тп, что будет вызывать dialogService.ShowAsync
+    */
+
     private IContentDialogService? _dialogService;
     protected IContentDialogService DialogService =>
         _dialogService ??= App.GetRequiredService<IContentDialogService>()
             ?? throw new InvalidOperationException("IContentDialogService не зарегистрирован в DI");
-    private MainWindowViewModel? _mainVM;
-    protected MainWindowViewModel MainWindowViewModel =>
-        _mainVM ??= App.GetRequiredService<MainWindowViewModel>()
-            ?? throw new InvalidOperationException("MainWindowViewMode не зарегистрирован в DI");
     public virtual Task OnNavigatedToAsync()
     {
         OnNavigatedTo();
@@ -36,7 +37,7 @@ public abstract class BaseViewModel : ObservableObject, INavigationAware
 
     public virtual void OnNavigatedFrom() { }
 
-    protected async Task HandleHttpRequest(
+    protected async Task HandleAction(
         Func<Task> action,
         bool showErrMessage = true
     )
@@ -47,7 +48,7 @@ public abstract class BaseViewModel : ObservableObject, INavigationAware
         }
         catch (ApiException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
         {
-            MainWindowViewModel.NavigateToAuthWindow();
+            //MainWindowViewModel.NavigateToAuthWindow();
 
             await ShowApiErrorAsync(ex);
         }

@@ -15,7 +15,8 @@ namespace admin.Shell
 
         public MainWindowView(
             MainWindowViewModel viewModel,
-            INavigationService navigationService
+            INavigationService navigationService,
+            IContentDialogService contentDialogService
         )
         {
             ViewModel = viewModel;
@@ -26,6 +27,7 @@ namespace admin.Shell
             InitializeComponent();
 
             navigationService.SetNavigationControl(RootNavigation);
+            contentDialogService.SetDialogHost(RootDialogHost);
         }
         public INavigationView GetNavigation() => RootNavigation;
 

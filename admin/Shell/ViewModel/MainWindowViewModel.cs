@@ -1,14 +1,14 @@
+using admin.Core.Abstractions;
 using admin.Core.Interfaces;
 using admin.Features.Auth.Pages;
 using admin.Features.Home;
-using admin.Infrastructure.Http.Clients;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 using Wpf.Ui;
 
 namespace admin.Shell.ViewModel;
 
-public partial class MainWindowViewModel : ObservableObject
+public partial class MainWindowViewModel : BaseViewModel
 {
     [ObservableProperty]
     private string _applicationTitle = "SpendScope";

@@ -29,9 +29,12 @@
                 PaneDisplayMode="LeftFluent"
                 MenuItemsSource="{Binding NavigationItems, Mode=OneWay}"
                 FooterMenuItemsSource="{Binding NavigationFooter, Mode=OneWay}"
-            >
+                >
             <ui:NavigationView.AutoSuggestBox>
-                <ui:AutoSuggestBox x:Name="AutoSuggestBox" PlaceholderText="Search">
+                <ui:AutoSuggestBox
+                    x:Name="AutoSuggestBox" 
+                    PlaceholderText="Search"
+                    >
                     <ui:AutoSuggestBox.Icon>
                         <ui:IconSourceElement>
                             <ui:SymbolIconSource Symbol="Search24" />
@@ -40,13 +43,24 @@
                 </ui:AutoSuggestBox>
             </ui:NavigationView.AutoSuggestBox>
             <ui:NavigationView.Header>
-                <ui:BreadcrumbBar Margin="42,32,0,0" FontSize="28" FontWeight="DemiBold" />
+                <ui:BreadcrumbBar 
+                    Margin="42,32,0,0"
+                    FontSize="28"
+                    FontWeight="DemiBold"
+                />
             </ui:NavigationView.Header>
         </ui:NavigationView>
+        <ui:ContentDialogHost
+            x:Name="RootDialogHost"
+            Grid.Row="1"
+            Panel.ZIndex="1000"
+            
+        /> <!--HorizontalAlignment="Stretch"
+VerticalAlignment="Stretch"-->
         <ui:TitleBar
-          Title="{Binding ApplicationTitle, Mode=OneWay}"
-          Grid.Row="0"
-          Icon="{ui:SymbolIcon Person24}"
+              Title="{Binding ApplicationTitle, Mode=OneWay}"
+              Grid.Row="0"
+              Icon="{ui:SymbolIcon Person24}"
         />
         <tray:NotifyIcon
             Grid.Row="0"
@@ -54,7 +68,7 @@
             Icon="pack://application:,,,/Resources/application-icon.png"
             MenuOnRightClick="True"
             TooltipText="SpendScope Admin"
-        >
+            >
             <tray:NotifyIcon.Menu>
                 <ContextMenu ItemsSource="{Binding TrayMenuItems, Mode=OneWay}" />
             </tray:NotifyIcon.Menu>
