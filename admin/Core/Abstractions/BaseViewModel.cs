@@ -1,24 +1,15 @@
-﻿using admin.Shell.ViewModel;
+﻿using admin.Core.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Refit;
-using System.Net;
-using Wpf.Ui;
 using Wpf.Ui.Abstractions.Controls;
-using Wpf.Ui.Controls;
-using Wpf.Ui.Extensions;
 
 namespace admin.Core.Abstractions;
 public abstract class BaseViewModel : ObservableObject, INavigationAware
 {
-    /*TODO:
-     * сделать IErrorHandler или тп, что будет хэндлить ошибки
-     * сделать ShowDialogService или тп, что будет вызывать dialogService.ShowAsync
-    */
-
-    private IContentDialogService? _dialogService;
-    protected IContentDialogService DialogService =>
-        _dialogService ??= App.GetRequiredService<IContentDialogService>()
-            ?? throw new InvalidOperationException("IContentDialogService не зарегистрирован в DI");
+    private IErrorHandler? _errorHandler;
+    protected IErrorHandler ErrorHandler =>
+        _errorHandler ??= App.GetRequiredService<IErrorHandler>()
+            ?? throw new InvalidOperationException("IErrorHandler не зарегистрирован в DI");
     public virtual Task OnNavigatedToAsync()
     {
         OnNavigatedTo();
@@ -37,57 +28,22 @@ public abstract class BaseViewModel : ObservableObject, INavigationAware
 
     public virtual void OnNavigatedFrom() { }
 
-    protected async Task HandleAction(
+    protected async Task HandleActionAsync(
         Func<Task> action,
-        bool showErrMessage = true
+        bool showUserMessage = true
     )
     {
         try
         {
             await action();
         }
-        catch (ApiException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+        catch (ApiException ex) when (showUserMessage)
         {
-            //MainWindowViewModel.NavigateToAuthWindow();
-
-            await ShowApiErrorAsync(ex);
+            await ErrorHandler.HandleApiErrorAsync(ex);
         }
-        catch (ApiException ex) when (showErrMessage)
+        catch (Exception ex) when (showUserMessage)
         {
-            await ShowApiErrorAsync(ex);
+            await ErrorHandler.HandleExceptionAsync(ex);
         }
-        catch (Exception ex) when (showErrMessage)
-        {
-            await ShowGenericErrorAsync(ex);
-        }
-    }
-    protected virtual async Task ShowApiErrorAsync(ApiException ex)
-    {
-        string title = $"Ошибка: {ex.StatusCode}";
-        string message = ex.Message;
-        
-        await DialogService.ShowAsync(new ContentDialog
-        {
-            Title = title,
-            Content = message,
-            CloseButtonText = "Закрыть",
-        }, default);
-
-        //await DialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions
-        //{
-        //    Title = title,
-        //    Content = message,
-        //    CloseButtonText = "Закрыть",
-        //});
-    }
-
-    protected virtual async Task ShowGenericErrorAsync(Exception ex)
-    {
-        await DialogService.ShowSimpleDialogAsync(new SimpleContentDialogCreateOptions
-        {
-            Title = "Неожиданная ошибка",
-            Content = "Что-то пошло не так…\n\n" + ex.Message,
-            CloseButtonText = "Закрыть",
-        });
     }
 }

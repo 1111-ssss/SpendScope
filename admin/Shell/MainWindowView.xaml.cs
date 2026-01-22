@@ -38,8 +38,6 @@ namespace admin.Shell
 
         public void ShowWindow() {
             Show();
-
-            ViewModel.InitNavigation();
         }
 
         public void CloseWindow() => Close();

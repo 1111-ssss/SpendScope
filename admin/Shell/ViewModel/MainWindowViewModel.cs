@@ -1,7 +1,5 @@
 using admin.Core.Abstractions;
 using admin.Core.Interfaces;
-using admin.Features.Auth.Pages;
-using admin.Features.Home;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 using Wpf.Ui;
@@ -24,38 +22,40 @@ public partial class MainWindowViewModel : BaseViewModel
 
     private INavigationService _navigationService;
     private ICurrentUserService _currentUserService;
-    private bool _isLoaded = false;
-
-    private string CurrentWindow = string.Empty;
+    private IMainWindowController _mainWindowController;
 
     public MainWindowViewModel(
         INavigationService navigationService,
-        ICurrentUserService currentUserService
+        ICurrentUserService currentUserService,
+        IMainWindowController mainWindowController
     )
     {
         _navigationService = navigationService;
         _currentUserService = currentUserService;
+        _mainWindowController = mainWindowController;
 
-        if (_isLoaded)
-            return;
-        
+        mainWindowController.SetMainViewModel(this);
+        InitWindows();
+
+        //if (!_currentUserService.IsAuthenticated)
+        //{
+        //    _mainWindowController.NavigateToWindow("Auth");
+        //    return;
+        //}
+
+        //_mainWindowController.NavigateToWindow("Main");
+
+        _currentUserService.UserStateChanged += OnUserStateChanged;
+    }
+
+    private void OnUserStateChanged(object? sender, EventArgs e)
+    {
         if (!_currentUserService.IsAuthenticated)
         {
-            InitAuthViewModel();
+            _mainWindowController.NavigateToWindow("Auth");
             return;
         }
 
-        InitMainViewModel();
-    }
-
-    public void NavigateToAuthWindow()
-    {
-        InitAuthViewModel();
-        _navigationService.Navigate(typeof(AuthLoginPage));
-    }
-    public void NavigateToMainWindow()
-    {
-        InitMainViewModel();
-        _navigationService.Navigate(typeof(HomePage));
+        _mainWindowController.NavigateToWindow("Main");
     }
 }

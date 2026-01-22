@@ -28,7 +28,6 @@ public class StorageService : IStorageService
     public async Task<TokenInfo?> GetTokenAsync(CancellationToken ct)
     {
         if (!File.Exists(TokenFilePath))
-            //return Result.Failed(ResultErrorCode.ReadWrite, "Файл с токеном не найден");
             return null;
 
         try
@@ -45,21 +44,18 @@ public class StorageService : IStorageService
             var tokenInfo = JsonSerializer.Deserialize<TokenInfo>(json);
 
             if (tokenInfo == null)
-                //return Result.Failed(ResultErrorCode.DeserializationFailed, "Ошибка десириализации");
                 return null;
 
-            //return Result<TokenInfo>.Success(tokenInfo);
             return tokenInfo;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Ошибка чтения токена");
-            //return Result.Failed(ResultErrorCode.Unknown, "Ошибка получения токена");
             return null;
         }
     }
 
-    public async Task<Result> SaveTokenAsync(TokenInfo tokenInfo, CancellationToken ct)
+    public async Task SaveTokenAsync(TokenInfo tokenInfo, CancellationToken ct)
     {
         try
         {
@@ -75,17 +71,14 @@ public class StorageService : IStorageService
             );
 
             await File.WriteAllBytesAsync(TokenFilePath, protectedBytes, ct);
-
-            return Result.Success();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Ошибка сохранения токена: {ex.Message}");
-            return Result.Failed("Не удалось сохранить токен");
+            _logger.LogError(ex, "Ошибка сохранения токена");
         }
     }
 
-    public async Task<Result> ClearTokenAsync(CancellationToken ct)
+    public async Task ClearTokenAsync(CancellationToken ct)
     {
         try
         {
@@ -93,13 +86,10 @@ public class StorageService : IStorageService
             {
                 await Task.Run(() => File.Delete(TokenFilePath), ct);
             }
-
-            return Result.Success();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Ошибка очистки токена: {ex.Message}");
-            return Result.Failed("Не удалось удалить токен");
+            _logger.LogError(ex, "Ошибка очистки токена");
         }
     }
 }

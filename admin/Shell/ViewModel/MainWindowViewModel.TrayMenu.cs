@@ -1,21 +1,11 @@
-﻿using admin.Features.Auth.Pages;
-using admin.Features.Home;
-using admin.Features.Settings;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace admin.Shell.ViewModel;
 public partial class MainWindowViewModel
 {
-    private static Dictionary<string, Type> _appPages = new() {
-        { "tray_home", typeof(HomePage) },
-        { "tray_settings", typeof(SettingsPage) },
-
-        { "tray_auth_login", typeof(AuthLoginPage) },
-        { "tray_auth_register", typeof(AuthRegisterPage) },
-        { "tray_auth_settings", typeof(AuthSettingsPage) },
-    };
+    public Dictionary<string, Action> TrayActions = [];
 
     private void OnTrayMenuItemClick(object sender, RoutedEventArgs e)
     {
@@ -28,32 +18,15 @@ public partial class MainWindowViewModel
 
         Debug.WriteLine($"Трей: {menuItem.Header}, тег: {tag}");
 
-        if (_appPages.TryGetValue(tag, out Type? viewType))
+        if (TrayActions.TryGetValue(tag, out Action? action))
         {
-            _navigationService.Navigate(viewType);
+            action();
 
-            ShowAndActivateWindow();
-
-            Debug.WriteLine($"Открываю страницу: {viewType}");
-
+            //ShowAndActivateWindow();
             return;
         }
-
-        //если тега нет в appPages
-        switch (tag)
-        {
-            case "tray_close":
-                HandleTrayCloseClick();
-                break;
-            default:
-                if (!string.IsNullOrEmpty(tag))
-                {
-                    Debug.WriteLine($"Неизвестный тег: {tag}");
-                }
-                break;
-        }
     }
-    private void SetupTrayMenuEvents()
+    public void SetupTrayMenuEvents()
     {
         foreach (var menuItem in TrayMenuItems)
         {
@@ -63,12 +36,6 @@ public partial class MainWindowViewModel
                 item.Click += OnTrayMenuItemClick;
             }
         }
-    }
-    private static void HandleTrayCloseClick()
-    {
-        Debug.WriteLine("Трей - закрытие приложения");
-
-        Application.Current.Shutdown();
     }
     private void ShowAndActivateWindow()
     {

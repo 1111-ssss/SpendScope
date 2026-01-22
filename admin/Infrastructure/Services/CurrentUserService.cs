@@ -9,24 +9,24 @@ namespace admin.Infrastructure.Services;
 public class CurrentUserService : ICurrentUserService
 {
     private readonly ITokenService _tokenService;
-    //private readonly IWindowNavigationController _windowNavigation;
     private ClaimsPrincipal? _currentPrincipal;
 
-    /*TODO:
-     * сделать ивент для изменения jwt
-    */
+    public event EventHandler? UserStateChanged;
 
     public CurrentUserService(
         ITokenService tokenService
-        //IWindowNavigationController windowNavigationController
     )
     {
         _tokenService = tokenService;
-        //_windowNavigation = windowNavigationController;
 
         _ = InitializeAsync();
+        tokenService.TokenInfoChanged += OnTokenInfoChanged;
     }
 
+    private void OnTokenInfoChanged(object? sender, TokenInfo? tokenInfo)
+    {
+        SetFromToken(tokenInfo?.JwtToken ?? string.Empty);
+    }
     private async Task InitializeAsync()
     {
         var token = await _tokenService.GetAccessTokenAsync();
@@ -50,6 +50,10 @@ public class CurrentUserService : ICurrentUserService
         {
             _currentPrincipal = null;
         }
+        finally
+        {
+            UserStateChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
     public async Task LoginAsync(TokenInfo tokenInfo)
     {
@@ -69,6 +73,7 @@ public class CurrentUserService : ICurrentUserService
     {
         await _tokenService.ClearAsync();
         _currentPrincipal = null;
+        UserStateChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public bool IsAuthenticated => _currentPrincipal?.Identity?.IsAuthenticated ?? false;

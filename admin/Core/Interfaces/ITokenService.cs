@@ -9,4 +9,5 @@ public interface ITokenService
     public Task SaveTokenAsync(AuthResponse response, CancellationToken ct = default);
     public Task SaveTokenAsync(TokenInfo tokenInfo, CancellationToken ct = default);
     public Task ClearAsync(CancellationToken ct = default);
+    public event EventHandler<TokenInfo?> TokenInfoChanged;
 }

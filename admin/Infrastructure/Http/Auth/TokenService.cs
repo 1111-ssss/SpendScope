@@ -3,6 +3,7 @@ using admin.Core.Model;
 using admin.Features.Auth.DTO.Requests;
 using admin.Features.Auth.DTO.Responses;
 using Refit;
+using System.Diagnostics;
 using System.Net;
 
 namespace admin.Infrastructure.Http.Auth;
@@ -12,6 +13,8 @@ public class TokenService : ITokenService
     private readonly IStorageService _storage;
     private readonly IApiService _apiService;
     private readonly SemaphoreSlim _semaphore = new(1, 1);
+
+    public event EventHandler<TokenInfo?>? TokenInfoChanged;
 
     public TokenService(
         IStorageService storage,
@@ -82,10 +85,17 @@ public class TokenService : ITokenService
             ExpiresAt: response.ExpiresAt
         );
 
-        await _storage.SaveTokenAsync(info, ct);
+        await SaveTokenAsync(info, ct);
     }
-    public async Task SaveTokenAsync(TokenInfo tokenInfo, CancellationToken ct = default) =>
+    public async Task SaveTokenAsync(TokenInfo tokenInfo, CancellationToken ct = default)
+    {
+        TokenInfoChanged?.Invoke(this, tokenInfo);
         await _storage.SaveTokenAsync(tokenInfo, ct);
+    }
 
-    public Task ClearAsync(CancellationToken ct = default) => _storage.ClearTokenAsync(ct);
+    public async Task ClearAsync(CancellationToken ct = default)
+    {
+        TokenInfoChanged?.Invoke(this, null);
+        await _storage.ClearTokenAsync(ct);
+    }
 }

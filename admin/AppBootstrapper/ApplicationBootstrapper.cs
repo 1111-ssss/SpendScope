@@ -49,6 +49,7 @@ public static class ApplicationBootstrapper
                 {
                     conf.AddConsole();
                     conf.AddDebug();
+                    conf.SetMinimumLevel(LogLevel.Debug);
                 });
 
                 //Services
@@ -58,6 +59,7 @@ public static class ApplicationBootstrapper
                 services.AddSingleton<IStorageService, StorageService>();
                 services.AddSingleton<ICurrentUserService, CurrentUserService>();
                 services.AddSingleton<ITokenService, TokenService>();
+                services.AddSingleton<IErrorHandler, ErrorHandler>();
                 services.AddSingleton<JwtAuthHandler>();
 
                 //Refit
@@ -79,7 +81,7 @@ public static class ApplicationBootstrapper
                 //Shell
                 services.AddSingleton<INavigationWindow, MainWindowView>();
                 services.AddSingleton<MainWindowViewModel>();
-                services.AddSingleton<IWindowNavigationController, WindowNavigationController>();
+                services.AddSingleton<IMainWindowController, MainWindowController>();
 
                 //Auth
                 services.AddSingleton<AuthViewModel>();

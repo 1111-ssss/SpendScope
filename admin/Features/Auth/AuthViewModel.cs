@@ -1,11 +1,9 @@
 ﻿using admin.Core.Abstractions;
 using admin.Core.Interfaces;
 using admin.Features.Auth.DTO.Requests;
-using admin.Shell.ViewModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Refit;
-using System.Diagnostics;
 using Wpf.Ui;
 
 namespace admin.Features.Auth.Pages;
@@ -30,13 +28,13 @@ public partial class AuthViewModel : BaseViewModel
     private IApiService _apiService;
     private ICurrentUserService _currentUserService;
     private INavigationService _navigationService;
-    private IWindowNavigationController _windowNavigationController;
+    private IMainWindowController _windowNavigationController;
 
     public AuthViewModel(
         IApiService apiService,
         INavigationService navigationService,
         ICurrentUserService currentUserService,
-        IWindowNavigationController windowNavigationController
+        IMainWindowController windowNavigationController
     )
     {
         _apiService = apiService;
@@ -56,27 +54,27 @@ public partial class AuthViewModel : BaseViewModel
     [RelayCommand]
     private async Task Login()
     {
-        await HandleAction(async () =>
+        await HandleActionAsync(async () =>
         {
             var result = await _apiService.Auth.Login(
                 new LoginRequest(Identifier, Password)
             );
 
             await _currentUserService.LoginAsync(result);
-            _windowNavigationController.NavigateToMainWindow();
+            _windowNavigationController.NavigateToWindow("Main");
         });
     }
     [RelayCommand]
     private async Task Register()
     {
-        await HandleAction(async () =>
+        await HandleActionAsync(async () =>
         {
             var result = await _apiService.Auth.Register(
                 new RegisterRequest(Identifier, Email, Password)
             );
 
             await _currentUserService.LoginAsync(result);
-            _windowNavigationController.NavigateToAuthWindow();
+            _windowNavigationController.NavigateToWindow("Main");
         });
     }
     [RelayCommand]

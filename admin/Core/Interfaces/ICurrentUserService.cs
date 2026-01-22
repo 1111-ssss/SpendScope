@@ -12,6 +12,5 @@ public interface ICurrentUserService
     Task LoginAsync(TokenInfo tokenInfo);
     Task LoginAsync(AuthResponse response);
     Task LogoutAsync();
-    //void NavigateToAuth();
-    //void NavigateToMain();
+    event EventHandler? UserStateChanged;
 }

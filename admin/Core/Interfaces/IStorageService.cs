@@ -4,8 +4,7 @@ namespace admin.Core.Interfaces;
 
 public interface IStorageService
 {
-    Task<Result> SaveTokenAsync(TokenInfo tokenInfo, CancellationToken ct);
-    //Task<Result> GetTokenAsync();
+    Task SaveTokenAsync(TokenInfo tokenInfo, CancellationToken ct);
     Task<TokenInfo?> GetTokenAsync(CancellationToken ct);
-    Task<Result> ClearTokenAsync(CancellationToken ct);
+    Task ClearTokenAsync(CancellationToken ct);
 }
