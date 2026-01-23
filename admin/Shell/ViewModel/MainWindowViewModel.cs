@@ -23,6 +23,7 @@ public partial class MainWindowViewModel : BaseViewModel
     private INavigationService _navigationService;
     private ICurrentUserService _currentUserService;
     private IMainWindowController _mainWindowController;
+    private bool _isLoaded = false;
 
     public MainWindowViewModel(
         INavigationService navigationService,
@@ -35,21 +36,19 @@ public partial class MainWindowViewModel : BaseViewModel
         _mainWindowController = mainWindowController;
 
         mainWindowController.SetMainViewModel(this);
-        InitWindows();
-
-        //if (!_currentUserService.IsAuthenticated)
-        //{
-        //    _mainWindowController.NavigateToWindow("Auth");
-        //    return;
-        //}
-
-        //_mainWindowController.NavigateToWindow("Main");
+        //InitWindows();
 
         _currentUserService.UserStateChanged += OnUserStateChanged;
+
+        //if (!_isLoaded)
+        //    OnUserStateChanged(this, EventArgs.Empty);
     }
 
     private void OnUserStateChanged(object? sender, EventArgs e)
     {
+        if (!_isLoaded)
+            return;
+
         if (!_currentUserService.IsAuthenticated)
         {
             _mainWindowController.NavigateToWindow("Auth");

@@ -29,10 +29,10 @@ public sealed class Result<T> : IResultBase
     public bool IsSuccess => Error is null;
     public ResultErrorCode? Error { get; }
     public string? Message { get; }
-    internal Result(T value, ResultErrorCode? error, string? message)
+    internal Result(T value, ResultErrorCode? errorCode, string? message)
     {
         Value = value;
-        Error = error;
+        Error = errorCode;
         Message = message;
     }
     public static Result<T> Success(T value) => new(value);

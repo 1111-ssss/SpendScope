@@ -1,6 +1,10 @@
-﻿using admin.Features.Auth.Pages;
+﻿using admin.Core.Interfaces;
+using admin.Features.Auth.Pages;
 using admin.Features.Home;
+using admin.Infrastructure.Services;
 using admin.Shell.ViewModel;
+using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows;
 using Wpf.Ui;
 using Wpf.Ui.Abstractions;
@@ -13,14 +17,17 @@ namespace admin.Shell
     {
         public MainWindowViewModel ViewModel { get; }
 
+        private readonly IAppSettingsService _appSettingsService;
         public MainWindowView(
             MainWindowViewModel viewModel,
             INavigationService navigationService,
-            IContentDialogService contentDialogService
+            IContentDialogService contentDialogService,
+            IAppSettingsService appSettingsService
         )
         {
             ViewModel = viewModel;
             DataContext = viewModel;
+            _appSettingsService = appSettingsService;
 
             SystemThemeWatcher.Watch(this);
 
@@ -38,10 +45,18 @@ namespace admin.Shell
 
         public void ShowWindow() {
             Show();
+
+            ViewModel.InitWindows();
         }
 
         public void CloseWindow() => Close();
 
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            _appSettingsService.SaveSettingsAsync();
+
+            base.OnClosing(e);
+        }
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);

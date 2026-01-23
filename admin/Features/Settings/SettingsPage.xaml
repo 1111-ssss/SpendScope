@@ -12,6 +12,11 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             FontSize="24"
-            FontWeight="Bold" />
+            FontWeight="Bold"
+        />
+        <ui:Button
+            Content="Logout"
+            Command="{Binding LogoutCommand}"
+        />
     </Grid>
 </Page>

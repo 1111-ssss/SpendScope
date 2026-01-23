@@ -29,18 +29,30 @@ public partial class AuthViewModel : BaseViewModel
     private ICurrentUserService _currentUserService;
     private INavigationService _navigationService;
     private IMainWindowController _windowNavigationController;
+    private readonly IAppSettingsService _appSettingsService;
 
     public AuthViewModel(
         IApiService apiService,
         INavigationService navigationService,
         ICurrentUserService currentUserService,
-        IMainWindowController windowNavigationController
+        IMainWindowController windowNavigationController,
+        IAppSettingsService appSettingsService
     )
     {
         _apiService = apiService;
         _currentUserService = currentUserService;
         _navigationService = navigationService;
         _windowNavigationController = windowNavigationController;
+        _appSettingsService = appSettingsService;
+
+        _appSettingsService.Current.PropertyChanged += OnSettingChanged;
+    }
+
+    private void OnSettingChanged(object? sender, EventArgs eventArgs) { 
+        ServerUrl = _appSettingsService.Current.ServerBaseURI;
+        RememberCredentials = _appSettingsService.Current.RememberUsername;
+        if (RememberCredentials)
+            Identifier = _appSettingsService.Current.SavedUsername;
     }
 
     [RelayCommand]
@@ -80,8 +92,7 @@ public partial class AuthViewModel : BaseViewModel
     [RelayCommand]
     private void ChangeSettings()
     {
-        //var result = _authService.ChangeSettings(_serverUrl, _rememberCredentials);
-
-        throw new NotImplementedException();
+        _appSettingsService.Current.ServerBaseURI = ServerUrl;
+        _appSettingsService.Current.RememberUsername = RememberCredentials;
     }
 }

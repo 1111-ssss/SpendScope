@@ -13,6 +13,7 @@ public class TokenService : ITokenService
     private readonly IStorageService _storage;
     private readonly IApiService _apiService;
     private readonly SemaphoreSlim _semaphore = new(1, 1);
+    private TokenInfo? _cachedTokenInfo;
 
     public event EventHandler<TokenInfo?>? TokenInfoChanged;
 
@@ -27,11 +28,14 @@ public class TokenService : ITokenService
 
     public async Task<string?> GetAccessTokenAsync(CancellationToken ct = default)
     {
-        var info = await _storage.GetTokenAsync(ct);
-        if (info == null) return null;
+        var tokenInfo = _cachedTokenInfo;
+        if (tokenInfo == null || tokenInfo.ExpiresAt < DateTimeOffset.UtcNow.AddMinutes(1))
+            tokenInfo = await _storage.GetTokenAsync(ct);
 
-        if (info.ExpiresAt > DateTimeOffset.UtcNow.AddMinutes(1))
-            return info.JwtToken;
+        if (tokenInfo == null) return null;
+
+        if (tokenInfo.ExpiresAt > DateTimeOffset.UtcNow.AddMinutes(1))
+            return tokenInfo.JwtToken;
 
         return await TryRefreshTokenAsync(ct);
     }
@@ -64,11 +68,13 @@ public class TokenService : ITokenService
                 );
 
                 await _storage.SaveTokenAsync(newInfo, ct);
+                _cachedTokenInfo = newInfo;
                 return newInfo.JwtToken;
             }
             catch (ApiException ex) when (ex.StatusCode == HttpStatusCode.BadRequest || ex.StatusCode == HttpStatusCode.Unauthorized)
             {
                 await _storage.ClearTokenAsync(ct);
+                _cachedTokenInfo = null;
                 return null;
             }
         }
@@ -90,12 +96,14 @@ public class TokenService : ITokenService
     public async Task SaveTokenAsync(TokenInfo tokenInfo, CancellationToken ct = default)
     {
         TokenInfoChanged?.Invoke(this, tokenInfo);
+        _cachedTokenInfo = tokenInfo;
         await _storage.SaveTokenAsync(tokenInfo, ct);
     }
 
     public async Task ClearAsync(CancellationToken ct = default)
     {
         TokenInfoChanged?.Invoke(this, null);
+        _cachedTokenInfo = null;
         await _storage.ClearTokenAsync(ct);
     }
 }

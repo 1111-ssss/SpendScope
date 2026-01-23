@@ -60,6 +60,7 @@ public static class ApplicationBootstrapper
                 services.AddSingleton<ICurrentUserService, CurrentUserService>();
                 services.AddSingleton<ITokenService, TokenService>();
                 services.AddSingleton<IErrorHandler, ErrorHandler>();
+                services.AddSingleton<IAppSettingsService, AppSettingsService>();
                 services.AddSingleton<JwtAuthHandler>();
 
                 //Refit

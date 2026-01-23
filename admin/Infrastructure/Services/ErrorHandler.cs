@@ -1,7 +1,9 @@
 ﻿using admin.Core.Interfaces;
+using admin.Core.Model;
 using Microsoft.Extensions.Logging;
 using Refit;
 using System.Net;
+using System.Text.Json;
 using Wpf.Ui;
 using Wpf.Ui.Extensions;
 
@@ -42,8 +44,17 @@ public class ErrorHandler : IErrorHandler
 
         if (!showUserMessage) return;
 
-        string title = $"Ошибка API: {ex.StatusCode}";
-        string message = ex.Message ?? "Сервер вернул ошибку";
+        string title = $"Ошибка API {((int)ex.StatusCode)}: {ex.StatusCode}";
+
+        string content = ex.Content ?? string.Empty;
+        if (!string.IsNullOrEmpty(content))
+        {
+            using JsonDocument doc = JsonDocument.Parse(content);
+            content = doc.RootElement.TryGetProperty("error", out JsonElement errorElem) ?
+                errorElem.ToString() ?? "Ошибка без описания" : "Неизвестная ошибка";
+        }
+
+        string message = content ?? ex.Message ?? "Сервер вернул ошибку";
 
         if (ex.StatusCode == HttpStatusCode.Unauthorized)
         {

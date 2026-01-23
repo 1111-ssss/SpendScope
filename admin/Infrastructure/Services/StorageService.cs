@@ -1,5 +1,4 @@
-﻿using admin.Core.Enums;
-using admin.Core.Interfaces;
+﻿using admin.Core.Interfaces;
 using admin.Core.Model;
 using Microsoft.Extensions.Logging;
 using System.IO;
@@ -11,18 +10,27 @@ namespace admin.Infrastructure.Services;
 
 public class StorageService : IStorageService
 {
-    private const string TokenFileName = "token_info.dat";
-    private static readonly string TokenFilePath = Path.Combine(
+    private static readonly string BaseFilePath = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-        "SpendScopeAdmin",
-        TokenFileName
+        "SpendScopeAdmin"
     );
-    private static readonly byte[] Entropy = Encoding.UTF8.GetBytes("app_specific-salt_123");
+    private static readonly string TokenFilePath = Path.Combine(
+        BaseFilePath,
+        "token_info.dat"
+    );
+    private static readonly string SettingsFilePath = Path.Combine(
+        BaseFilePath,
+        "app_settings.json"
+    );
+    private JsonSerializerOptions serializerOptions = new JsonSerializerOptions() { WriteIndented = true };
+    private static readonly byte[] Entropy = Encoding.UTF8.GetBytes("admin.app_specific-salt_123");
     private readonly ILogger<StorageService> _logger;
 
     public StorageService(ILogger<StorageService> logger)
     {
         _logger = logger;
+        Directory.CreateDirectory(Path.GetDirectoryName(TokenFilePath)!);
+        Directory.CreateDirectory(Path.GetDirectoryName(SettingsFilePath)!);
     }
 
     public async Task<TokenInfo?> GetTokenAsync(CancellationToken ct)
@@ -59,8 +67,6 @@ public class StorageService : IStorageService
     {
         try
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(TokenFilePath)!);
-
             var json = JsonSerializer.Serialize(tokenInfo);
             var bytes = Encoding.UTF8.GetBytes(json);
 
@@ -90,6 +96,40 @@ public class StorageService : IStorageService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Ошибка очистки токена");
+        }
+    }
+
+    public ApplicationSettings? LoadSettings()
+    {
+        if (!File.Exists(SettingsFilePath))
+            return null;
+
+        try
+        {
+            string json = File.ReadAllText(SettingsFilePath);
+            return JsonSerializer.Deserialize<ApplicationSettings>(json);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Ошибка загрузки настроек");
+            return null;
+        }
+    }
+
+    public async Task SaveSettingsAsync(ApplicationSettings appSettings)
+    {
+        try
+        {
+            string json = JsonSerializer.Serialize(
+                appSettings,
+                serializerOptions
+            );
+
+            await File.WriteAllTextAsync(SettingsFilePath, json);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Ошибка сохранения настроек");
         }
     }
 }

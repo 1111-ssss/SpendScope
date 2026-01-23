@@ -25,18 +25,21 @@ public class CurrentUserService : ICurrentUserService
 
     private void OnTokenInfoChanged(object? sender, TokenInfo? tokenInfo)
     {
-        SetFromToken(tokenInfo?.JwtToken ?? string.Empty);
+        SetFromToken(tokenInfo?.JwtToken);
     }
     private async Task InitializeAsync()
     {
         var token = await _tokenService.GetAccessTokenAsync();
-        if (!string.IsNullOrEmpty(token))
-        {
-            SetFromToken(token);
-        }
+
+        SetFromToken(token);
     }
-    private void SetFromToken(string token)
+    private void SetFromToken(string? token)
     {
+        if (string.IsNullOrEmpty(token))
+        {
+            UserStateChanged?.Invoke(this, EventArgs.Empty);
+            return;
+        }
         try
         {
             var handler = new JwtSecurityTokenHandler();
@@ -71,9 +74,9 @@ public class CurrentUserService : ICurrentUserService
     }
     public async Task LogoutAsync()
     {
-        await _tokenService.ClearAsync();
+        await _tokenService.ClearAsync(); //сам и вызовет UserStateChanged
         _currentPrincipal = null;
-        UserStateChanged?.Invoke(this, EventArgs.Empty);
+        //UserStateChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public bool IsAuthenticated => _currentPrincipal?.Identity?.IsAuthenticated ?? false;

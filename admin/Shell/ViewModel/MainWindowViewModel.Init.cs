@@ -7,7 +7,7 @@ using Wpf.Ui.Controls;
 namespace admin.Shell.ViewModel;
 public partial class MainWindowViewModel
 {
-    private void InitWindows()
+    public void InitWindows()
     {
         //MainWindow
         _mainWindowController.CreateNewWindow("Main", new WindowNavigationProps
@@ -106,5 +106,7 @@ public partial class MainWindowViewModel
                 },
             },
         });
+        _isLoaded = true;
+        OnUserStateChanged(this, EventArgs.Empty);
     }
 }

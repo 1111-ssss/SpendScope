@@ -45,6 +45,7 @@ public class MainWindowController : IMainWindowController
         MainVM.NavigationFooter = props.NavigationFooter;
 
         MainVM.TrayMenuItems.Clear();
+        MainVM.TrayActions.Clear();
         foreach (var (item, action) in props.TrayMenuItems)
         {
             MainVM.TrayMenuItems.Add(item);
