@@ -17,7 +17,6 @@ namespace admin.Shell
     {
         public MainWindowViewModel ViewModel { get; }
 
-        private readonly IAppSettingsService _appSettingsService;
         public MainWindowView(
             MainWindowViewModel viewModel,
             INavigationService navigationService,
@@ -27,9 +26,9 @@ namespace admin.Shell
         {
             ViewModel = viewModel;
             DataContext = viewModel;
-            _appSettingsService = appSettingsService;
 
             SystemThemeWatcher.Watch(this);
+            appSettingsService.UpdateTheme();
 
             InitializeComponent();
 
@@ -51,12 +50,6 @@ namespace admin.Shell
 
         public void CloseWindow() => Close();
 
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            _appSettingsService.SaveSettingsAsync();
-
-            base.OnClosing(e);
-        }
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);

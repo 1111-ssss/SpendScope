@@ -3,28 +3,63 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:local="clr-namespace:admin.Features.Auth.Pages"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     >
-    <StackPanel Margin="40" MaxWidth="460" VerticalAlignment="Center">
-        <TextBlock Text="Настройки авторизации" FontSize="28" FontWeight="SemiBold" Margin="0,0,0,32"/>
+    <StackPanel
+        Margin="40"
+        MaxWidth="460"
+        VerticalAlignment="Center"
+        >
+        
+        <TextBlock 
+            Text="Настройки"
+            FontSize="28"
+            FontWeight="SemiBold"
+            Margin="0,0,0,32"
+        />
 
-        <ui:TextBox PlaceholderText="Адрес удаленного сервера (https://...)"
-                    Text="{Binding ServerUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                    Margin="0,0,0,24"/>
+        <Label
+            Content="Адрес удаленного сревера"
+        />
+        <ui:TextBox 
+            PlaceholderText="https://..."
+            Text="{Binding ServerUrl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            Icon="{ui:SymbolIcon Symbol=Link24}"
+            Margin="0,0,0,16"
+        />
 
-        <ui:ToggleSwitch Content="Запоминать логин и email"
-                         IsChecked="{Binding RememberCredentials}"
-                         Margin="0,0,0,32"/>
+        <ui:ToggleSwitch 
+            Content="Запоминать логин"
+            IsChecked="{Binding RememberCredentials, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            Margin="0,0,0,16"
+        />
 
-        <ui:Button Content="Сохранить и вернуться"
-                   Appearance="Primary"
-                   Command="{Binding SaveAndReturnCommand}"
-                   HorizontalAlignment="Stretch"
-                   Height="48"
-                   FontSize="16"/>
+        <Label
+            Content="Тема приложения"
+        />
+        <ComboBox
+            ItemsSource="{Binding Settings.Themes}"
+            Margin="0,0,0,24"
+            HorizontalAlignment="Left"
+            MinWidth="200"
+            SelectedItem="{Binding Settings.CurrentTheme, Mode=TwoWay}"
+        />
 
-        <ui:HyperlinkButton Content="← Назад ко входу"
-                            Command="{Binding NavigateToLoginCommand}"
-                            HorizontalAlignment="Center"
-                            Margin="0,24,0,0"/>
+        <ui:Button 
+            Content="Сохранить и вернуться"
+            Appearance="Primary"
+            Command="{Binding ChangeSettingsCommand}"
+            HorizontalAlignment="Stretch"
+            Height="48"
+            FontSize="16"
+        />
+
+        <ui:HyperlinkButton 
+            Content="Назад ко входу"
+            Command="{Binding NavigateToLoginCommand}"
+            HorizontalAlignment="Center"
+            Margin="0,24,0,0"
+            Icon="{ui:SymbolIcon Symbol=ArrowLeft20}"
+        />
     </StackPanel>
 </Page>

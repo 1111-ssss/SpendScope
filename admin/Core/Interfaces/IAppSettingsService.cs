@@ -8,4 +8,5 @@ public interface IAppSettingsService
     ApplicationSettings Current { get; }
     event EventHandler<string?>? SettingsChanged;
     Task SaveSettingsAsync();
+    void UpdateTheme();
 }

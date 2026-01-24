@@ -16,4 +16,15 @@ public partial class ApplicationSettings : ObservableObject
 
     [ObservableProperty]
     private bool _rememberUsername = true;
+
+    [ObservableProperty]
+    private List<string> _themes = new List<string>()
+    {
+        "Light",
+        "Dark",
+        "HighContrast",
+    };
+
+    [ObservableProperty]
+    private string _currentTheme = "Dark";
 }

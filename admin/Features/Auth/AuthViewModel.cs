@@ -1,9 +1,9 @@
 ﻿using admin.Core.Abstractions;
 using admin.Core.Interfaces;
+using admin.Core.Model;
 using admin.Features.Auth.DTO.Requests;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Refit;
 using Wpf.Ui;
 
 namespace admin.Features.Auth.Pages;
@@ -25,6 +25,9 @@ public partial class AuthViewModel : BaseViewModel
     [ObservableProperty]
     private bool _rememberCredentials = true;
 
+    [ObservableProperty]
+    private ApplicationSettings _settings;
+
     private IApiService _apiService;
     private ICurrentUserService _currentUserService;
     private INavigationService _navigationService;
@@ -45,14 +48,10 @@ public partial class AuthViewModel : BaseViewModel
         _windowNavigationController = windowNavigationController;
         _appSettingsService = appSettingsService;
 
-        _appSettingsService.Current.PropertyChanged += OnSettingChanged;
-    }
+        Settings = appSettingsService.Current;
 
-    private void OnSettingChanged(object? sender, EventArgs eventArgs) { 
-        ServerUrl = _appSettingsService.Current.ServerBaseURI;
-        RememberCredentials = _appSettingsService.Current.RememberUsername;
-        if (RememberCredentials)
-            Identifier = _appSettingsService.Current.SavedUsername;
+        if (Settings.RememberUsername && !string.IsNullOrEmpty(Settings.SavedUsername))
+            Identifier = Settings.SavedUsername;
     }
 
     [RelayCommand]
@@ -66,6 +65,7 @@ public partial class AuthViewModel : BaseViewModel
     [RelayCommand]
     private async Task Login()
     {
+        SaveUsername();
         await HandleActionAsync(async () =>
         {
             var result = await _apiService.Auth.Login(
@@ -79,6 +79,7 @@ public partial class AuthViewModel : BaseViewModel
     [RelayCommand]
     private async Task Register()
     {
+        SaveUsername();
         await HandleActionAsync(async () =>
         {
             var result = await _apiService.Auth.Register(
@@ -92,7 +93,16 @@ public partial class AuthViewModel : BaseViewModel
     [RelayCommand]
     private void ChangeSettings()
     {
-        _appSettingsService.Current.ServerBaseURI = ServerUrl;
-        _appSettingsService.Current.RememberUsername = RememberCredentials;
+        Settings.ServerBaseURI = string.IsNullOrEmpty(ServerUrl) ?
+            Settings.ServerBaseURI : ServerUrl;
+        Settings.RememberUsername = RememberCredentials;
+
+        _appSettingsService.UpdateTheme();
+
+        NavigateToLogin();
+    }
+    private void SaveUsername()
+    {
+        Settings.SavedUsername = Identifier;
     }
 }
