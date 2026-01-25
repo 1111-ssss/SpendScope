@@ -5,74 +5,75 @@
     xmlns:local="clr-namespace:admin.Features.Auth.Pages"
     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     >
-    <StackPanel
+    <ui:Card
         Margin="40"
         MaxWidth="460"
         VerticalAlignment="Center"
         >
-        
-        <TextBlock
-            Text="Вход"
-            FontSize="28"
-            FontWeight="SemiBold"
-            Margin="0,0,0,32"
-        />
-
-        <Label
-            Content="Имя пользователя или email"
-        />
-        <ui:TextBox 
-            PlaceholderText="Введите логин"
-            Text="{Binding Identifier, Mode=TwoWay}"
-            Margin="0,0,0,16"
-        />
-
-        <Label
-            Content="Пароль"
-        />
-        <ui:PasswordBox 
-            PlaceholderText="Введите пароль"
-            Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-            Margin="0,0,0,24"
-        />
-
-        <ui:Button 
-            Content="Войти"
-            Appearance="Primary"
-            Command="{Binding LoginCommand}"
-            HorizontalAlignment="Stretch"
-            Height="48"
-            FontSize="16"
-        />
-
-        <Grid
-            Margin="0,24,0,0"
-            HorizontalAlignment="Center"
-            >
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition
-                    Width="auto"
-                />
-                <ColumnDefinition
-                    Width="25"
-                />
-                <ColumnDefinition
-                    Width="auto"
-                />
-            </Grid.ColumnDefinitions>
-
-            <ui:HyperlinkButton
-                Grid.Column="0"
-                Content="Регистрация"
-                HorizontalAlignment="Center"
-                Command="{Binding NavigateToRegisterCommand}"
+        <StackPanel>
+            <TextBlock
+                Text="Заполните данные для входа"
+                FontSize="24"
+                FontWeight="SemiBold"
+                Margin="0,0,0,32"
             />
-            <ui:HyperlinkButton 
-                Grid.Column="2"
-                Content="Настройки"
-                HorizontalAlignment="Center"
-                Command="{Binding NavigateToSettingsCommand}"
+
+            <Label
+                Content="Имя пользователя или email"
             />
-        </Grid>
-    </StackPanel>
+            <ui:TextBox 
+                PlaceholderText="Введите логин"
+                Text="{Binding Identifier, Mode=TwoWay}"
+                Margin="0,0,0,16"
+            />
+
+            <Label
+                Content="Пароль"
+            />
+            <ui:PasswordBox 
+                PlaceholderText="Введите пароль"
+                Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                Margin="0,0,0,24"
+            />
+
+            <ui:Button 
+                Content="Войти"
+                Appearance="Primary"
+                Command="{Binding LoginCommand}"
+                HorizontalAlignment="Stretch"
+                Height="48"
+                FontSize="16"
+            />
+
+            <Grid
+                Margin="0,24,0,0"
+                HorizontalAlignment="Center"
+                >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition
+                        Width="auto"
+                    />
+                    <ColumnDefinition
+                        Width="25"
+                    />
+                    <ColumnDefinition
+                        Width="auto"
+                    />
+                </Grid.ColumnDefinitions>
+
+                <ui:HyperlinkButton
+                    Grid.Column="0"
+                    Content="Регистрация"
+                    HorizontalAlignment="Center"
+                    Command="{Binding NavigateToRegisterCommand}"
+                />
+                <ui:HyperlinkButton 
+                    Grid.Column="2"
+                    Content="Настройки"
+                    HorizontalAlignment="Center"
+                    Command="{Binding NavigateToSettingsCommand}"
+                />
+            </Grid>
+        </StackPanel>
+    </ui:Card>
 </Page>

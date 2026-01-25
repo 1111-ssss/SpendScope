@@ -2,12 +2,15 @@
 using admin.Features.Auth.Pages;
 using admin.Features.Home;
 using admin.Features.Settings;
+using CommunityToolkit.Mvvm.ComponentModel;
+using System.Windows;
+using System.Windows.Data;
 using Wpf.Ui.Controls;
 
 namespace admin.Shell.ViewModel;
 public partial class MainWindowViewModel
 {
-    public void InitWindows()
+    public void InitWindows1()
     {
         //MainWindow
         _mainWindowController.CreateNewWindow("Main", new WindowNavigationProps
@@ -21,7 +24,7 @@ public partial class MainWindowViewModel
                     Content = "Главная",
                     Icon = new SymbolIcon { Symbol = SymbolRegular.Home24 },
                     TargetPageType = typeof(HomePage),
-                },
+                }
                 //new NavigationViewItem()
                 //{
                 //    Content = "Пользователи",
@@ -66,13 +69,13 @@ public partial class MainWindowViewModel
                 new NavigationViewItem()
                 {
                     Content = "Вход",
-                    Icon = new SymbolIcon { Symbol = SymbolRegular.Person24 },
+                    Icon = new SymbolIcon { Symbol = SymbolRegular.ArrowForwardDownPerson24 },
                     TargetPageType = typeof(AuthLoginPage),
                 },
                 new NavigationViewItem()
                 {
                     Content = "Регистрация",
-                    Icon = new SymbolIcon { Symbol = SymbolRegular.Person24 },
+                    Icon = new SymbolIcon { Symbol = SymbolRegular.PersonAdd24 },
                     TargetPageType = typeof(AuthRegisterPage),
                 },
             ],

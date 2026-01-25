@@ -12,6 +12,7 @@
     Width="1280"
     Height="720"
     WindowStartupLocation="CenterScreen"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     
     ExtendsContentIntoTitleBar="True"
     WindowBackdropType="Mica"
@@ -24,12 +25,15 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <ui:NavigationView
-                x:Name="RootNavigation"
-                Grid.Row="1"
-                PaneDisplayMode="LeftFluent"
-                MenuItemsSource="{Binding NavigationItems, Mode=OneWay}"
-                FooterMenuItemsSource="{Binding NavigationFooter, Mode=OneWay}"
-                >
+            x:Name="RootNavigation"
+            Grid.Row="1"
+            PaneDisplayMode="Left"
+            IsBackButtonVisible="Collapsed"
+            BreadcrumbBar="{Binding ElementName=BreadcrumbBar}"
+            IsPaneOpen="False"
+            MenuItemsSource="{Binding NavigationItems, Mode=OneWay}"
+            FooterMenuItemsSource="{Binding NavigationFooter, Mode=OneWay}"
+            >
             <ui:NavigationView.AutoSuggestBox>
                 <ui:AutoSuggestBox
                     x:Name="AutoSuggestBox" 
@@ -43,24 +47,30 @@
                 </ui:AutoSuggestBox>
             </ui:NavigationView.AutoSuggestBox>
             <ui:NavigationView.Header>
-                <ui:BreadcrumbBar 
-                    Margin="42,32,0,0"
-                    FontSize="28"
-                    FontWeight="DemiBold"
-                />
+                <StackPanel Margin="42,32,42,20">
+                    <ui:BreadcrumbBar
+                        x:Name="BreadcrumbBar"
+                    />
+                    <Border Height="2" Margin="0,12,0,0" HorizontalAlignment="Left" Width="300">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                <GradientStop Color="{DynamicResource AccentFillColorDefault}" Offset="0"/>
+                                <GradientStop Color="Transparent" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                    </Border>
+                </StackPanel>
             </ui:NavigationView.Header>
         </ui:NavigationView>
         <ui:ContentDialogHost
             x:Name="RootDialogHost"
             Grid.Row="1"
-            Panel.ZIndex="1000"
-            
-        /> <!--HorizontalAlignment="Stretch"
-VerticalAlignment="Stretch"-->
+            Panel.ZIndex="1000" 
+        /> 
         <ui:TitleBar
               Title="{Binding ApplicationTitle, Mode=OneWay}"
               Grid.Row="0"
-              Icon="{ui:SymbolIcon Person24}"
+              Icon="pack://application:,,,/Resources/application-icon.png"
         />
         <tray:NotifyIcon
             Grid.Row="0"
