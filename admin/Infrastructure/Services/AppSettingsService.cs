@@ -46,5 +46,7 @@ public class AppSettingsService : IAppSettingsService
     {
         SettingsChanged?.Invoke(this, e.PropertyName);
         _ = SaveSettingsAsync();
+        if (e.PropertyName == "CurrentTheme")
+            UpdateTheme();
     }
 }

@@ -37,7 +37,7 @@
             <ui:NavigationView.AutoSuggestBox>
                 <ui:AutoSuggestBox
                     x:Name="AutoSuggestBox" 
-                    PlaceholderText="Search"
+                    PlaceholderText="Поиск"
                     >
                     <ui:AutoSuggestBox.Icon>
                         <ui:IconSourceElement>
@@ -68,9 +68,9 @@
             Panel.ZIndex="1000" 
         /> 
         <ui:TitleBar
-              Title="{Binding ApplicationTitle, Mode=OneWay}"
-              Grid.Row="0"
-              Icon="pack://application:,,,/Resources/application-icon.png"
+            Title="{Binding ApplicationTitle, Mode=OneWay}"
+            Grid.Row="0"
+            Icon="pack://application:,,,/Resources/application-icon.png"
         />
         <tray:NotifyIcon
             Grid.Row="0"

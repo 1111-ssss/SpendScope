@@ -2,22 +2,57 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:controls="clr-namespace:admin.Features.Common.Controls"
     xmlns:local="clr-namespace:admin.Features.Settings"
     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-    Height="450" Width="800"
-    Title="Dashboard"
     >
-    <Grid>
-        <TextBlock
-            Text="Настройки"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            FontSize="24"
-            FontWeight="Bold"
-        />
-        <ui:Button
-            Content="Logout"
-            Command="{Binding LogoutCommand}"
-        />
-    </Grid>
+    <StackPanel>
+        <controls:LabeledCard
+            Icon="Link24"
+            Title="Адрес удаленного сервера"
+            Description="Адрес сервера для взаимодействия с приложением"
+            >
+            <ui:TextBox 
+                Grid.Column="2"
+                Margin="5"
+                PlaceholderText="https://..."
+                Text="{Binding Settings.ServerBaseURI, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            />
+        </controls:LabeledCard>
+        <controls:LabeledCard
+            Icon="DarkTheme24"
+            Title="Тема приложения"
+            Description="Изменение общего оформления приложения"
+            >
+            <ComboBox
+                ItemsSource="{Binding Settings.Themes}"
+                HorizontalAlignment="Stretch"
+                SelectedItem="{Binding Settings.CurrentTheme, Mode=TwoWay}"
+            />
+        </controls:LabeledCard>
+        <controls:LabeledCard
+            Icon="Dismiss24"
+            Title="Выход"
+            Description="Закрытие приложения"
+            >
+            <ui:Button
+                Content="Закрыть"
+                Command="{Binding CloseCommand}"
+                MinWidth="150"
+                HorizontalAlignment="Right"
+            />
+        </controls:LabeledCard>
+        <controls:LabeledCard
+            Icon="PersonDelete24"
+            Title="Выход из аккаунта"
+            Description="Удаление сессии и выход из аккаунта"
+            >
+            <ui:Button
+                Content="Выход"
+                Command="{Binding LogoutCommand}"
+                MinWidth="150"
+                HorizontalAlignment="Right"
+            />
+        </controls:LabeledCard>
+    </StackPanel>
 </Page>

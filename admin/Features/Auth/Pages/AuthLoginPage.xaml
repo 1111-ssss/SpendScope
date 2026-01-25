@@ -7,15 +7,14 @@
     >
     <ui:Card
         Margin="40"
-        MaxWidth="460"
-        VerticalAlignment="Center"
+        MaxWidth="560"
         >
         <StackPanel>
             <TextBlock
                 Text="Заполните данные для входа"
                 FontSize="24"
                 FontWeight="SemiBold"
-                Margin="0,0,0,32"
+                Margin="0,0,0,24"
             />
 
             <Label
@@ -63,7 +62,7 @@
 
                 <ui:HyperlinkButton
                     Grid.Column="0"
-                    Content="Регистрация"
+                    Content="Еще нет аккаунта? Регистрация"
                     HorizontalAlignment="Center"
                     Command="{Binding NavigateToRegisterCommand}"
                 />

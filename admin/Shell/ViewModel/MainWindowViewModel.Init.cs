@@ -2,15 +2,12 @@
 using admin.Features.Auth.Pages;
 using admin.Features.Home;
 using admin.Features.Settings;
-using CommunityToolkit.Mvvm.ComponentModel;
-using System.Windows;
-using System.Windows.Data;
 using Wpf.Ui.Controls;
 
 namespace admin.Shell.ViewModel;
 public partial class MainWindowViewModel
 {
-    public void InitWindows1()
+    public void InitWindows()
     {
         //MainWindow
         _mainWindowController.CreateNewWindow("Main", new WindowNavigationProps

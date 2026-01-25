@@ -20,12 +20,6 @@ public partial class AuthViewModel : BaseViewModel
     private string _password = String.Empty;
 
     [ObservableProperty]
-    private string _serverUrl = String.Empty;
-
-    [ObservableProperty]
-    private bool _rememberCredentials = true;
-
-    [ObservableProperty]
     private ApplicationSettings _settings;
 
     private IApiService _apiService;
@@ -89,17 +83,6 @@ public partial class AuthViewModel : BaseViewModel
             await _currentUserService.LoginAsync(result);
             _windowNavigationController.NavigateToWindow("Main");
         });
-    }
-    [RelayCommand]
-    private void ChangeSettings()
-    {
-        Settings.ServerBaseURI = string.IsNullOrEmpty(ServerUrl) ?
-            Settings.ServerBaseURI : ServerUrl;
-        Settings.RememberUsername = RememberCredentials;
-
-        _appSettingsService.UpdateTheme();
-
-        NavigateToLogin();
     }
     private void SaveUsername()
     {

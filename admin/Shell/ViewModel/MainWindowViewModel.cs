@@ -49,11 +49,11 @@ public partial class MainWindowViewModel : BaseViewModel
         if (!_isLoaded)
             return;
 
-        if (!_currentUserService.IsAuthenticated)
-        {
-            _mainWindowController.NavigateToWindow("Auth");
-            return;
-        }
+        //if (!_currentUserService.IsAuthenticated)
+        //{
+        //    _mainWindowController.NavigateToWindow("Auth");
+        //    return;
+        //}
 
         _mainWindowController.NavigateToWindow("Main");
     }

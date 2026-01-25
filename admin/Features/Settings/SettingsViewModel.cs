@@ -1,5 +1,6 @@
 ﻿using admin.Core.Abstractions;
 using admin.Core.Interfaces;
+using admin.Core.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -10,17 +11,26 @@ public partial class SettingsViewModel : BaseViewModel
     [ObservableProperty]
     private string _appTheme = string.Empty;
 
-    private readonly ICurrentUserService _currentUserService;
+    [ObservableProperty]
+    private ApplicationSettings _settings;
 
-    public SettingsViewModel(ICurrentUserService currentUserService)
+    private readonly ICurrentUserService _currentUserService;
+    private readonly IAppSettingsService _appSettingsService;
+
+    public SettingsViewModel(
+        ICurrentUserService currentUserService,
+        IAppSettingsService appSettings
+    )
     {
         _currentUserService = currentUserService;
+        _appSettingsService = appSettings;
+        Settings = appSettings.Current;
     }
 
     [RelayCommand]
-    private void SetTheme(string theme)
+    private void Close()
     {
-
+        App.Current.Shutdown();
     }
     [RelayCommand]
     private async Task Logout()
