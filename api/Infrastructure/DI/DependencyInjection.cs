@@ -33,7 +33,8 @@ public static class DependencyInjection
         services.AddScoped<IImageFormatter, ImageFormatter>();
 
         //Misc
-        services.AddScoped<IRequestStatisticsService, RequestStatisticsService>();
+        services.AddSingleton<IRequestStatisticsService, RequestStatisticsService>();
+        services.AddSingleton<ICpuUsageService, CpuUsageService>();
 
         return services;
     }

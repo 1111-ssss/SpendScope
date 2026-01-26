@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Application.Abstractions.DataBase;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -29,5 +30,24 @@ public partial class AppDbContext : DbContext, IUnitOfWork
     public async Task<int> GetTrackedEntitiesCountAsync()
     {
         return ChangeTracker.Entries().Count();
+    }
+
+    public async Task<bool> CanConnectAsync(CancellationToken ct = default)
+    {
+        return await Database.CanConnectAsync(ct);
+    }
+    public async Task<long> CalcDBLatencyAsync(CancellationToken ct = default)
+    {
+        var sw = Stopwatch.StartNew();
+        try
+        {
+            await Database.ExecuteSqlRawAsync("SELECT 1", ct);
+            // await Database.CanConnectAsync(ct);
+            return sw.ElapsedMilliseconds;
+        }
+        catch
+        {
+            return -1;
+        }
     }
 }

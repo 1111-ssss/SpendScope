@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using MediatR; 
 using Web.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authorization;
-using Application.Features.Stats.GetRequestCount;
 
 namespace Web.Controllers;
 
@@ -19,11 +18,5 @@ public class StatsController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet("requests")]
-    public async Task<IActionResult> GetRequestCount([FromQuery] GetRequestCountQuery query, CancellationToken ct)
-    {
-        var result = await _mediator.Send(query, ct);
-
-        return result.ToActionResult(); 
-    }
+    //
 }

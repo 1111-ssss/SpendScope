@@ -2,7 +2,7 @@ using Application.Abstractions.Misc;
 using Domain.Abstractions.Result;
 using MediatR;
 
-namespace Application.Features.Stats.GetRequestCount;
+namespace Application.Features.Health.GetRequestCount;
 
 public class GetRequestCountHandler : IRequestHandler<GetRequestCountQuery, Result<int>>
 {

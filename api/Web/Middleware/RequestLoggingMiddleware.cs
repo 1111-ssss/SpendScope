@@ -5,17 +5,25 @@ namespace Web.Middleware;
 public class RequestLoggingMiddleware
 {
     private readonly RequestDelegate _next;
-    private readonly IRequestStatisticsService _reqStatsService;
-    public RequestLoggingMiddleware(RequestDelegate next, IRequestStatisticsService reqStatsService)
+    public RequestLoggingMiddleware(RequestDelegate next)
     {
         _next = next;
-        _reqStatsService = reqStatsService;
     }
-    public async Task InvokeAsync(HttpContext context)
+    public async Task InvokeAsync(HttpContext context, IRequestStatisticsService reqStatsService)
     {
-        _reqStatsService.AddRequest(DateTime.UtcNow);
+        try {
+            reqStatsService.AddRequest(DateTime.UtcNow);
+            reqStatsService.EnterRequest();
 
-        await _next(context);
+            await _next(context);
+        }
+        catch
+        {
+            reqStatsService.AddFailedRequest();
+        }
+        finally {
+            reqStatsService.ExitRequest();
+        }
     }
 }
 

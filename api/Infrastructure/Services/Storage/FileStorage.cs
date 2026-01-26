@@ -19,6 +19,16 @@ public class FileStorage : IFileStorage
         if (!Directory.Exists(_basePath))
             Directory.CreateDirectory(_basePath);
     }
+    public long GetStorageSize(string? subDirectory)
+    {
+        var directory = Path.Combine(_basePath, subDirectory ?? string.Empty);
+
+        var dirInfo = new DirectoryInfo(directory);
+        if (!dirInfo.Exists)
+            return 0;
+
+        return dirInfo.EnumerateFiles("*", SearchOption.AllDirectories).Sum(f => f.Length);
+    }
     public async Task<string> SaveFileAsync(IFormFile file, string subDirectory, string fileName, CancellationToken ct = default)
     {
         var directory = Path.Combine(_basePath, subDirectory);

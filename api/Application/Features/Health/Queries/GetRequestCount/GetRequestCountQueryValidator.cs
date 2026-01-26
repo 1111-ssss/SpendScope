@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Application.Features.Stats.GetRequestCount;
+namespace Application.Features.Health.GetRequestCount;
 
 public class GetStatsQueryValidator : AbstractValidator<GetRequestCountQuery>
 {

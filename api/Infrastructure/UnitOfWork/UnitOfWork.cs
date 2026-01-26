@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Application.Abstractions.DataBase;
 using Infrastructure.DataBase.Context;
 
@@ -13,6 +14,23 @@ public class UnitOfWork : IUnitOfWork
     public async Task<int> SaveChangesAsync(CancellationToken ct = default)
     {
         return await _db.SaveChangesAsync(ct);
+    }
+    public async Task<bool> CanConnectAsync(CancellationToken ct = default)
+    {
+        return await _db.Database.CanConnectAsync(ct);
+    }
+    public async Task<long> CalcDBLatencyAsync(CancellationToken ct = default)
+    {
+        var sw = Stopwatch.StartNew();
+        try
+        {
+            await _db.Database.CanConnectAsync(ct);
+            return sw.ElapsedMilliseconds;
+        }
+        catch
+        {
+            return -1;
+        }
     }
     public void Dispose()
     {
