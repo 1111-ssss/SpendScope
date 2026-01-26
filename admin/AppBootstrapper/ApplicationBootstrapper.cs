@@ -70,7 +70,9 @@ public static class ApplicationBootstrapper
                     client.Timeout = TimeSpan.FromSeconds(20);
                 })
                 //.AddHttpMessageHandler<JwtAuthHandler>()
-                .AddTypedClient<IAuthApi>(Refit.RestService.For<IAuthApi>);
+                .AddTypedClient<IAuthApi>(Refit.RestService.For<IAuthApi>)
+                .AddTypedClient<IHealthApi>(Refit.RestService.For<IHealthApi>)
+                .AddTypedClient<IProfileApi>(Refit.RestService.For<IProfileApi>);
 
                 //services.AddHttpClient("AuthClient", client =>
                 //{

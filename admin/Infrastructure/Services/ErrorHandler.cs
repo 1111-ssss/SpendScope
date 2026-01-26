@@ -20,14 +20,14 @@ public class ErrorHandler : IErrorHandler
         _logger = logger;
     }
 
-    public async Task HandleExceptionAsync(Exception ex, bool showUserMessage = true)
+    public async Task HandleExceptionAsync(Exception ex, bool showUserMessage = true, string? messageTitle = null, string? messageText = null)
     {
         _logger.LogError(ex, "Неизвестная ошибка");
 
         if (!showUserMessage) return;
 
-        string title = "Неожиданная ошибка";
-        string message = "Что-то пошло не так…\n\n" + (ex.Message ?? "Неизвестная ошибка");
+        string title = messageTitle ?? "Неожиданная ошибка";
+        string message = messageText ?? "Что-то пошло не так…\n\n" + (ex.Message ?? "Неизвестная ошибка");
 
         if (ex is ApiException apiEx)
         {
@@ -38,13 +38,13 @@ public class ErrorHandler : IErrorHandler
         await ShowDialogAsync(title, message);
     }
 
-    public async Task HandleApiErrorAsync(ApiException ex, bool showUserMessage = true)
+    public async Task HandleApiErrorAsync(ApiException ex, bool showUserMessage = true, string? messageTitle = null, string? messageText = null)
     {
         _logger.LogWarning($"Ошибка API {ex.StatusCode}: {ex.Message}");
 
         if (!showUserMessage) return;
 
-        string title = $"Ошибка API {((int)ex.StatusCode)}: {ex.StatusCode}";
+        string title = messageTitle ?? $"Ошибка API {((int)ex.StatusCode)}: {ex.StatusCode}";
 
         string content = ex.Content ?? string.Empty;
         if (!string.IsNullOrEmpty(content))
@@ -54,7 +54,7 @@ public class ErrorHandler : IErrorHandler
                 errorElem.ToString() ?? "Ошибка без описания" : "Неизвестная ошибка";
         }
 
-        string message = content ?? ex.Message ?? "Сервер вернул ошибку";
+        string message = messageText ?? content ?? ex.Message ?? "Сервер вернул ошибку";
 
         if (ex.StatusCode == HttpStatusCode.Unauthorized)
         {

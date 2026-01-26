@@ -1,17 +1,58 @@
 ﻿<Page x:Class="admin.Features.Home.HomePage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-      xmlns:local="clr-namespace:admin.Features.Home"
-      Height="450" Width="800"
-      Title="Dashboard">
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:local="clr-namespace:admin.Features.Home"
+    xmlns:sp="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+    >
 
-    <Grid>
-        <TextBlock
-            Text="Главная страница"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            FontSize="24"
-            FontWeight="Bold" />
-    </Grid>
+    <!--<StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,24" VerticalAlignment="Top">
+            <ui:Image
+                Source="{Binding CurrentUser.AvatarUrl}"
+                Width="64" Height="64"
+                Stretch="UniformToFill"
+                CornerRadius="32"
+                Margin="0,0,16,0"/>
+
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="{Binding CurrentUser.DisplayName}" 
+                   FontSize="24" FontWeight="SemiBold"/>
+                <TextBlock Text="Администратор" 
+                   FontSize="14" Opacity="0.7"/>
+            </StackPanel>
+        </StackPanel>
+
+        <ui:Card Margin="16" HorizontalAlignment="Right" VerticalAlignment="Top" MinWidth="180">
+            <StackPanel Orientation="Horizontal" Margin="12">
+                <ui:SymbolIcon 
+                    x:Name="ServerStatusIcon"
+                    Symbol="Wifi124" 
+                    FontSize="24"
+                    Foreground="{Binding ServerStatusColor}"/>
+
+                <StackPanel Margin="12,0,0,0">
+                    <TextBlock Text="Сервер" FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding ServerStatusText}" 
+                       Foreground="{Binding ServerStatusColor}"/>
+                </StackPanel>
+            </StackPanel>
+        </ui:Card>
+
+        <ui:Card Margin="0,0,0,24">
+            <StackPanel>
+                <TextBlock 
+            Text="Оборот за последние 7 дней" 
+            FontSize="18" 
+            FontWeight="SemiBold" 
+            Margin="16,16,16,8"/>
+
+                <sp:WpfPlot 
+            x:Name="TurnoverPlot" 
+            Height="320" 
+            Margin="16"/>
+            </StackPanel>
+        </ui:Card>
+    </StackPanel>-->
 </Page>

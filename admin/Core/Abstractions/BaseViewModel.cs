@@ -30,7 +30,9 @@ public abstract class BaseViewModel : ObservableObject, INavigationAware
 
     protected async Task HandleActionAsync(
         Func<Task> action,
-        bool showUserMessage = true
+        bool showUserMessage = true,
+        string? messageTitle = null,
+        string? messageText = null
     )
     {
         try
@@ -39,11 +41,11 @@ public abstract class BaseViewModel : ObservableObject, INavigationAware
         }
         catch (ApiException ex) when (showUserMessage)
         {
-            await ErrorHandler.HandleApiErrorAsync(ex);
+            await ErrorHandler.HandleApiErrorAsync(ex, true, messageTitle, messageText);
         }
         catch (Exception ex) when (showUserMessage)
         {
-            await ErrorHandler.HandleExceptionAsync(ex);
+            await ErrorHandler.HandleExceptionAsync(ex, true, messageTitle, messageText);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using admin.Core.Interfaces;
 using admin.Core.Model;
-using admin.Features.Auth.DTO.Requests;
-using admin.Features.Auth.DTO.Responses;
+using admin.Core.DTO.Auth.Requests;
+using admin.Core.DTO.Auth.Responses;
 using Refit;
 using System.Diagnostics;
 using System.Net;

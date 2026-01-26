@@ -1,5 +1,5 @@
-﻿using admin.Features.Auth.DTO.Requests;
-using admin.Features.Auth.DTO.Responses;
+﻿using admin.Core.DTO.Auth.Requests;
+using admin.Core.DTO.Auth.Responses;
 using Refit;
 
 namespace admin.Infrastructure.Http.Clients;

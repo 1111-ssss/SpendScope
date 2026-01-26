@@ -1,4 +1,4 @@
-﻿namespace admin.Features.Auth.DTO.Responses;
+﻿namespace admin.Core.DTO.Auth.Responses;
 
 public record AuthResponse(
     string JwtToken,

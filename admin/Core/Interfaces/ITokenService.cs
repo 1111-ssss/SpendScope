@@ -1,5 +1,5 @@
 ﻿using admin.Core.Model;
-using admin.Features.Auth.DTO.Responses;
+using admin.Core.DTO.Auth.Responses;
 
 namespace admin.Core.Interfaces;
 

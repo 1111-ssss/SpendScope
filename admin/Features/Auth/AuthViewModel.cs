@@ -1,7 +1,7 @@
 ﻿using admin.Core.Abstractions;
 using admin.Core.Interfaces;
 using admin.Core.Model;
-using admin.Features.Auth.DTO.Requests;
+using admin.Core.DTO.Auth.Requests;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Wpf.Ui;
@@ -26,7 +26,6 @@ public partial class AuthViewModel : BaseViewModel
     private ICurrentUserService _currentUserService;
     private INavigationService _navigationService;
     private IMainWindowController _windowNavigationController;
-    private readonly IAppSettingsService _appSettingsService;
 
     public AuthViewModel(
         IApiService apiService,
@@ -40,16 +39,21 @@ public partial class AuthViewModel : BaseViewModel
         _currentUserService = currentUserService;
         _navigationService = navigationService;
         _windowNavigationController = windowNavigationController;
-        _appSettingsService = appSettingsService;
 
         Settings = appSettingsService.Current;
 
         if (Settings.RememberUsername && !string.IsNullOrEmpty(Settings.SavedUsername))
             Identifier = Settings.SavedUsername;
+
+        _ = HandleActionAsync(async () =>
+        {
+            await _apiService.Health.GetHealth();
+        }, true, "Нет ответа от сервера", "Проверьте подключение к интернету или поменяйте адрес удаленного сервера");
     }
 
     [RelayCommand]
     private void NavigateToLogin() => _navigationService.Navigate(typeof(AuthLoginPage));
+
     [RelayCommand]
     private void NavigateToRegister() => _navigationService.Navigate(typeof(AuthRegisterPage));
 
@@ -59,7 +63,7 @@ public partial class AuthViewModel : BaseViewModel
     [RelayCommand]
     private async Task Login()
     {
-        SaveUsername();
+        Settings.SavedUsername = Identifier;
         await HandleActionAsync(async () =>
         {
             var result = await _apiService.Auth.Login(
@@ -70,10 +74,11 @@ public partial class AuthViewModel : BaseViewModel
             _windowNavigationController.NavigateToWindow("Main");
         });
     }
+
     [RelayCommand]
     private async Task Register()
     {
-        SaveUsername();
+        Settings.SavedUsername = Identifier;
         await HandleActionAsync(async () =>
         {
             var result = await _apiService.Auth.Register(
@@ -83,9 +88,5 @@ public partial class AuthViewModel : BaseViewModel
             await _currentUserService.LoginAsync(result);
             _windowNavigationController.NavigateToWindow("Main");
         });
-    }
-    private void SaveUsername()
-    {
-        Settings.SavedUsername = Identifier;
     }
 }
