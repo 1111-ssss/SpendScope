@@ -6,18 +6,18 @@
     <UserSecretsId>4b22f4b0-eaea-4a82-aa57-76bb9e7afe98</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="CorrelationId" Version="3.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0" />
+    <PackageReference Include="CorrelationId" Version="3.0.1"/>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.1.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0"/>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="NWebsec.AspNetCore.Middleware" Version="3.0.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.1" />
+    <PackageReference Include="NWebsec.AspNetCore.Middleware" Version="3.0.0"/>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.1"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Application\Application.csproj" />
-    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\Application\Application.csproj"/>
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj"/>
   </ItemGroup>
 </Project>

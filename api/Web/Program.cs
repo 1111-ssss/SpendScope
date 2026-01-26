@@ -60,12 +60,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseRequestLogging();
 
 app.UseCorrelationAndSecurityHeaders(app.Environment);
 
 app.UseAuthentication();
 app.UseIPValidation();
 app.UseAuthorization();
+
 app.UseRateLimiter();
 app.MapControllers();
 

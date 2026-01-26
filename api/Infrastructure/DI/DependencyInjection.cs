@@ -1,10 +1,12 @@
 using Application.Abstractions.Auth;
 using Application.Abstractions.DataBase;
+using Application.Abstractions.Misc;
 using Application.Abstractions.Repository;
 using Application.Abstractions.Storage;
 using Infrastructure.DataBase.Context;
 using Infrastructure.DataBase.Repository;
 using Infrastructure.Services.Auth;
+using Infrastructure.Services.Misc;
 using Infrastructure.Services.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -29,6 +31,9 @@ public static class DependencyInjection
         //Storage services
         services.AddScoped<IFileStorage, FileStorage>();
         services.AddScoped<IImageFormatter, ImageFormatter>();
+
+        //Misc
+        services.AddScoped<IRequestStatisticsService, RequestStatisticsService>();
 
         return services;
     }

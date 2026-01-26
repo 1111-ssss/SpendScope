@@ -13,7 +13,7 @@ public static class ResultExtensions
 
         return code switch
         {
-            400 => new BadRequestObjectResult(new { error = result.Message ?? "Bad request", code }),
+            400 => new BadRequestObjectResult(new { error = result.Message ?? "Bad request", code}),
             401 => new UnauthorizedObjectResult(new { error = result.Message ?? "Unauthorized", code }),
             404 => new NotFoundObjectResult(new { error = result.Message ?? "Not found", code }),
             409 => new ConflictObjectResult(new { error = result.Message ?? "Conflict", code }),
