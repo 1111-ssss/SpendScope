@@ -4,6 +4,8 @@ using Infrastructure.DI;
 using Web.Extensions.DependencyInjection;
 using Web.Extensions.Middleware;
 using Web.Middleware;
+using Serilog;
+using Serilog.Debugging;
 
 var builder = WebApplication.CreateBuilder(args);
 

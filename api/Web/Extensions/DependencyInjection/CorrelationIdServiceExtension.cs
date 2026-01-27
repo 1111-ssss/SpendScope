@@ -6,7 +6,11 @@ public static class CorrelationIdServiceExtension
 {
     public static IServiceCollection AddCorrelationId(this IServiceCollection services)
     {
-        services.AddDefaultCorrelationId();
+        services.AddDefaultCorrelationId(conf =>
+        {
+            conf.IgnoreRequestHeader = true;
+            conf.UpdateTraceIdentifier = true;
+        });
 
         return services;
     }

@@ -14,6 +14,7 @@ public static class SerilogExtensions
                 .ReadFrom.Configuration(context.Configuration)
                 .ReadFrom.Services(services)
                 .Enrich.FromLogContext()
+                .Enrich.WithCorrelationId()
                 .WriteTo.Console()
                 .WriteTo.Async(a => a.PostgreSQL(
                     connectionString: context.Configuration.GetConnectionString("DefaultConnection"),

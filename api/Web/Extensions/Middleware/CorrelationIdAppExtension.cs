@@ -6,7 +6,8 @@ public static class CorelationIdAppExtension
 {
     public static IApplicationBuilder UseCorrelationAndSecurityHeaders(
         this IApplicationBuilder app,
-        IWebHostEnvironment env)
+        IWebHostEnvironment env
+    )
     {
         app.UseCorrelationId();
 

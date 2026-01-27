@@ -36,7 +36,14 @@ public class LogEntryConfiguration : IEntityTypeConfiguration<LogEntry>
               builder.Property(l => l.Exception)
                      .HasColumnName("exception");
 
+              builder.Property(l => l.MessageTemplate)
+                     .HasColumnName("message_template");
+
               builder.Property(l => l.Properties)
+                     .HasColumnName("properties")
+                     .HasColumnType("jsonb");
+              
+              builder.Property(l => l.LogEvent)
                      .HasColumnName("log_event")
                      .HasColumnType("jsonb");
        }
