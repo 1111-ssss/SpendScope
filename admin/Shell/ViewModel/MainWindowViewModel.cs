@@ -3,6 +3,7 @@ using admin.Core.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 using Wpf.Ui;
+using Wpf.Ui.Controls;
 
 namespace admin.Shell.ViewModel;
 
@@ -18,8 +19,9 @@ public partial class MainWindowViewModel : BaseViewModel
     private ObservableCollection<object> _navigationFooter = [];
 
     [ObservableProperty]
-    private ObservableCollection<Wpf.Ui.Controls.MenuItem> _trayMenuItems = [];
+    private ObservableCollection<MenuItem> _trayMenuItems = [];
 
+    public string ApplicationWindow = "None";
     private INavigationService _navigationService;
     private ICurrentUserService _currentUserService;
     private IMainWindowController _mainWindowController;
@@ -49,11 +51,11 @@ public partial class MainWindowViewModel : BaseViewModel
         if (!_isLoaded)
             return;
 
-        //if (!_currentUserService.IsAuthenticated)
-        //{
-        //    _mainWindowController.NavigateToWindow("Auth");
-        //    return;
-        //}
+        if (!_currentUserService.IsAuthenticated)
+        {
+            _mainWindowController.NavigateToWindow("Auth");
+            return;
+        }
 
         _mainWindowController.NavigateToWindow("Main");
     }

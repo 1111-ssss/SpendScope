@@ -5,13 +5,14 @@ using admin.Core.DTO.Auth.Responses;
 using Refit;
 using System.Diagnostics;
 using System.Net;
+using admin.Infrastructure.Http.Clients;
 
 namespace admin.Infrastructure.Http.Auth;
 
 public class TokenService : ITokenService
 {
     private readonly IStorageService _storage;
-    private readonly IApiService _apiService;
+    private readonly IAuthApi _authApi;
     private readonly SemaphoreSlim _semaphore = new(1, 1);
     private TokenInfo? _cachedTokenInfo;
 
@@ -19,11 +20,11 @@ public class TokenService : ITokenService
 
     public TokenService(
         IStorageService storage,
-        IApiService apiService
+        IAuthApi authApi
     )
     {
         _storage = storage;
-        _apiService = apiService;
+        _authApi = authApi;
     }
 
     public async Task<string?> GetAccessTokenAsync(CancellationToken ct = default)
@@ -53,7 +54,7 @@ public class TokenService : ITokenService
 
             try
             {
-                var response = await _apiService.Auth.RefreshToken(
+                var response = await _authApi.RefreshToken(
                     new RefreshTokenRequest(
                         JwtToken: info.JwtToken,
                         RefreshToken: info.RefreshToken

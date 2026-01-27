@@ -40,6 +40,7 @@ public class MainWindowController : IMainWindowController
         if (!_windowsDictionary.TryGetValue(name, out var props))
             throw new InvalidOperationException($"Не удалось найти окно с названием {name}");
 
+        MainVM.ApplicationWindow = name;
         MainVM.ApplicationTitle = props.ApplicationTitle;
         MainVM.NavigationItems = props.NavigationItems;
         MainVM.NavigationFooter = props.NavigationFooter;
