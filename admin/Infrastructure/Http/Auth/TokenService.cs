@@ -3,9 +3,9 @@ using admin.Core.Model;
 using admin.Core.DTO.Auth.Requests;
 using admin.Core.DTO.Auth.Responses;
 using Refit;
-using System.Diagnostics;
 using System.Net;
 using admin.Infrastructure.Http.Clients;
+using System.Net.Http;
 
 namespace admin.Infrastructure.Http.Auth;
 
@@ -76,6 +76,10 @@ public class TokenService : ITokenService
             {
                 await _storage.ClearTokenAsync(ct);
                 _cachedTokenInfo = null;
+                return null;
+            }
+            catch (HttpRequestException)
+            {
                 return null;
             }
         }

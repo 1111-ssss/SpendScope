@@ -1,6 +1,7 @@
 ﻿using admin.Core.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Refit;
+using System.Net.Http;
 using Wpf.Ui.Abstractions.Controls;
 
 namespace admin.Core.Abstractions;
@@ -39,13 +40,13 @@ public abstract class BaseViewModel : ObservableObject, INavigationAware
         {
             await action();
         }
-        catch (ApiException ex) when (showUserMessage)
+        catch (ApiException ex)
         {
-            await ErrorHandler.HandleApiErrorAsync(ex, true, messageTitle, messageText);
+            await ErrorHandler.HandleApiErrorAsync(ex, showUserMessage, messageTitle, messageText);
         }
-        catch (Exception ex) when (showUserMessage)
+        catch (Exception ex)
         {
-            await ErrorHandler.HandleExceptionAsync(ex, true, messageTitle, messageText);
+            await ErrorHandler.HandleExceptionAsync(ex, showUserMessage, messageTitle, messageText);
         }
     }
 }

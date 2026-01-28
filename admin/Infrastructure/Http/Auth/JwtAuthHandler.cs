@@ -19,7 +19,7 @@ public class JwtAuthHandler : DelegatingHandler
         CancellationToken cancellationToken
     )
     {
-        if (request.RequestUri != null && !UriRequiresAuthorization(request.RequestUri.Segments))
+        if (request.RequestUri != null && IsPublicPath(request.RequestUri))
             return await base.SendAsync(request, cancellationToken);
 
         var token = await _tokenService.GetAccessTokenAsync(cancellationToken);
@@ -31,17 +31,17 @@ public class JwtAuthHandler : DelegatingHandler
 
         var response = await base.SendAsync(request, cancellationToken);
 
-        if (response.StatusCode == HttpStatusCode.Unauthorized)
-        {
-            token = await _tokenService.GetAccessTokenAsync(cancellationToken);
-            if (string.IsNullOrEmpty(token))
-            {
-                return response;
-            }
+        //if (response.StatusCode == HttpStatusCode.Unauthorized)
+        //{
+        //    token = await _tokenService.GetAccessTokenAsync(cancellationToken);
+        //    if (string.IsNullOrEmpty(token))
+        //    {
+        //        return response;
+        //    }
 
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            response = await base.SendAsync(request, cancellationToken);
-        }
+        //    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        //    response = await base.SendAsync(request, cancellationToken);
+        //}
 
         return response;
     }
@@ -50,11 +50,16 @@ public class JwtAuthHandler : DelegatingHandler
         [
             "/auth"
         ];
-    private bool UriRequiresAuthorization(string[] uris)
+    private bool IsPublicPath(Uri? uri)
     {
-        if (_publicPaths.Any(p => uris.Contains(p)))
-            return false;
+        if (uri == null)
+            return true;
 
-        return true;
+        string[] uriSegments = uri.Segments;
+
+        if (_publicPaths.Any(p => uriSegments.Contains(p)))
+            return true;
+
+        return false;
     }
 }
