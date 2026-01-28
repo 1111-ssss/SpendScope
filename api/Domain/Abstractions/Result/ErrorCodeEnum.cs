@@ -11,6 +11,7 @@ public enum ErrorCode
     Forbidden = 403,
     NotFound = 404,
     Conflict = 409,
+    ImATeapot = 418,
     TooManyRequests = 429,
     InternalServerError = 500,
     ServiceUnavailable = 503,

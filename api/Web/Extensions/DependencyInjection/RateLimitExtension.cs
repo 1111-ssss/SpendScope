@@ -11,11 +11,12 @@ public static class RateLimitExtension
         {
             options.AddTokenBucketLimiter("DefaultLimiter", opt =>
             {
-                opt.TokenLimit = 20;
+                opt.TokenLimit = 50;
                 opt.ReplenishmentPeriod = TimeSpan.FromSeconds(10);
-                opt.TokensPerPeriod = 10;
+                opt.TokensPerPeriod = 25;
                 opt.AutoReplenishment = true;
                 opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                opt.QueueLimit = 5;
             });
 
             options.AddFixedWindowLimiter("StrictLimiter", opt =>
@@ -28,14 +29,16 @@ public static class RateLimitExtension
             {
                 var key = context.User.Identity?.IsAuthenticated == true
                     ? $"user:{context.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value}"
-                    : context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+                    : $"ip:{context.Connection.RemoteIpAddress?.ToString() ?? "unknown"}";
 
                 return RateLimitPartition.GetTokenBucketLimiter(key, _ => new TokenBucketRateLimiterOptions
                 {
-                    TokenLimit = 50,
+                    TokenLimit = 150,
                     ReplenishmentPeriod = TimeSpan.FromMinutes(1),
-                    TokensPerPeriod = 5,
-                    AutoReplenishment = true
+                    TokensPerPeriod = 60,
+                    AutoReplenishment = true,
+                    QueueLimit = 10,
+                    QueueProcessingOrder = QueueProcessingOrder.OldestFirst
                 });
             });
 
