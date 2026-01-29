@@ -13,5 +13,6 @@ public record HealthResponse(
     long ActiveConnections,
     int FailedRequests,
     int TotalRequests,
-    long DbLatency
+    long DbLatency,
+    DateTime CurrentTime
 );

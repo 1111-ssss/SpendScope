@@ -67,7 +67,8 @@ public class GetHealthQueryHandler : IRequestHandler<GetHealthQuery, Result<Heal
             ActiveConnections: activeConnections,
             FailedRequests: failedRequests,
             TotalRequests: totalRequests,
-            DbLatency: dbLatency
+            DbLatency: dbLatency,
+            CurrentTime: DateTime.UtcNow
         ));
     }
 }
