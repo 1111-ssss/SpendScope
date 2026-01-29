@@ -41,8 +41,8 @@ public partial class AppDbContext : DbContext, IUnitOfWork
         var sw = Stopwatch.StartNew();
         try
         {
-            await Database.ExecuteSqlRawAsync("SELECT 1", ct);
-            // await Database.CanConnectAsync(ct);
+            // await Database.ExecuteSqlRawAsync("SELECT 1", ct);
+            await Database.CanConnectAsync(ct);
             return sw.ElapsedMilliseconds;
         }
         catch

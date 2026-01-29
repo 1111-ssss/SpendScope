@@ -1,8 +1,5 @@
 using Application.Abstractions.Storage;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -10,6 +7,9 @@ namespace Infrastructure.Services.Storage;
 
 public class FileStorage : IFileStorage
 {
+    private static long _lastStorageSize;
+    private static DateTime _lastStorageSizeUpdateTime = DateTime.MinValue;
+
     private readonly string _basePath;
     private readonly ILogger<FileStorage> _logger;
     public FileStorage(IConfiguration config, ILogger<FileStorage> logger)
@@ -21,13 +21,20 @@ public class FileStorage : IFileStorage
     }
     public long GetStorageSize(string? subDirectory)
     {
+        if (_lastStorageSizeUpdateTime.AddMinutes(1) < DateTime.UtcNow)
+            return _lastStorageSize;
+
         var directory = Path.Combine(_basePath, subDirectory ?? string.Empty);
 
         var dirInfo = new DirectoryInfo(directory);
         if (!dirInfo.Exists)
             return 0;
 
-        return dirInfo.EnumerateFiles("*", SearchOption.AllDirectories).Sum(f => f.Length);
+        long totalSize = dirInfo.EnumerateFiles("*", SearchOption.AllDirectories).Sum(f => f.Length);
+
+        _lastStorageSize = totalSize;
+        _lastStorageSizeUpdateTime = DateTime.UtcNow;
+        return totalSize;
     }
     public async Task<string> SaveFileAsync(IFormFile file, string subDirectory, string fileName, CancellationToken ct = default)
     {
