@@ -1,4 +1,5 @@
 ﻿using admin.Core.Interfaces;
+using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -9,7 +10,9 @@ public class JwtAuthHandler : DelegatingHandler
 {
     private readonly ITokenService _tokenService;
 
-    public JwtAuthHandler(ITokenService tokenService)
+    public JwtAuthHandler(
+        ITokenService tokenService
+    )
     {
         _tokenService = tokenService;
     }

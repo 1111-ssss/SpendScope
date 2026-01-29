@@ -1,6 +1,7 @@
 ﻿using admin.Core.Model;
 using admin.Features.Auth.Pages;
 using admin.Features.Home;
+using admin.Features.Metrics;
 using admin.Features.Settings;
 using Wpf.Ui.Controls;
 
@@ -21,13 +22,13 @@ public partial class MainWindowViewModel
                     Content = "Главная",
                     Icon = new SymbolIcon { Symbol = SymbolRegular.Home24 },
                     TargetPageType = typeof(HomePage),
-                }
-                //new NavigationViewItem()
-                //{
-                //    Content = "Пользователи",
-                //    Icon = new SymbolIcon { Symbol = SymbolRegular.DataHistogram24 },
-                //    TargetPageType = typeof(UsersView),
-                //},
+                },
+                new NavigationViewItem()
+                {
+                    Content = "Метрики",
+                    Icon = new SymbolIcon { Symbol = SymbolRegular.DataUsageSettings20 },
+                    TargetPageType = typeof(MetricsPage),
+                },
             ],
 
             NavigationFooter =
@@ -44,6 +45,10 @@ public partial class MainWindowViewModel
                 {
                     new() { Header = "Главная", Tag = "tray_home" },
                     () => _navigationService.Navigate(typeof(HomePage))
+                },
+                {
+                    new() { Header = "Метрики", Tag = "tray_metrics" },
+                    () => _navigationService.Navigate(typeof(MetricsPage))
                 },
                 {
                     new() { Header = "Настройки", Tag = "tray_settings" },

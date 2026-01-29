@@ -72,7 +72,8 @@
                         />
                         <TextBlock
                             Text="{Binding Problems}"
-                            FontSize="18"
+                            FontSize="16"
+                            FontWeight="Normal"
                         />
                     </StackPanel>
                 </controls:DashboardCard>
@@ -92,8 +93,8 @@
                 </controls:DashboardCard>
 
                 <controls:DashboardCard
-                    Title="Активных подключений"
-                    SubText="Обрабатываемые подключения"
+                    Title="Подключения"
+                    SubText="Активные подключения"
                     Icon="PhoneScreenTime24"
                     >
                     <TextBlock

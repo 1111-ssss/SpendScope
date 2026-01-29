@@ -1,7 +1,9 @@
 ﻿using admin.Core.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Refit;
+using Serilog;
 using System.Net.Http;
+using Wpf.Ui;
 using Wpf.Ui.Abstractions.Controls;
 
 namespace admin.Core.Abstractions;
@@ -43,6 +45,10 @@ public abstract class BaseViewModel : ObservableObject, INavigationAware
         catch (ApiException ex)
         {
             await ErrorHandler.HandleApiErrorAsync(ex, showUserMessage, messageTitle, messageText);
+        }
+        catch (TaskCanceledException ex)
+        {
+            Log.Logger.Information($"Запрос был отменен по причине CancellationToken");
         }
         catch (Exception ex)
         {

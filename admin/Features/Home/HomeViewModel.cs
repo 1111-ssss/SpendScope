@@ -5,6 +5,7 @@ using admin.Core.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.Logging;
 using System.Windows.Media;
+using System.Windows.Threading;
 using Wpf.Ui.Appearance;
 
 namespace admin.Features.Home;
@@ -13,9 +14,7 @@ public partial class HomeViewModel : BaseViewModel, IDisposable
     [ObservableProperty]
     private HealthResponse? _currentHealth;
 
-    [ObservableProperty]
-    private string _pingValue = "0 мс";
-
+    public string PingValue => CalculatePing();
     public string HealthStatus => CurrentHealth switch
     {
         null => "Загрузка",
@@ -41,11 +40,12 @@ public partial class HomeViewModel : BaseViewModel, IDisposable
     };
     public string Problems => GetProblems();
 
-    private readonly CancellationTokenSource _cts = new();
+    private CancellationTokenSource _cts = new();
+    private DispatcherTimer _timer = new();
+
     private readonly ICurrentUserService _currentUserService;
     private readonly IApiService _apiService;
     private readonly ILogger<HomeViewModel> _logger;
-    private Task? _healthMonitor;
     public HomeViewModel(
         ICurrentUserService currentUserService, 
         IApiService apiService,
@@ -56,7 +56,13 @@ public partial class HomeViewModel : BaseViewModel, IDisposable
         _apiService = apiService;
         _logger = logger;
 
-        InitHealthMonitor();
+        InitTimer();
+    }
+    private void InitTimer()
+    {
+        _ = FetchHealthDataAsync();
+        _timer.Interval = TimeSpan.FromSeconds(5);
+        _timer.Tick += async (sender, e) => await FetchHealthDataAsync();
     }
 
     partial void OnCurrentHealthChanged(HealthResponse? value)
@@ -67,47 +73,44 @@ public partial class HomeViewModel : BaseViewModel, IDisposable
         OnPropertyChanged(nameof(TotalRequests));
         OnPropertyChanged(nameof(ActiveConnections));
         OnPropertyChanged(nameof(Problems));
+        OnPropertyChanged(nameof(PingValue));
     }
 
-    private void InitHealthMonitor()
+    public override void OnNavigatedTo()
     {
-        _healthMonitor = Task.Run(async () =>
+        base.OnNavigatedTo();
+
+        _cts = new();
+        _timer.Start();
+    }
+
+    public override void OnNavigatedFrom()
+    {
+        base.OnNavigatedFrom();
+
+        _timer.Stop();
+        _cts.Cancel();
+    }
+
+    private async Task FetchHealthDataAsync()
+    {
+        try
         {
-            while (!_cts.Token.IsCancellationRequested)
+            await HandleActionAsync(async () =>
             {
-                try
-                {
-                    await FetchHealthDataAsync(_cts.Token);
-                }
-                catch (OperationCanceledException)
-                {
-                    return;
-                }
-
-                try
-                {
-                    await Task.Delay(TimeSpan.FromSeconds(5), _cts.Token);
-                }
-                catch (TaskCanceledException)
-                {
-                    return;
-                }
-            }
-        }, _cts.Token);
-    }
-
-    private async Task FetchHealthDataAsync(CancellationToken ct = default)
-    {
-        await HandleActionAsync(async () =>
+                CurrentHealth = await _apiService.Health.GetDetailed(_cts.Token);
+            }, false);
+        }
+        catch (TaskCanceledException) when (_cts.IsCancellationRequested)
         {
-            CalculatePing(await _apiService.Health.GetPing());
-            CurrentHealth = await _apiService.Health.GetDetailed(ct);
-        }, false);
+            //skip
+        }
     }
 
-    private void CalculatePing(DateTime dt)
+    private string CalculatePing()
     {
-        PingValue = $"{DateTime.UtcNow.CompareTo(dt)} мс";
+        var serverTime = CurrentHealth?.CurrentTime ?? DateTime.UtcNow;
+        return $"{(int)DateTime.UtcNow.Subtract(serverTime).TotalMilliseconds} мс";
     }
     private string GetUptime()
     {
@@ -115,8 +118,8 @@ public partial class HomeViewModel : BaseViewModel, IDisposable
             return "Загрузка";
 
         int days = (int)CurrentHealth.Uptime.TotalDays;
-        int hours = (int)CurrentHealth.Uptime.TotalHours;
-        int mins = (int)CurrentHealth.Uptime.TotalMinutes;
+        int hours = (int)CurrentHealth.Uptime.TotalHours % 24;
+        int mins = (int)CurrentHealth.Uptime.TotalMinutes % 60;
 
         var dayWord = days switch
         {

@@ -1,0 +1,31 @@
+﻿using admin.Features.Auth.Pages;
+using admin.Features.Home;
+using admin.Features.Metrics;
+using admin.Features.Settings;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace admin.AppBootstrapper.Extensions;
+
+public static class VMsAndPagesExtensions
+{
+    public static IServiceCollection AddVMsAndPages(this IServiceCollection services)
+    {
+        //Auth
+        services.AddSingleton<AuthViewModel>();
+        services.AddTransient<AuthLoginPage>();
+        services.AddTransient<AuthRegisterPage>();
+        services.AddTransient<AuthSettingsPage>();
+
+        // ViewModels
+        services.AddSingleton<HomeViewModel>();
+        services.AddSingleton<MetricsViewModel>();
+        services.AddSingleton<SettingsViewModel>();
+
+        // Pages
+        services.AddSingleton<HomePage>();
+        services.AddSingleton<MetricsPage>();
+        services.AddSingleton<SettingsPage>();
+
+        return services;
+    }
+}

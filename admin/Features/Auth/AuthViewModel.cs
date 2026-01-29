@@ -5,6 +5,7 @@ using admin.Core.DTO.Auth.Requests;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Wpf.Ui;
+using System.Net.Http;
 
 namespace admin.Features.Auth.Pages;
 
@@ -45,10 +46,27 @@ public partial class AuthViewModel : BaseViewModel
         if (Settings.RememberUsername && !string.IsNullOrEmpty(Settings.SavedUsername))
             Identifier = Settings.SavedUsername;
 
-        _ = HandleActionAsync(async () =>
+        _ = CheckServerConnection();
+    }
+
+    private async Task CheckServerConnection()
+    {
+        try
         {
-            await _apiService.Health.GetHealth();
-        }, true, "Нет ответа от сервера", "Проверьте подключение к интернету или поменяйте адрес удаленного сервера");
+            await HandleActionAsync(async () =>
+            {
+                await _apiService.Health.GetHealth();
+            }, true, "Нет ответа от сервера", "Проверьте подключение к интернету или поменяйте адрес удаленного сервера");
+        }
+        catch (HttpRequestException ex)
+        {
+            await ErrorHandler.HandleExceptionAsync(
+                ex,
+                true,
+                "Нет ответа от сервера",
+                "Проверьте подключение к интернету или поменяйте адрес удаленного сервера"
+            );
+        }
     }
 
     [RelayCommand]
