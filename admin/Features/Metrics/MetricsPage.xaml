@@ -7,93 +7,133 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:sp="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
     mc:Ignorable="d" 
     >
-
-    <StackPanel>
-        <WrapPanel
-            Orientation="Horizontal"
+    <hc:FlexPanel
+        FlexWrap="Wrap"
+        >
+        <!-->Первая строка<-->
+        <ContentControl
+            Content="{Binding PingPlot, Mode=OneTime}"
+            VerticalAlignment="Stretch"
+            HorizontalAlignment="Stretch"
+            MinHeight="180"
+            MinWidth="560"
+            Margin="16"
+        />
+        <controls:DashboardCard
+            Title="Статус сервера"
+            SubText="Текущее состояние сервера"
+            Icon="Wifi124"
+            AccentBrush="{Binding AccentBrush, Mode=OneWay}"
             >
-            <ContentControl
-                Content="{Binding PingPlot, Mode=OneTime}"
-                VerticalAlignment="Stretch"
-                HorizontalAlignment="Stretch"
-                MinHeight="360"
-                MinWidth="560"
-                Margin="16"
+            <StackPanel>
+                <TextBlock
+                    Text="{Binding HealthStatus, Mode=OneWay}"
+                    FontSize="20"
+                    FontWeight="SemiBold"
+                    TextWrapping="WrapWithOverflow"
+                    Foreground="{Binding AccentBrush}"
+                />
+                <TextBlock
+                    Text="{Binding Problems, Mode=OneWay}"
+                    FontSize="18"
+                />
+            </StackPanel>
+        </controls:DashboardCard>
+        <controls:DashboardCard
+            Title="Всего запросов"
+            SubText="Запросов за время работы"
+            Icon="BookNumber24"
+            >
+            <TextBlock
+                Text="{Binding TotalRequests, Mode=OneWay}"
+                FontSize="28"
+                FontWeight="SemiBold"
+                TextWrapping="WrapWithOverflow"
+                Foreground="{DynamicResource SystemAccentColorPrimaryBrush}"
             />
-            <ContentControl
-                Content="{Binding PingPlot1, Mode=OneTime}"
-                VerticalAlignment="Stretch"
-                HorizontalAlignment="Stretch"
-                MinHeight="360"
-                MinWidth="560"
-                Margin="16"
+        </controls:DashboardCard>
+
+        <!-->Вторая строка<-->
+        <controls:DashboardCard
+            Title="Отклоненных запроов"
+            SubText="Запросы с ошибками"
+            Icon="BookExclamationMark24"
+            >
+            <TextBlock
+                Text="{Binding FailedRequests, Mode=OneWay}"
+                FontSize="28"
+                FontWeight="SemiBold"
+                TextWrapping="WrapWithOverflow"
+                Foreground="{DynamicResource SystemAccentColorPrimaryBrush}"
             />
-        </WrapPanel>
-        <WrapPanel>
-            <controls:DashboardCard
-                Title="Статус сервера"
-                SubText="Текущее состояние сервера"
-                Icon="Wifi124"
-                AccentBrush="{Binding AccentBrush}"
-                >
-                <StackPanel>
-                    <TextBlock
-                        Text="{Binding HealthStatus}"
-                        FontSize="20"
-                        FontWeight="SemiBold"
-                        TextWrapping="WrapWithOverflow"
-                        Foreground="{Binding AccentBrush}"
-                    />
-                    <TextBlock
-                        Text="{Binding Problems}"
-                        FontSize="18"
-                    />
-                </StackPanel>
-            </controls:DashboardCard>
+        </controls:DashboardCard>
+        <ContentControl
+            Content="{Binding DbLatencyPlot, Mode=OneTime}"
+            VerticalAlignment="Stretch"
+            HorizontalAlignment="Stretch"
+            MinHeight="180"
+            MinWidth="560"
+            Margin="16"
+        />
+        <controls:DashboardCard
+            Title="Время работы"
+            SubText="Время с запуска сервера"
+            Icon="Clock24"
+            >
+            <TextBlock
+                Text="{Binding Uptime, Mode=OneWay}"
+                FontSize="28"
+                FontWeight="SemiBold"
+                TextWrapping="WrapWithOverflow"
+                Foreground="{DynamicResource SystemAccentColorPrimaryBrush}"
+            />
+        </controls:DashboardCard>
 
-            <controls:DashboardCard
-                Title="Подключения"
-                SubText="Активные подключения"
-                Icon="PhoneScreenTime24"
-                >
-                <TextBlock
-                    Text="{Binding ActiveConnections}"
-                    FontSize="28"
-                    FontWeight="SemiBold"
-                    TextWrapping="WrapWithOverflow"
+        <!-->Третья строка<-->
+        <ContentControl
+            Content="{Binding MemoryUsagePlot, Mode=OneTime}"
+            VerticalAlignment="Stretch"
+            HorizontalAlignment="Stretch"
+            MinHeight="180"
+            MinWidth="560"
+            Margin="16"
+        />
+        <controls:DashboardCard
+            Title="Нагрузка ЦП"
+            SubText="Процент нагрузки центрального процессора"
+            Icon="DeveloperBoard24"
+            >
+            <StackPanel>
+                <ProgressBar
+                    Value="{Binding CpuUsage, Mode=OneWay}"
+                    Height="20"
+                    Width="125"
+                    Minimum="0"
+                    Maximum="100"
                     Foreground="{DynamicResource SystemAccentColorPrimaryBrush}"
                 />
-            </controls:DashboardCard>
-
-            <controls:DashboardCard
-                Title="Всего запросов"
-                SubText="Запросов за время работы"
-                Icon="BookNumber24"
-                >
                 <TextBlock
-                    Text="{Binding TotalRequests}"
-                    FontSize="28"
-                    FontWeight="SemiBold"
-                    TextWrapping="WrapWithOverflow"
+                    Text="{Binding CpuUsageText, Mode=OneWay}"
+                    TextAlignment="Center"
                     Foreground="{DynamicResource SystemAccentColorPrimaryBrush}"
                 />
-            </controls:DashboardCard>
-
-            <controls:DashboardCard
-                Title="Время работы"
-                SubText="Время с запуска сервера"
-                Icon="Clock24"
-                >
-                <TextBlock
-                    Text="{Binding Uptime}"
-                    FontSize="28"
-                    FontWeight="SemiBold"
-                    TextWrapping="WrapWithOverflow"
-                    Foreground="{DynamicResource SystemAccentColorPrimaryBrush}"
-                />
-            </controls:DashboardCard>
-        </WrapPanel>
-    </StackPanel>
+            </StackPanel>
+        </controls:DashboardCard>
+        <controls:DashboardCard
+            Title="Память сервера"
+            SubText="Занятое пространство диска"
+            Icon="HardDrive20"
+            >
+        <TextBlock
+                Text="{Binding DiskUsage, Mode=OneWay}"
+                FontSize="28"
+                FontWeight="SemiBold"
+                TextWrapping="WrapWithOverflow"
+                Foreground="{DynamicResource SystemAccentColorPrimaryBrush}"
+            />
+        </controls:DashboardCard>
+    </hc:FlexPanel>
 </Page>

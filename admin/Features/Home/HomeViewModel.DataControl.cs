@@ -1,12 +1,13 @@
-﻿using admin.Core.Enums;
+﻿using admin.Core.Abstractions;
+using admin.Core.Enums;
 using System.Windows.Media;
 using Wpf.Ui.Appearance;
 
-namespace admin.Features.Metrics;
-
-public partial class MetricsViewModel
+namespace admin.Features.Home;
+public partial class HomeViewModel : BaseViewModel
 {
     //DataBindings
+    public string PingValue => CalculatePing();
     public string HealthStatus => CurrentHealth switch
     {
         null => "Загрузка",
@@ -25,22 +26,19 @@ public partial class MetricsViewModel
         null => "Загрузка",
         _ => CurrentHealth.TotalRequests.ToString()
     };
-    public string FailedRequests => CurrentHealth switch
+    public string ActiveConnections => CurrentHealth switch
     {
         null => "Загрузка",
-        _ => CurrentHealth.FailedRequests.ToString()
+        _ => CurrentHealth.ActiveConnections.ToString()
     };
     public string Problems => GetProblems();
-    public double CpuUsage => CurrentHealth?.CpuUsage ?? 0;
-    public string CpuUsageText => $"{CpuUsage:F2} %";
-    public string DiskUsage => CurrentHealth?.DiskUsage switch
-    {
-        null or 0 => "0 МБ",
-        < 1024 => $"{CurrentHealth.DiskUsage} МБ",
-        _ => $"{CurrentHealth.DiskUsage / 1024:F2} МБ"
-    };
 
     //Funcs
+    private string CalculatePing()
+    {
+        var serverTime = CurrentHealth?.CurrentTime ?? DateTime.UtcNow;
+        return $"{(int)DateTime.UtcNow.Subtract(serverTime).TotalMilliseconds} мс";
+    }
     private string GetUptime()
     {
         if (CurrentHealth == null)
@@ -77,7 +75,7 @@ public partial class MetricsViewModel
         {
             0 => "Нет проблем",
             1 => $"{counter} проблема",
-            < 5 => $"{counter} проблемы",
+            <5 => $"{counter} проблемы",
             _ => $"{counter} проблем"
         };
 

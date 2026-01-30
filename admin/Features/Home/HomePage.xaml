@@ -16,6 +16,7 @@
         <ui:Card
             Grid.Column="0"
             Margin="10,10,10,10"
+            Width="300"
             VerticalAlignment="Top"
             >
             <StackPanel>
@@ -25,7 +26,7 @@
                     Height="128"
                     Stretch="UniformToFill"
                     CornerRadius="32"
-                    Margin="0,0,0,10"
+                    Margin="0,20,0,10"
                 />
                 <Label
                     Content="{Binding Username}"
@@ -133,39 +134,6 @@
                         Foreground="{DynamicResource SystemAccentColorPrimaryBrush}"
                     />
                 </controls:DashboardCard>
-
-                <ui:Card Margin="8" MinWidth="200" MaxWidth="240" Background="{DynamicResource CardBackgroundFillColorDefaultBrush}">
-                    <StackPanel Margin="16">
-                        <ui:SymbolIcon Symbol="Wifi124" FontSize="32" Foreground="{Binding ServerStatusBrush}"/>
-                        <TextBlock Text="Статус сервера" 
-                                       HorizontalAlignment="Center"
-                       FontSize="18" FontWeight="SemiBold" Margin="0,4,0,4"/>
-                        <Separator Margin="0,0,0,4" />
-                        <TextBlock Text="Сервер активен и работает" 
-                       FontSize="16" FontWeight="Medium"
-                                       TextWrapping="WrapWithOverflow"
-                       Foreground="{Binding ServerStatusBrush}"/>
-                    </StackPanel>
-                </ui:Card>
-                <ui:Card Margin="8" MinWidth="200">
-                    <StackPanel Margin="16">
-                        <ui:SymbolIcon Symbol="People24" FontSize="32" Foreground="{DynamicResource SystemAccentColorBrush}"/>
-                        <TextBlock Text="Онлайн пользователей" 
-                       FontSize="14" Margin="0,8,0,2" Opacity="0.8"/>
-                        <TextBlock Text="{Binding OnlineUsers}" 
-                       FontSize="28" FontWeight="Bold"/>
-                    </StackPanel>
-                </ui:Card>
-
-                <!-- С прогресс-баром -->
-                <ui:Card Margin="8" MinWidth="200">
-                    <StackPanel Margin="16">
-                        <TextBlock Text="Загрузка CPU" FontSize="16" FontWeight="SemiBold"/>
-                        <ProgressBar Value="50" Height="12" Margin="0,8"/>
-                        <TextBlock Text="CPU загружен на 50%" 
-                       HorizontalAlignment="Right" FontSize="14" Margin="0,4,0,0"/>
-                    </StackPanel>
-                </ui:Card>
             </WrapPanel>
         </StackPanel>
     </Grid>
