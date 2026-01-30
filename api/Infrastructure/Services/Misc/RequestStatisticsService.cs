@@ -6,12 +6,12 @@ namespace Infrastructure.Services.Misc;
 public class RequestStatisticsService : IRequestStatisticsService
 {
     private readonly ConcurrentDictionary<DateTime, int> _requestCount = new();
-    private long _activeConnections;
+    private int _activeConnections = 0;
     private int _failedRequests;
     private int _totalRequests;
-    public void EnterRequest() => Interlocked.Increment(ref _activeConnections);
-    public void ExitRequest()  => Interlocked.Decrement(ref _activeConnections);
-    public long GetActiveConnections() => Interlocked.Read(ref _activeConnections);
+    public void EnterRequest() => _activeConnections++;
+    public void ExitRequest() => _activeConnections--;
+    public int GetActiveConnections() => _activeConnections;
     public void AddFailedRequest() => _failedRequests++;
     public int GetFailedRequests() => _failedRequests;
     public int GetTotalRequests() => _totalRequests;

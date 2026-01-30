@@ -21,7 +21,7 @@ public class FileStorage : IFileStorage
     }
     public long GetStorageSize(string? subDirectory)
     {
-        if (_lastStorageSizeUpdateTime.AddMinutes(1) < DateTime.UtcNow)
+        if (_lastStorageSizeUpdateTime.AddMinutes(1) > DateTime.UtcNow)
             return _lastStorageSize;
 
         var directory = Path.Combine(_basePath, subDirectory ?? string.Empty);

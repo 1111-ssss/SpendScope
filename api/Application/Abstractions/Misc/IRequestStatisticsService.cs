@@ -4,7 +4,7 @@ public interface IRequestStatisticsService
 {
     void EnterRequest();
     void ExitRequest();
-    long GetActiveConnections();
+    int GetActiveConnections();
     void AddFailedRequest();
     int GetFailedRequests();
     int GetTotalRequests();

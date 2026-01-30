@@ -16,10 +16,14 @@ public class RequestLoggingMiddleware
             reqStatsService.EnterRequest();
 
             await _next(context);
+
+            if (context.Response.StatusCode >= 400)
+                reqStatsService.AddFailedRequest();
         }
         catch
         {
             reqStatsService.AddFailedRequest();
+            throw;
         }
         finally {
             reqStatsService.ExitRequest();
