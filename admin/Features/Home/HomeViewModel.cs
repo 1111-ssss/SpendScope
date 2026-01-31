@@ -1,8 +1,11 @@
 ﻿using admin.Core.Abstractions;
 using admin.Core.DTO.Health.Responses;
+using admin.Core.DTO.Profiles.Responses;
 using admin.Core.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.Logging;
+using System.IO;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
 namespace admin.Features.Home;
@@ -11,6 +14,12 @@ public partial class HomeViewModel : BaseViewModel
     [ObservableProperty]
     private HealthResponse? _currentHealth;
 
+    [ObservableProperty]
+    private ProfileResponse? _profileInfo;
+
+    [ObservableProperty]
+    private BitmapImage? _avatarUri;
+
     private CancellationTokenSource _cts = new();
     private DispatcherTimer _timer = new();
 
@@ -18,7 +27,7 @@ public partial class HomeViewModel : BaseViewModel
     private readonly IApiService _apiService;
     private readonly ILogger<HomeViewModel> _logger;
     public HomeViewModel(
-        ICurrentUserService currentUserService, 
+        ICurrentUserService currentUserService,
         IApiService apiService,
         ILogger<HomeViewModel> logger
     )
@@ -28,6 +37,10 @@ public partial class HomeViewModel : BaseViewModel
         _logger = logger;
 
         InitTimer();
+
+        //
+        FetchProfileDataAsync();
+        FetchAvatarDataAsync();
     }
     private void InitTimer()
     {
@@ -45,6 +58,9 @@ public partial class HomeViewModel : BaseViewModel
         OnPropertyChanged(nameof(ActiveConnections));
         OnPropertyChanged(nameof(Problems));
         OnPropertyChanged(nameof(PingValue));
+
+        OnPropertyChanged(nameof(Username));
+        OnPropertyChanged(nameof(UserRole));
     }
 
     public override void OnNavigatedTo()
@@ -76,5 +92,40 @@ public partial class HomeViewModel : BaseViewModel
         {
             //skip
         }
+    }
+
+    private async Task FetchProfileDataAsync()
+    {
+        await HandleActionAsync(async () =>
+        {
+            if (!int.TryParse(_currentUserService.UserId, out int userId))
+                throw new ArgumentException("Не удалось получить айди пользователя");
+
+            ProfileInfo = await _apiService.Profile.GetProfile(userId);
+        });
+    }
+
+    private async Task FetchAvatarDataAsync()
+    {
+        await HandleActionAsync(async () =>
+        {
+            if (!int.TryParse(_currentUserService.UserId, out int userId))
+                throw new ArgumentException("Не удалось получить айди пользователя");
+
+            using var response = await _apiService.Profile.GetAvatar(userId);
+            response.EnsureSuccessStatusCode();
+
+            var bytes = await response.Content.ReadAsByteArrayAsync();
+
+            using var ms = new MemoryStream(bytes);
+            var bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            bitmap.StreamSource = ms;
+            bitmap.EndInit();
+            bitmap.Freeze();
+
+            AvatarUri = bitmap;
+        }, false);
     }
 }

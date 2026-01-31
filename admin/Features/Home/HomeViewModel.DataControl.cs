@@ -32,6 +32,8 @@ public partial class HomeViewModel : BaseViewModel
         _ => CurrentHealth.ActiveConnections.ToString()
     };
     public string Problems => GetProblems();
+    public string Username => _currentUserService.UserName ?? "@username";
+    public string UserRole => _currentUserService.IsAdmin ? "Админ" : string.Empty;
 
     //Funcs
     private string CalculatePing()

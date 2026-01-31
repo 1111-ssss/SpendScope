@@ -82,6 +82,7 @@
             Panel.ZIndex="1000" 
         />
         <ui:TitleBar
+            x:Name="TitleBar"
             Title="{Binding ApplicationTitle, Mode=OneWay}"
             Grid.Row="0"
             CloseWindowByDoubleClickOnIcon="True"

@@ -25,7 +25,7 @@
                     Width="128"
                     Height="128"
                     Stretch="UniformToFill"
-                    CornerRadius="32"
+                    CornerRadius="16"
                     Margin="0,20,0,10"
                 />
                 <Label
