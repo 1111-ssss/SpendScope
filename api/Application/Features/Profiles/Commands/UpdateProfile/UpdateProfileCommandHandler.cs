@@ -69,6 +69,7 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand,
 
             var response = new ProfileResponse(
                 DisplayName: profile.DisplayName ?? user.Username,
+                Username: user.Username,
                 Bio: profile.Bio ?? "",
                 AvatarUrl: profile.AvatarUrl ?? "avatars/default-avatar.png",
                 LastOnline: profile.LastOnline ?? user.CreatedAt

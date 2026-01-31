@@ -58,6 +58,7 @@ public class DeleteAvatarCommandHandler : IRequestHandler<DeleteAvatarCommand, R
 
         return Result<ProfileResponse>.Success(new ProfileResponse(
             DisplayName: profile.DisplayName ?? user.Username,
+            Username: user.Username,
             Bio: profile.Bio ?? "",
             AvatarUrl: "avatars/default-avatar.png",
             LastOnline: profile.LastOnline ?? user.CreatedAt
