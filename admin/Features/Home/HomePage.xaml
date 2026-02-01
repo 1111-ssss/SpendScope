@@ -6,6 +6,7 @@
     xmlns:controls="clr-namespace:admin.Features.Common.Controls"
     xmlns:converters="clr-namespace:admin.Features.Common.Converters"
     xmlns:sp="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     >
 
@@ -21,30 +22,35 @@
             VerticalAlignment="Top"
             >
             <StackPanel>
-                <ui:Image
-                    Source="{Binding AvatarUri}"
-                    Width="128"
-                    Height="128"
-                    Stretch="UniformToFill"
-                    CornerRadius="16"
-                    Margin="0,20,0,10"
-                />
-                <Label
-                    Content="{Binding Username}"
-                    Foreground="{Binding AccentTextFillColorSecondaryBrush}"
-                    FontSize="20"
+                <Ellipse
+                    Width="200"
+                    Height="200"
+                    Margin="10,30,10,10"
+                    >
+                    <Ellipse.Fill>
+                        <ImageBrush
+                            ImageSource="{Binding AvatarUri}"
+                            Stretch="UniformToFill"
+                        />
+                    </Ellipse.Fill>
+                </Ellipse>
+                <TextBlock
+                    Text="{Binding Username}"
+                    Foreground="{DynamicResource AccentTextFillColorSecondaryBrush}"
+                    FontSize="22"
                     HorizontalAlignment="Center"
                     Margin="0,0,0,5"
                 />
-                <Label
-                    Content="{Binding UsernameSub}"
-                    FontSize="16"
+                <TextBlock
+                    Text="{Binding UsernameSub}"
+                    FontSize="14"
+                    Visibility="{Binding UsernameSub, Converter={StaticResource NullToVisibilityConverter}}"
                     HorizontalAlignment="Center"
                     Margin="0,0,0,5"
                 />
-                <Label
-                    Content="{Binding UserRole}"
-                    FontSize="16"
+                <TextBlock
+                    Text="{Binding UserRole}"
+                    FontSize="14"
                     Visibility="{Binding UserRole, Converter={StaticResource NullToVisibilityConverter}}"
                     HorizontalAlignment="Center"
                     Margin="0,0,0,10"
@@ -52,15 +58,15 @@
             </StackPanel>
         </ui:Card>
         <StackPanel
-                Grid.Column="1"
-                Margin="10,10,10,10"
-                HorizontalAlignment="Stretch"
-                >
+            Grid.Column="1"
+            Margin="10,10,10,10"
+            HorizontalAlignment="Stretch"
+            >
             <TextBlock
                 Text="Статистика сервера и метрики"
                 FontSize="28"
                 FontWeight="SemiBold"
-                Foreground="{Binding AccentTextFillColorSecondaryBrush}"
+                Foreground="{DynamicResource AccentTextFillColorSecondaryBrush}"
                 TextWrapping="WrapWithOverflow"
                 Margin="5,5,5,10"
             />
@@ -114,7 +120,7 @@
                         Foreground="{DynamicResource SystemAccentColorPrimaryBrush}"
                     />
                 </controls:DashboardCard>
-                
+
                 <controls:DashboardCard
                     Title="Всего запросов"
                     SubText="Запросов за время работы"

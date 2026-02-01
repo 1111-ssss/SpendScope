@@ -37,8 +37,8 @@ public partial class HomeViewModel : BaseViewModel
     public string Username => ProfileInfo?.DisplayName ?? (string.IsNullOrEmpty(_currentUserService.UserName)
         ? $"@{_currentUserService.UserName}"
         : "@username");
-    public string UsernameSub => string.IsNullOrEmpty(Username)
-        ? ProfileInfo?.Username ?? "@username"
+    public string UsernameSub => !string.IsNullOrEmpty(Username)
+        ? $"@{ProfileInfo?.Username}" ?? "@username"
         : string.Empty;
     public string UserRole => _currentUserService.IsAdmin ? "Админ" : string.Empty;
 
