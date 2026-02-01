@@ -58,8 +58,12 @@ public partial class HomeViewModel : BaseViewModel
         OnPropertyChanged(nameof(ActiveConnections));
         OnPropertyChanged(nameof(Problems));
         OnPropertyChanged(nameof(PingValue));
+    }
 
+    partial void OnProfileInfoChanged(ProfileResponse? value)
+    {
         OnPropertyChanged(nameof(Username));
+        OnPropertyChanged(nameof(UsernameSub));
         OnPropertyChanged(nameof(UserRole));
     }
 

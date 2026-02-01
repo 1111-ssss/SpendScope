@@ -4,6 +4,7 @@
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:local="clr-namespace:admin.Features.Home"
     xmlns:controls="clr-namespace:admin.Features.Common.Controls"
+    xmlns:converters="clr-namespace:admin.Features.Common.Converters"
     xmlns:sp="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     >
@@ -36,8 +37,15 @@
                     Margin="0,0,0,5"
                 />
                 <Label
+                    Content="{Binding UsernameSub}"
+                    FontSize="16"
+                    HorizontalAlignment="Center"
+                    Margin="0,0,0,5"
+                />
+                <Label
                     Content="{Binding UserRole}"
                     FontSize="16"
+                    Visibility="{Binding UserRole, Converter={StaticResource NullToVisibilityConverter}}"
                     HorizontalAlignment="Center"
                     Margin="0,0,0,10"
                 />

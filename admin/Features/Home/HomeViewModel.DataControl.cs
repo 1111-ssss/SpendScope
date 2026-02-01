@@ -6,7 +6,7 @@ using Wpf.Ui.Appearance;
 namespace admin.Features.Home;
 public partial class HomeViewModel : BaseViewModel
 {
-    //DataBindings
+    //DataBindings - metrics
     public string PingValue => CalculatePing();
     public string HealthStatus => CurrentHealth switch
     {
@@ -32,7 +32,14 @@ public partial class HomeViewModel : BaseViewModel
         _ => CurrentHealth.ActiveConnections.ToString()
     };
     public string Problems => GetProblems();
-    public string Username => _currentUserService.UserName ?? "@username";
+
+    //Bindings - profile
+    public string Username => ProfileInfo?.DisplayName ?? (string.IsNullOrEmpty(_currentUserService.UserName)
+        ? $"@{_currentUserService.UserName}"
+        : "@username");
+    public string UsernameSub => string.IsNullOrEmpty(Username)
+        ? ProfileInfo?.Username ?? "@username"
+        : string.Empty;
     public string UserRole => _currentUserService.IsAdmin ? "Админ" : string.Empty;
 
     //Funcs
