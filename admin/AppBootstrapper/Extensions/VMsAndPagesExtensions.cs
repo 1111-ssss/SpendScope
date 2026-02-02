@@ -1,6 +1,7 @@
 ﻿using admin.Features.Auth.Pages;
 using admin.Features.Home;
 using admin.Features.Metrics;
+using admin.Features.Profile;
 using admin.Features.Settings;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,11 +19,13 @@ public static class VMsAndPagesExtensions
 
         // ViewModels
         services.AddSingleton<HomeViewModel>();
+        services.AddSingleton<ProfileViewModel>();
         services.AddSingleton<MetricsViewModel>();
         services.AddSingleton<SettingsViewModel>();
 
         // Pages
         services.AddSingleton<HomePage>();
+        services.AddSingleton<ProfilePage>();
         services.AddSingleton<MetricsPage>();
         services.AddSingleton<SettingsPage>();
 

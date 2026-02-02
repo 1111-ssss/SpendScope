@@ -38,7 +38,6 @@
             MenuItemsSource="{Binding NavigationItems, Mode=OneWay}"
             FooterMenuItemsSource="{Binding NavigationFooter, Mode=OneWay}"
             Transition="FadeIn"
-            TitleBar="{Binding ElementName=TitleBar, Mode=OneWay}"
             SelectionChanged="RootNavigation_SelectionChanged"
             PaneOpened="RootNavigation_OnPaneOpened"
             PaneClosed="RootNavigation_OnPaneClosed"

@@ -49,7 +49,7 @@ public class TokenService : ITokenService
             if (info == null || string.IsNullOrEmpty(info.RefreshToken))
                 return null;
 
-            if (info.ExpiresAt > DateTimeOffset.UtcNow.AddSeconds(60))
+            if (info.ExpiresAt > DateTimeOffset.UtcNow.AddMinutes(1))
                 return info.JwtToken;
 
             try

@@ -16,6 +16,7 @@
 
                 <ResourceDictionary Source="Features/Common/Controls/LabeledCard.xaml" />
                 <ResourceDictionary Source="/Features/Common/Controls/DashboardCard.xaml" />
+                <ResourceDictionary Source="/Features/Common/Controls/ProfileCard.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <convert:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />

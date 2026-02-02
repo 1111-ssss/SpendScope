@@ -2,6 +2,7 @@
 using admin.Features.Auth.Pages;
 using admin.Features.Home;
 using admin.Features.Metrics;
+using admin.Features.Profile;
 using admin.Features.Settings;
 using Wpf.Ui.Controls;
 
@@ -22,6 +23,12 @@ public partial class MainWindowViewModel
                     Content = "Главная",
                     Icon = new SymbolIcon { Symbol = SymbolRegular.Home24 },
                     TargetPageType = typeof(HomePage),
+                },
+                new NavigationViewItem()
+                {
+                    Content = "Профиль",
+                    Icon = new SymbolIcon { Symbol = SymbolRegular.PersonCircle24 },
+                    TargetPageType = typeof(ProfilePage),
                 },
                 new NavigationViewItem()
                 {
