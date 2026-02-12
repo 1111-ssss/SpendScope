@@ -46,8 +46,4 @@
     </Compile>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Users\" />
-  </ItemGroup>
-
 </Project>
