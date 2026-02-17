@@ -3,6 +3,7 @@ using admin.Features.Home;
 using admin.Features.Metrics;
 using admin.Features.Profile;
 using admin.Features.Settings;
+using admin.Features.Users;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace admin.AppBootstrapper.Extensions;
@@ -20,12 +21,14 @@ public static class VMsAndPagesExtensions
         // ViewModels
         services.AddSingleton<HomeViewModel>();
         services.AddSingleton<ProfileViewModel>();
+        services.AddSingleton<UsersViewModel>();
         services.AddSingleton<MetricsViewModel>();
         services.AddSingleton<SettingsViewModel>();
 
         // Pages
         services.AddSingleton<HomePage>();
         services.AddSingleton<ProfilePage>();
+        services.AddSingleton<UsersPage>();
         services.AddSingleton<MetricsPage>();
         services.AddSingleton<SettingsPage>();
 

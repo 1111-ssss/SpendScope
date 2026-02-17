@@ -1,26 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using Wpf.Ui.Abstractions.Controls;
 
-namespace admin.Features.Users
+namespace admin.Features.Users;
+
+public partial class UsersPage : INavigableView<UsersViewModel>
 {
-    /// <summary>
-    /// Логика взаимодействия для UsersPage.xaml
-    /// </summary>
-    public partial class UsersPage : Page
+    public UsersViewModel ViewModel { get; }
+    public UsersPage(UsersViewModel viewModel)
     {
-        public UsersPage()
-        {
-            InitializeComponent();
-        }
+        ViewModel = viewModel;
+        DataContext = viewModel;
+
+        InitializeComponent();
     }
 }
