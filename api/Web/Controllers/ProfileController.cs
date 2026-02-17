@@ -6,6 +6,7 @@ using Application.Features.Profiles.GetAvatar;
 using Application.Features.Profiles.DeleteAvatar;
 using Web.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authorization;
+using Application.Features.Profiles.SearchProfiles;
 
 namespace Web.Controllers;
 
@@ -25,6 +26,13 @@ public class ProfileController : ControllerBase
     public async Task<IActionResult> Get(int userId, CancellationToken ct)
     {
         var result = await _mediator.Send(new GetProfileQuery(userId), ct);
+
+        return result.ToActionResult();
+    }
+    [HttpGet("search")]
+    public async Task<IActionResult> Search([FromQuery] SearchProfilesQuery query, CancellationToken ct)
+    {
+        var result = await _mediator.Send(query, ct);
 
         return result.ToActionResult();
     }
