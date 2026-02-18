@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:local="clr-namespace:admin.Features.Users"
     xmlns:controls="clr-namespace:admin.Features.Common.Controls"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
     mc:Ignorable="d" 
     >
     <Grid>
@@ -13,6 +14,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <controls:ProfileCard
+            Grid.Column="0"
             Avatar="{Binding UserAvatar}"
             DisplayName="{Binding UserDisplayName}"
             Username="{Binding Username}"
@@ -20,20 +22,77 @@
         />
         <StackPanel
             Grid.Column="1"
-            Margin="10,10,10,10"
-            HorizontalAlignment="Stretch"
             >
-            <TextBlock
-                Text="Личные данные"
-                FontSize="28"
-                FontWeight="SemiBold"
-                Foreground="{DynamicResource AccentTextFillColorSecondaryBrush}"
-                TextWrapping="WrapWithOverflow"
-                Margin="5,5,5,10"
-            />
-            <WrapPanel>
-
-            </WrapPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <hc:TextBox 
+                    Grid.Column="0"
+                    hc:InfoElement.Placeholder="Введите имя пользователя"
+                    hc:InfoElement.Title="Поиск пользователей"
+                    hc:InfoElement.Necessary="True"
+                    Margin="0,16,0,0"
+                    Text="{Binding SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                />
+                <Button
+                    Grid.Column="1"
+                    Content="Найти"
+                    Command="{Binding SearchCommand}"
+                    Margin="8,16,0,0"
+                    MinWidth="100"
+                />
+            </Grid>
+            <hc:Pagination
+                PageIndex="{Binding CurrentPage}"
+                MaxPageCount="{Binding TotalPages}"
+                >
+                <hc:Interaction.Triggers>
+                    <hc:EventTrigger EventName="PageUpdated">
+                        <hc:EventToCommand Command="{Binding PageUpdatedCommand}" PassEventArgsToCommand="True" />
+                    </hc:EventTrigger>
+                </hc:Interaction.Triggers>
+            </hc:Pagination>
+            <DataGrid
+                Grid.Column="1"
+                Margin="10,10,10,10"
+                HorizontalAlignment="Stretch"
+                HeadersVisibility="All"
+                RowHeaderWidth="60"
+                AutoGenerateColumns="False"
+                hc:DataGridAttach.ShowRowNumber="True"
+                >
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Width="60" CanUserResize="False">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Image
+                                    Source="{Binding Avatar}"
+                                    MaxWidth="32"
+                                    MaxHeight="32"
+                                    Stretch="Uniform"
+                                />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn
+                        Binding="{Binding Username}"
+                        CanUserResize="False"
+                        Header="Никнейм"
+                    />
+                    <DataGridTextColumn
+                        Binding="{Binding DisplayName}"
+                        CanUserResize="False"
+                        Header="Отображаемое имя"
+                    />
+                    <DataGridTextColumn
+                        Binding="{Binding LastOnline}"
+                        CanUserResize="False"
+                        Header="Онлайн"
+                    />
+                </DataGrid.Columns>
+            </DataGrid>
         </StackPanel>
     </Grid>
 </Page>

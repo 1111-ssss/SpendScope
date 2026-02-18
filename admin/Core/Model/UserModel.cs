@@ -4,15 +4,24 @@ namespace admin.Core.Model;
 
 public class UserModel
 {
-    public string Username { get; set; }
-    public string DisplayName { get; set; }
-    public BitmapImage Avatar { get; set; }
-    public string Role { get; set; }
-    public UserModel(string username, string displayName, BitmapImage avatar, string role)
+    public int UserId { get; }
+    public string DisplayName { get; }
+    public string Username { get; }
+    public BitmapImage? Avatar { get; set; }
+    public DateTime LastOnline { get; }
+
+    public UserModel(
+        int userId,
+        string displayName,
+        string username,
+        BitmapImage? avatar,
+        DateTime lastOnline
+    )
     {
-        Username = username;
+        UserId = userId;
         DisplayName = displayName;
+        Username = username;
         Avatar = avatar;
-        Role = role;
+        LastOnline = lastOnline;
     }
 }
