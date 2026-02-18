@@ -68,6 +68,7 @@ public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand,
             await _uow.SaveChangesAsync(ct);
 
             var response = new ProfileResponse(
+                UserId: user.Id,
                 DisplayName: profile.DisplayName ?? user.Username,
                 Username: user.Username,
                 Bio: profile.Bio ?? "",

@@ -57,6 +57,7 @@ public class DeleteAvatarCommandHandler : IRequestHandler<DeleteAvatarCommand, R
         await _fileStorage.DeleteFileAsync(avatarPath, ct);
 
         return Result<ProfileResponse>.Success(new ProfileResponse(
+            UserId: user.Id,
             DisplayName: profile.DisplayName ?? user.Username,
             Username: user.Username,
             Bio: profile.Bio ?? "",

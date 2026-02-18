@@ -41,6 +41,7 @@ public class SearchProfilesQueryHandler : IRequestHandler<SearchProfilesQuery, R
 
         var profilesResponse = profiles.Select(
             u => new ProfileResponse(
+                UserId: u.Id,
                 DisplayName: u.Profile.DisplayName ?? u.Username,
                 Username: u.Username,
                 AvatarUrl: u.Profile.AvatarUrl ?? "avatars/default-avatar.png",

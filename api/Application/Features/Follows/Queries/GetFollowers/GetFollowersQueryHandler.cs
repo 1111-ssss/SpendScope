@@ -43,6 +43,7 @@ public class GetFollowersQueryHandler : IRequestHandler<GetFollowersQuery, Resul
         var profiles = users
             .Where(u => u.Profile != null)
             .Select(u => new ProfileResponse(
+                UserId: u.Id,
                 DisplayName: u.Profile.DisplayName ?? u.Username,
                 Username: u.Username,
                 AvatarUrl: u.Profile.AvatarUrl ?? "avatars/default-avatar.png",

@@ -36,6 +36,7 @@ public class GetProfileQueryHandler : IRequestHandler<GetProfileQuery, Result<Pr
             return Result.NotFound("Профиль пользователя не найден");
 
         return Result<ProfileResponse>.Success(new ProfileResponse(
+            UserId: user.Id,
             DisplayName: profile.DisplayName ?? user.Username,
             Username: user.Username,
             AvatarUrl: profile.AvatarUrl ?? "avatars/default-avatar.png",
