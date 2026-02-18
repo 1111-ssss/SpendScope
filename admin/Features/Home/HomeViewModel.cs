@@ -38,9 +38,8 @@ public partial class HomeViewModel : BaseViewModel
 
         InitTimer();
 
-        //
-        FetchProfileDataAsync();
-        FetchAvatarDataAsync();
+        _ = FetchProfileDataAsync();
+        _ = FetchAvatarDataAsync();
     }
     private void InitTimer()
     {
