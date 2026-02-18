@@ -22,16 +22,19 @@ public class SearchProfilesQueryHandler : IRequestHandler<SearchProfilesQuery, R
     }
     public async Task<Result<ProfilesPageResponse>> Handle(SearchProfilesQuery request, CancellationToken ct)
     {
+        var page = request.Page ?? 1;
+        var pageSize = request.PageSize ?? 10;
+
         var profiles = await _usersRepository.ListAsync(
             new GetProfilesByNameSpec(
-                request.Username,
-                request.Page,
-                request.PageSize
+                request.Username ?? "",
+                page,
+                pageSize
             ), ct);
         
         var totalCount = await _usersRepository.CountAsync(
             new GetProfilesByNameSpec(
-                request.Username,
+                request.Username ?? "",
                 1,
                 int.MaxValue
             ), ct);
@@ -48,9 +51,9 @@ public class SearchProfilesQueryHandler : IRequestHandler<SearchProfilesQuery, R
 
         return Result<ProfilesPageResponse>.Success(new ProfilesPageResponse(
             TotalCount: totalCount,
-            PageSize: request.PageSize,
-            CurrentPage: request.Page,
-            TotalPages: (int)Math.Ceiling((double)totalCount / request.PageSize),
+            CurrentPage: page,
+            PageSize: pageSize,
+            TotalPages: (int)Math.Ceiling((double)totalCount / pageSize),
             Items: profilesResponse
         ));
     }

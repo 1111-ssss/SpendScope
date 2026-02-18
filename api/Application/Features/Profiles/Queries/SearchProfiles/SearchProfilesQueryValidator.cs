@@ -7,7 +7,6 @@ public class SearchProfilesQueryValidator : AbstractValidator<SearchProfilesQuer
     public SearchProfilesQueryValidator()
     {
         RuleFor(x => x.Username)
-            .NotEmpty().WithMessage("Имя пользователя не может быть пустым")
             .MaximumLength(50).WithMessage("Имя пользователя должно быть не более 50 символов");
         RuleFor(x => x.Page)
             .NotEmpty().WithMessage("Номер страницы не может быть пустым")

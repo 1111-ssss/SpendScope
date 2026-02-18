@@ -19,6 +19,11 @@ public class GetProfilesByNameSpec : Specification<User>
                     && l.Profile.DisplayName.Contains(username)
                 );
         }
+        else
+        {
+            Query
+                .Include(x => x.Profile);
+        }
 
         Query
             .Skip((page - 1) * pageSize)

@@ -3,4 +3,4 @@ using MediatR;
 
 namespace Application.Features.Profiles.SearchProfiles;
 
-public record SearchProfilesQuery(string Username, int Page, int PageSize) : IRequest<Result<ProfilesPageResponse>>;
+public record SearchProfilesQuery(string? Username = "", int? Page = 1, int? PageSize = 10) : IRequest<Result<ProfilesPageResponse>>;
