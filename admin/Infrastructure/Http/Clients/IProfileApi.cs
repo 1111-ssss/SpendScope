@@ -13,5 +13,5 @@ public interface IProfileApi
     Task<HttpResponseMessage> GetAvatar(int userId, CancellationToken ct = default);
     //delete avatar
     [Get("/profile/search")]
-    Task<ProfilesPageResponse> SearchProfiles([Query] string username, int page, int pageSize, CancellationToken ct = default);
+    Task<ProfilesPageResponse> SearchProfiles([Query] string username, [Query] int page, [Query] int pageSize, CancellationToken ct = default);
 }

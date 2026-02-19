@@ -4,6 +4,7 @@ using admin.Features.Home;
 using admin.Features.Metrics;
 using admin.Features.Profile;
 using admin.Features.Settings;
+using admin.Features.Users;
 using Wpf.Ui.Controls;
 
 namespace admin.Shell.ViewModel;
@@ -26,9 +27,9 @@ public partial class MainWindowViewModel
                 },
                 new NavigationViewItem()
                 {
-                    Content = "Профиль",
+                    Content = "Пользователи",
                     Icon = new SymbolIcon { Symbol = SymbolRegular.PersonCircle24 },
-                    TargetPageType = typeof(ProfilePage),
+                    TargetPageType = typeof(UsersPage),
                 },
                 new NavigationViewItem()
                 {

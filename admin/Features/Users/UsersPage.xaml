@@ -6,6 +6,8 @@
     xmlns:local="clr-namespace:admin.Features.Users"
     xmlns:controls="clr-namespace:admin.Features.Common.Controls"
     xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     mc:Ignorable="d" 
     >
     <Grid>
@@ -18,7 +20,7 @@
             Avatar="{Binding UserAvatar}"
             DisplayName="{Binding UserDisplayName}"
             Username="{Binding Username}"
-            UserRole="{Binding UserRole}"
+            UserRole=""
         />
         <StackPanel
             Grid.Column="1"
@@ -28,20 +30,25 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <hc:TextBox 
-                    Grid.Column="0"
-                    hc:InfoElement.Placeholder="Введите имя пользователя"
-                    hc:InfoElement.Title="Поиск пользователей"
-                    hc:InfoElement.Necessary="True"
-                    Margin="0,16,0,0"
-                    Text="{Binding SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                />
-                <Button
+                <StackPanel>
+                    <Label
+                        Content="Введите имя пользователя"
+                        Margin="8 8 8 0"
+                        Foreground="{StaticResource AccentTextFillColorPrimaryBrush }"
+                    />
+                    <ui:TextBox 
+                        MinWidth="200"
+                        Margin="8 0 8 8"
+                        Text="{Binding SearchUsername, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    />
+                </StackPanel>
+                <ui:Button
+                    Appearance="Primary"
                     Grid.Column="1"
                     Content="Найти"
                     Command="{Binding SearchCommand}"
-                    Margin="8,16,0,0"
-                    MinWidth="100"
+                    Margin="8,24,50,0"
+                    Width="100"
                 />
             </Grid>
             <hc:Pagination
@@ -62,6 +69,7 @@
                 RowHeaderWidth="60"
                 AutoGenerateColumns="False"
                 hc:DataGridAttach.ShowRowNumber="True"
+                ItemsSource="{Binding Users}"
                 >
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Width="60" CanUserResize="False">
