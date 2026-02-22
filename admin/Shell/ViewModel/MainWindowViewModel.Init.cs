@@ -5,6 +5,7 @@ using admin.Features.Metrics;
 using admin.Features.Profile;
 using admin.Features.Settings;
 using admin.Features.Users;
+using admin.Features.Versions;
 using Wpf.Ui.Controls;
 
 namespace admin.Shell.ViewModel;
@@ -36,6 +37,12 @@ public partial class MainWindowViewModel
                     Content = "Метрики",
                     Icon = new SymbolIcon { Symbol = SymbolRegular.DataUsageSettings20 },
                     TargetPageType = typeof(MetricsPage),
+                },
+                new NavigationViewItem()
+                {
+                    Content = "Версии",
+                    Icon = new SymbolIcon { Symbol = SymbolRegular.Branch24 },
+                    TargetPageType = typeof(VersionsPage),
                 },
             ],
 
