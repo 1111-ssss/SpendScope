@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Refit;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
 namespace admin.Features.Users;
@@ -32,7 +33,13 @@ public partial class UsersViewModel : BaseViewModel
     private string _username = string.Empty;
 
     [ObservableProperty]
+    private string _lastOnline = string.Empty;
+
+    [ObservableProperty]
     private BitmapImage? _userAvatar;
+
+    [ObservableProperty]
+    private UserModel? _selectedUser;
 
     private readonly IApiService _apiService;
     private readonly ICurrentUserService _currentUserService;
@@ -47,6 +54,7 @@ public partial class UsersViewModel : BaseViewModel
         _apiService = apiService;
         _currentUserService = currentUserService;
         _logger = logger;
+
         _ = InitUserProfile();
     }
 
@@ -56,6 +64,8 @@ public partial class UsersViewModel : BaseViewModel
             UserAvatar = await FetchAvatarDataAsync(userId);
 
         Username = string.IsNullOrEmpty(_currentUserService.UserName) ? "@username" : $"@{_currentUserService.UserName}";
+
+        SearchCommand.Execute(this);
     }
 
     public async Task FetchSearchUsers(string username, int page, int pageSize)
@@ -65,8 +75,8 @@ public partial class UsersViewModel : BaseViewModel
             var usersResponse = await _apiService.Profile.SearchProfiles(username, page, pageSize);
             if (usersResponse == null)
                 return;
-
-            var usersList = usersResponse.Profiles.Select(p => new UserModel(
+            
+            var usersList = usersResponse.Items.Select(p => new UserModel(
                 p.UserId,
                 p.DisplayName,
                 p.Username,
@@ -90,15 +100,17 @@ public partial class UsersViewModel : BaseViewModel
             using var response = await _apiService.Profile.GetAvatar(userId);
             response.EnsureSuccessStatusCode();
 
+            var bitmap = new BitmapImage();
             using var ms = new MemoryStream(
                 await response.Content.ReadAsByteArrayAsync()
             );
-            var bitmap = new BitmapImage();
-            bitmap.BeginInit();
-            bitmap.CacheOption = BitmapCacheOption.OnLoad;
-            bitmap.StreamSource = ms;
-            bitmap.EndInit();
-            bitmap.Freeze();
+            {
+                bitmap.BeginInit();
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                bitmap.StreamSource = ms;
+                bitmap.EndInit();
+                bitmap.Freeze();
+            }
 
             return bitmap;
         }
@@ -111,6 +123,15 @@ public partial class UsersViewModel : BaseViewModel
             _logger.LogWarning($"Ошибка: {ex.Message}");
         }
         return null;
+    }
+    partial void OnSelectedUserChanged(UserModel? value)
+    {
+        if (value == null)
+            return;
+
+        UserAvatar = value.Avatar;
+        UserDisplayName = value.DisplayName;
+        Username = value.Username;
     }
 
     [RelayCommand]

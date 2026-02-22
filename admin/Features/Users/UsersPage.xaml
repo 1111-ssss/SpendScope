@@ -69,33 +69,45 @@
                 RowHeaderWidth="60"
                 AutoGenerateColumns="False"
                 hc:DataGridAttach.ShowRowNumber="True"
-                ItemsSource="{Binding Users}"
+                ItemsSource="{Binding Users, Mode=OneWay}"
+                CanUserDeleteRows="False"
+                CanUserAddRows="False"
+                SelectedItem="{Binding SelectedUser, Mode=TwoWay}"
+                SelectionMode="Single"
                 >
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn Width="60" CanUserResize="False">
+                    <DataGridTemplateColumn
+                        Width="60"
+                        CanUserResize="False"
+                        >
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Image
-                                    Source="{Binding Avatar}"
-                                    MaxWidth="32"
-                                    MaxHeight="32"
-                                    Stretch="Uniform"
-                                />
+                                <Ellipse
+                                    Width="32"
+                                    Height="32"
+                                    >
+                                    <Ellipse.Fill>
+                                        <ImageBrush
+                                            ImageSource="{Binding Avatar, Mode=OneWay}"
+                                            Stretch="UniformToFill"
+                                        />
+                                    </Ellipse.Fill>
+                                </Ellipse>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn
-                        Binding="{Binding Username}"
+                        Binding="{Binding Username, Mode=OneWay}"
                         CanUserResize="False"
                         Header="Никнейм"
                     />
                     <DataGridTextColumn
-                        Binding="{Binding DisplayName}"
+                        Binding="{Binding DisplayName, Mode=OneWay}"
                         CanUserResize="False"
                         Header="Отображаемое имя"
                     />
                     <DataGridTextColumn
-                        Binding="{Binding LastOnline}"
+                        Binding="{Binding LastOnline, Mode=OneWay}"
                         CanUserResize="False"
                         Header="Онлайн"
                     />
