@@ -45,14 +45,14 @@
                             <TextBlock
                                 Text="{TemplateBinding Username}"
                                 FontSize="14"
-                                Visibility="{Binding Username, Converter={StaticResource NullToVisibilityConverter}}"
+                                Visibility="{TemplateBinding Username, Converter={StaticResource NullToVisibilityConverter}}"
                                 HorizontalAlignment="Center"
                                 Margin="0,0,0,5"
                             />
                             <TextBlock
                                 Text="{TemplateBinding UserRole}"
                                 FontSize="14"
-                                Visibility="{Binding UserRole, Converter={StaticResource NullToVisibilityConverter}}"
+                                Visibility="{TemplateBinding UserRole, Converter={StaticResource NullToVisibilityConverter}}"
                                 HorizontalAlignment="Center"
                                 Margin="0,0,0,10"
                             />
