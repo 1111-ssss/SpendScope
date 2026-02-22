@@ -13,9 +13,9 @@ public partial class ProfileCard : UserControl
        new PropertyMetadata(null)
    );
 
-    public BitmapImage Avatar
+    public BitmapImage? Avatar
     {
-        get => (BitmapImage)GetValue(AvatarProperty);
+        get => (BitmapImage?)GetValue(AvatarProperty);
         set => SetValue(AvatarProperty, value);
     }
 
@@ -26,9 +26,9 @@ public partial class ProfileCard : UserControl
        new PropertyMetadata("")
    );
 
-    public string DisplayName
+    public string? DisplayName
     {
-        get => (string)GetValue(DisplayNameProperty);
+        get => (string?)GetValue(DisplayNameProperty);
         set => SetValue(DisplayNameProperty, value);
     }
 
@@ -39,9 +39,9 @@ public partial class ProfileCard : UserControl
        new PropertyMetadata("")
    );
 
-    public string Username
+    public string? Username
     {
-        get => (string)GetValue(UsernameProperty);
+        get => (string?)GetValue(UsernameProperty);
         set => SetValue(UsernameProperty, value);
     }
 
