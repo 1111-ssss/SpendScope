@@ -52,9 +52,9 @@ public partial class ProfileCard : UserControl
        new PropertyMetadata("")
    );
 
-    public string UserRole
+    public string? UserRole
     {
-        get => (string)GetValue(UserRoleProperty);
+        get => (string?)GetValue(UserRoleProperty);
         set => SetValue(UserRoleProperty, value);
     }
 }
