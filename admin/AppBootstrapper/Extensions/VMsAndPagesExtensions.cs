@@ -21,7 +21,6 @@ public static class VMsAndPagesExtensions
 
         // ViewModels
         services.AddSingleton<HomeViewModel>();
-        services.AddSingleton<ProfileViewModel>();
         services.AddSingleton<UsersViewModel>();
         services.AddSingleton<VersionsViewModel>();
         services.AddSingleton<MetricsViewModel>();
@@ -29,7 +28,6 @@ public static class VMsAndPagesExtensions
 
         // Pages
         services.AddSingleton<HomePage>();
-        services.AddSingleton<ProfilePage>();
         services.AddSingleton<UsersPage>();
         services.AddSingleton<VersionsPage>();
         services.AddSingleton<MetricsPage>();

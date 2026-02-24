@@ -44,6 +44,9 @@
     <Compile Update="Features\Auth\Pages\AuthRegisterPage.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Features\Versions\VersionsPage.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
 
 </Project>
