@@ -3,12 +3,94 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:local="clr-namespace:admin.Features.Versions"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     mc:Ignorable="d" 
     >
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <ui:Card
+            Grid.Column="0"
+            Margin="10,10,10,10"
+            Width="300"
+            VerticalAlignment="Top"
+            >
+            <StackPanel>
+                <StackPanel
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    >
+                    <ui:SymbolIcon
+                        Symbol="Branch24"
+                        FontSize="24"
+                    />
+                    <Label
+                        Content="{Binding CurrentBranch}"
+                    />
+                </StackPanel>
+            </StackPanel>
+        </ui:Card>
+        <StackPanel
+            Grid.Column="1"
+            >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <Label
+                        Content="Выберите ветку"
+                        Margin="8 8 8 0"
+                        Foreground="{StaticResource AccentTextFillColorPrimaryBrush }"
+                        FontWeight="SemiBold"
+                    />
+                    <ComboBox
+                        Margin="8 0 8 0"
+                        MaxWidth="250"
+                        MinWidth="200"
+                        HorizontalAlignment="Left"
+                        ItemsSource="{Binding Branches}"
+                    />
+                </StackPanel>
+            </Grid>
+            <hc:Pagination
+                PageIndex="{Binding CurrentPage}"
+                MaxPageCount="{Binding TotalPages}"
+                >
+                <hc:Interaction.Triggers>
+                    <hc:EventTrigger EventName="CurrentPageUpdated">
+                        <hc:EventToCommand Command="{Binding PageUpdatedCommand}" PassEventArgsToCommand="True" />
+                    </hc:EventTrigger>
+                </hc:Interaction.Triggers>
+            </hc:Pagination>
+            <DataGrid
+                Grid.Column="1"
+                Margin="10,10,10,10"
+                HorizontalAlignment="Stretch"
+                HeadersVisibility="All"
+                RowHeaderWidth="60"
+                AutoGenerateColumns="False"
+                hc:DataGridAttach.ShowRowNumber="True"
+                ItemsSource="{Binding Versions, Mode=OneWay}"
+                CanUserDeleteRows="False"
+                CanUserAddRows="False"
+                SelectedItem="{Binding SelectedVersion, Mode=TwoWay}"
+                SelectionMode="Single"
+                >
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Binding="{Binding Version, Mode=OneWay}"
+                        CanUserResize="False"
+                        Header="Версия"
+                    />
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
     </Grid>
 </Page>
