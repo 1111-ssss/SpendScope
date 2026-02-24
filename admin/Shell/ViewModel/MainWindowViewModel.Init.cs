@@ -2,7 +2,6 @@
 using admin.Features.Auth.Pages;
 using admin.Features.Home;
 using admin.Features.Metrics;
-using admin.Features.Profile;
 using admin.Features.Settings;
 using admin.Features.Users;
 using admin.Features.Versions;
