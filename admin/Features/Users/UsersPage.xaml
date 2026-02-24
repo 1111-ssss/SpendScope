@@ -90,7 +90,7 @@
                 MaxPageCount="{Binding TotalPages}"
                 >
                 <hc:Interaction.Triggers>
-                    <hc:EventTrigger EventName="PageUpdated">
+                    <hc:EventTrigger EventName="CurrentPageUpdated">
                         <hc:EventToCommand Command="{Binding PageUpdatedCommand}" PassEventArgsToCommand="True" />
                     </hc:EventTrigger>
                 </hc:Interaction.Triggers>
