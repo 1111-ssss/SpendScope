@@ -4,7 +4,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:local="clr-namespace:admin.Features.Users"
-    xmlns:controls="clr-namespace:admin.Features.Common.Controls"
     xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Foreground="{DynamicResource TextFillColorPrimaryBrush}"
@@ -15,13 +14,48 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <controls:ProfileCard
+        <ui:Card
+            Grid.Column="0"
+            Margin="10,10,10,10"
+            Width="300"
+            VerticalAlignment="Top"
+            >
+            <StackPanel>
+                <Ellipse
+                    Width="200"
+                    Height="200"
+                    Margin="10,30,10,10"
+                    >
+                    <Ellipse.Fill>
+                        <ImageBrush
+                            ImageSource="{Binding UserAvatar}"
+                            Stretch="UniformToFill"
+                        />
+                    </Ellipse.Fill>
+                </Ellipse>
+                <TextBlock
+                    Text="{Binding Username}"
+                    Foreground="{DynamicResource AccentTextFillColorSecondaryBrush}"
+                    FontSize="22"
+                    HorizontalAlignment="Center"
+                    Margin="0,0,0,5"
+                />
+                <TextBlock
+                    Text="{Binding UserDisplayName}"
+                    FontSize="14"
+                    Visibility="{Binding UserDisplayName, Converter={StaticResource NullToVisibilityConverter}}"
+                    HorizontalAlignment="Center"
+                    Margin="0,0,0,5"
+                />
+            </StackPanel>
+        </ui:Card>
+        <!--<controls:ProfileCard
             Grid.Column="0"
             Avatar="{Binding UserAvatar}"
             DisplayName="{Binding UserDisplayName}"
             Username="{Binding Username}"
             UserRole=""
-        />
+        />-->
         <StackPanel
             Grid.Column="1"
             >
