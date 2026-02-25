@@ -7,4 +7,5 @@ public interface IApiService
     IAuthApi Auth { get; }
     IHealthApi Health { get; }
     IProfileApi Profile { get; }
+    IVersionsApi Versions { get; }
 }
