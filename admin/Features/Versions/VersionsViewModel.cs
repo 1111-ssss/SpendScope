@@ -7,8 +7,10 @@ namespace admin.Features.Versions;
 
 public partial class VersionsViewModel : BaseViewModel
 {
+    public readonly List<string> Branches = new () { "Stable", "Dev" };
+
     [ObservableProperty]
-    private List<string> _branches = new() { "Stable", "Dev" };
+    private string _selectedBranch = "Stable";
 
     private readonly IApiService _apiService;
     private readonly ICurrentUserService _currentUserService;

@@ -55,7 +55,8 @@
                         MaxWidth="250"
                         MinWidth="200"
                         HorizontalAlignment="Left"
-                        ItemsSource="{Binding Branches}"
+                        ItemsSource="{Binding Branches, Mode=OneTime}"
+                        SelectedItem="{Binding SelectedBranch, Mode=TwoWay}"
                     />
                 </StackPanel>
             </Grid>
@@ -85,9 +86,14 @@
                 >
                 <DataGrid.Columns>
                     <DataGridTextColumn
-                        Binding="{Binding Version, Mode=OneWay}"
+                        Binding="{Binding Build, Mode=OneWay}"
                         CanUserResize="False"
-                        Header="Версия"
+                        Header="Билд"
+                    />
+                    <DataGridTextColumn
+                        Binding="{Binding Changelog, Mode=OneWay}"
+                        CanUserResize="False"
+                        Header="Изменения"
                     />
                 </DataGrid.Columns>
             </DataGrid>
