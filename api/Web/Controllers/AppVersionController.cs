@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Web.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Application.Features.AppVersions.GetAllVersions;
 
 namespace Web.Controllers;
 
@@ -27,6 +28,13 @@ public class AppVersionController : ControllerBase
     public async Task<IActionResult> GetLatest(string branch, CancellationToken ct)
     {
         var result = await _mediator.Send(new GetLatestVersionQuery(branch), ct);
+
+        return result.ToActionResult();
+    }
+    [HttpGet]
+    public async Task<IActionResult> GetAll(CancellationToken ct)
+    {
+        var result = await _mediator.Send(new GetAllVersionsQuery(), ct);
 
         return result.ToActionResult();
     }
