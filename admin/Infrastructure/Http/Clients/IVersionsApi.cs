@@ -10,4 +10,7 @@ public interface IVersionsApi
 
     [Get("/versions")]
     Task<AllVersionsResponse> GetAllVersions(CancellationToken ct = default);
+
+    [Delete("/versions/{branch}/{build}")]
+    Task DeleteVersion([Query] string branch, [Query] string build, CancellationToken ct = default);
 }
