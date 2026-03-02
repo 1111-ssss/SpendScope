@@ -47,7 +47,7 @@ public partial class MainWindowViewModel
                 new NavigationViewItem()
                 {
                     Content = "Загрузка версии",
-                    Icon = new SymbolIcon { Symbol = SymbolRegular.Branch24 },
+                    Icon = new SymbolIcon { Symbol = SymbolRegular.DocumentAdd24 },
                     TargetPageType = typeof(UploadVersionPage),
                 },
             ],
