@@ -31,6 +31,8 @@ public abstract class BaseViewModel : ObservableObject, INavigationAware
 
     public virtual void OnNavigatedFrom() { }
 
+    protected async Task ShowDialogAsync(string title, string message) =>
+        await ErrorHandler.ShowDialogAsync(title, message);
     protected async Task HandleApiErrorAsync(ApiException ex, bool showUserMessage, string? messageTitle, string? messageText) =>
         await ErrorHandler.HandleApiErrorAsync(ex, showUserMessage, messageTitle, messageText);
 
