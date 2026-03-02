@@ -13,4 +13,8 @@ public interface IVersionsApi
 
     [Delete("/versions/{branch}/{build}")]
     Task DeleteVersion([Query] string branch, [Query] string build, CancellationToken ct = default);
+
+    [Multipart]
+    [Post("/versions/upload")]
+    Task<AppVersionResponse> UploadVersion(string branch, int build, string? changelog, StreamPart file);
 }
