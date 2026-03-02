@@ -8,7 +8,7 @@ public class AppVersionUploadedBySpec : Specification<AppVersion>
     public AppVersionUploadedBySpec()
     {
         Query
-            .Include(x => x.UploadedBy)
+            // .Include(x => x.UploadedBy)
             .OrderBy(x => x.Build);
     }
 }
