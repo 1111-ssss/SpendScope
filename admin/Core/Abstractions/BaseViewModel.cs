@@ -31,6 +31,12 @@ public abstract class BaseViewModel : ObservableObject, INavigationAware
 
     public virtual void OnNavigatedFrom() { }
 
+    protected async Task HandleApiErrorAsync(ApiException ex, bool showUserMessage, string? messageTitle, string? messageText) =>
+        await ErrorHandler.HandleApiErrorAsync(ex, showUserMessage, messageTitle, messageText);
+
+    protected async Task HandleExceptionAsync(Exception ex, bool showUserMessage, string? messageTitle, string? messageText) =>
+        await ErrorHandler.HandleExceptionAsync(ex, showUserMessage, messageTitle, messageText);
+
     protected async Task HandleActionAsync(
         Func<Task> action,
         bool showUserMessage = true,
