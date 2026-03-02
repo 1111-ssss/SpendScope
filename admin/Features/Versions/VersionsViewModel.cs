@@ -10,7 +10,7 @@ namespace admin.Features.Versions;
 
 public partial class VersionsViewModel : BaseViewModel
 {
-    public readonly List<string> Branches = new() { "Stable", "Dev" };
+    public List<string> Branches = new() { "Stable", "Dev" };
     public List<AppVersionResponse>? Versions => AllVersions?.Versions[SelectedBranch];
 
     [ObservableProperty]

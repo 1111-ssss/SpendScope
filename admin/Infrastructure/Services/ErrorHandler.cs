@@ -1,5 +1,4 @@
 ﻿using admin.Core.Interfaces;
-using admin.Core.Model;
 using Microsoft.Extensions.Logging;
 using Refit;
 using System.Net;
@@ -50,8 +49,9 @@ public class ErrorHandler : IErrorHandler
         if (!string.IsNullOrEmpty(content))
         {
             using JsonDocument doc = JsonDocument.Parse(content);
-            content = doc.RootElement.TryGetProperty("error", out JsonElement errorElem) ?
-                errorElem.ToString() ?? "Ошибка без описания" : "Неизвестная ошибка";
+            content = doc.RootElement.TryGetProperty("error", out JsonElement errorElem)
+                ? errorElem.ToString() ?? "Ошибка без описания"
+                : "Неизвестная ошибка";
         }
 
         string message = messageText ?? content ?? ex.Message ?? "Сервер вернул ошибку";

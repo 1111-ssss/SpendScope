@@ -24,8 +24,9 @@
             CornerRadius="10"
             VerticalAlignment="Stretch"
             MinHeight="200"
-            DragDrop.Drop="{Binding DragDrop_UploadVersion}"
-            DragDrop.DragOver="{Binding DragDrop_DragOver}"
+            AllowDrop="True"
+            DragDrop.Drop="Drop_UploadVersion"
+            DragDrop.DragOver="Drop_DragOver"
             >
             <Label
                 Content="Перетащите сюда apk или ipa файл приложения"
@@ -46,7 +47,7 @@
                 Content="Ветка"
             />
             <ComboBox
-                ItemsSource="{Binding Branches, Mode=OneTime}"
+                ItemsSource="{Binding Branches, Mode=OneWay}"
                 SelectedItem="{Binding SelectedBranch, Mode=TwoWay}"
             />
             <Label

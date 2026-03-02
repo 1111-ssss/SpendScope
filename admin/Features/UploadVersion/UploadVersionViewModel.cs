@@ -1,5 +1,4 @@
 ﻿using admin.Core.Abstractions;
-using admin.Core.DTO.Versions.Responses;
 using admin.Core.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -11,7 +10,8 @@ namespace admin.Features.UploadVersion;
 
 public partial class UploadVersionViewModel : BaseViewModel
 {
-    public readonly List<string> Branches = new() { "Stable", "Dev" };
+    private readonly List<string> _branches = new() { "Stable", "Dev" };
+    public List<string> Branches => _branches;
 
     [ObservableProperty]
     private string _selectedBranch = "Stable";
@@ -34,10 +34,10 @@ public partial class UploadVersionViewModel : BaseViewModel
 
     public void DragDrop_DragOver(object sender, DragEventArgs e)
     {
-        return;
+        e.Effects = DragDropEffects.Copy;
     }
 
-    private async void DragDrop_UploadVersion(object sender, DragEventArgs e)
+    public async Task DragDrop_UploadVersion(object sender, DragEventArgs e)
     {
         if (e.Data.GetData(DataFormats.FileDrop) is not string[] { Length: > 0 } files)
             return;
@@ -60,17 +60,27 @@ public partial class UploadVersionViewModel : BaseViewModel
 
         await HandleActionAsync(async () =>
         {
-            await using var fileStream = File.OpenRead(filePath);
+            FileStream? fileStream = null;
+            try
+            {
+                fileStream = File.OpenRead(filePath);
 
-            var streamPart = new StreamPart(
-                fileStream,
-                //fileName: Path.GetFileName(filePath),
-                fileName: $"SpendScope{extension}",
-                contentType: contentType,
-                name: $"SpendScope{extension}"
-            );
+                var streamPart = new StreamPart(
+                    fileStream,
+                    fileName: $"SpendScope{extension}",
+                    contentType: contentType,
+                    name: $"SpendScope{extension}"
+                );
 
-            _streamPart = streamPart;
+                _streamPart = streamPart;
+
+                await ShowDialogAsync("Успех", "Файл готов к загрузке");
+            }
+            catch
+            {
+                fileStream?.Dispose();
+                throw;
+            }
         }, true, "Ошибка", "Не удалось получить файл");
     }
 
