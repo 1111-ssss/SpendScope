@@ -8,16 +8,19 @@ public class ApiService : IApiService
     public IAuthApi Auth { get; }
     public IHealthApi Health { get; }
     public IProfileApi Profile { get; }
+    public IVersionsApi Versions { get; }
 
     public ApiService(
         IAuthApi auth,
         IHealthApi health,
-        IProfileApi profile
+        IProfileApi profile,
+        IVersionsApi versions
 
     )
     {
         Auth = auth;
         Health = health;
         Profile = profile;
+        Versions = versions;
     }
 }

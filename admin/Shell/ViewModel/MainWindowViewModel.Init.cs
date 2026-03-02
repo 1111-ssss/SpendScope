@@ -3,6 +3,7 @@ using admin.Features.Auth.Pages;
 using admin.Features.Home;
 using admin.Features.Metrics;
 using admin.Features.Settings;
+using admin.Features.UploadVersion;
 using admin.Features.Users;
 using admin.Features.Versions;
 using Wpf.Ui.Controls;
@@ -42,6 +43,12 @@ public partial class MainWindowViewModel
                     Content = "Версии",
                     Icon = new SymbolIcon { Symbol = SymbolRegular.Branch24 },
                     TargetPageType = typeof(VersionsPage),
+                },
+                new NavigationViewItem()
+                {
+                    Content = "Загрузка версии",
+                    Icon = new SymbolIcon { Symbol = SymbolRegular.Branch24 },
+                    TargetPageType = typeof(UploadVersionPage),
                 },
             ],
 

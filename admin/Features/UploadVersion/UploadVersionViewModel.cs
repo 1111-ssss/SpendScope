@@ -32,6 +32,11 @@ public partial class UploadVersionViewModel : BaseViewModel
         _apiService = apiService;
     }
 
+    public void DragDrop_DragOver(object sender, DragEventArgs e)
+    {
+        return;
+    }
+
     private async void DragDrop_UploadVersion(object sender, DragEventArgs e)
     {
         if (e.Data.GetData(DataFormats.FileDrop) is not string[] { Length: > 0 } files)
@@ -69,18 +74,18 @@ public partial class UploadVersionViewModel : BaseViewModel
         }, true, "Ошибка", "Не удалось получить файл");
     }
 
-    private async Task<AppVersionResponse> GetLatestVersion()
+    private async Task GetLatestVersion()
     {
-        return await HandleActionAsync(Task<AppVersionResponse> () =>
+        await HandleActionAsync(async () =>
         {
-            return await _apiService.Versions.GetLatest(SelectedBranch);
+            var result = await _apiService.Versions.GetLatest(SelectedBranch);
+            Build = (result.Build + 1).ToString();
         }, false);
     }
 
     async partial void OnSelectedBranchChanged(string value)
     {
-        var result = await GetLatestVersion();
-        Build = (result.Build + 1).ToString();
+        await GetLatestVersion();
     }
 
     [RelayCommand]

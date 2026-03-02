@@ -24,8 +24,8 @@
             CornerRadius="10"
             VerticalAlignment="Stretch"
             MinHeight="200"
-            DragDrop.Drop="DragDrop_UploadVersion"
-            DragDrop.DragOver="DragDrop_DragOver"
+            DragDrop.Drop="{Binding DragDrop_UploadVersion}"
+            DragDrop.DragOver="{Binding DragDrop_DragOver}"
             >
             <Label
                 Content="Перетащите сюда apk или ipa файл приложения"
@@ -68,7 +68,7 @@
             <ui:Button
                 Margin="0 20 0 0"
                 Content="Загрузить версию"
-                Command="UploadVersionCommand"
+                Command="{Binding UploadVersionCommand}"
             />
         </StackPanel>
     </Grid>
