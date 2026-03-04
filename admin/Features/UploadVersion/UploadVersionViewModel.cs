@@ -32,6 +32,13 @@ public partial class UploadVersionViewModel : BaseViewModel
         _apiService = apiService;
     }
 
+    public override void OnNavigatedTo()
+    {
+        base.OnNavigatedTo();
+
+        _ = GetLatestVersion();
+    }
+
     public void DragDrop_DragOver(object sender, DragEventArgs e)
     {
         e.Effects = DragDropEffects.Copy;
