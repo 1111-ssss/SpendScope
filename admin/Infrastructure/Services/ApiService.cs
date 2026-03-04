@@ -9,12 +9,14 @@ public class ApiService : IApiService
     public IHealthApi Health { get; }
     public IProfileApi Profile { get; }
     public IVersionsApi Versions { get; }
+    public ILoggingApi Logging { get; }
 
     public ApiService(
         IAuthApi auth,
         IHealthApi health,
         IProfileApi profile,
-        IVersionsApi versions
+        IVersionsApi versions,
+        ILoggingApi logging
 
     )
     {
@@ -22,5 +24,6 @@ public class ApiService : IApiService
         Health = health;
         Profile = profile;
         Versions = versions;
+        Logging = logging;
     }
 }

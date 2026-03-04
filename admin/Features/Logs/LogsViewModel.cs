@@ -3,7 +3,7 @@ using admin.Core.Interfaces;
 
 namespace admin.Features.Logs;
 
-public class LogsViewModel : BaseViewModel
+public partial class LogsViewModel : BaseViewModel
 {
     private readonly IApiService _apiService;
     public LogsViewModel(

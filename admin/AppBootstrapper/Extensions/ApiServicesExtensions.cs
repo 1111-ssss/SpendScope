@@ -31,6 +31,7 @@ public static class ApiServicesExtensions
         .AddHttpMessageHandler<JwtAuthHandler>()
         .AddTypedClient<IHealthApi>(Refit.RestService.For<IHealthApi>)
         .AddTypedClient<IVersionsApi>(Refit.RestService.For<IVersionsApi>)
+        .AddTypedClient<ILoggingApi>(Refit.RestService.For<ILoggingApi>)
         .AddTypedClient<IProfileApi>(Refit.RestService.For<IProfileApi>);
 
         return services;

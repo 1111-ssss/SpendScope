@@ -8,4 +8,5 @@ public interface IApiService
     IHealthApi Health { get; }
     IProfileApi Profile { get; }
     IVersionsApi Versions { get; }
+    ILoggingApi Logging { get; }
 }
