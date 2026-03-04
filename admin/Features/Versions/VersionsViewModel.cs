@@ -1,5 +1,4 @@
 ﻿using admin.Core.Abstractions;
-using admin.Core.DTO.Health.Responses;
 using admin.Core.DTO.Versions.Responses;
 using admin.Core.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -10,8 +9,9 @@ namespace admin.Features.Versions;
 
 public partial class VersionsViewModel : BaseViewModel
 {
-    public List<string> Branches = new() { "Stable", "Dev" };
-    public List<AppVersionResponse>? Versions => AllVersions?.Versions[SelectedBranch];
+    [ObservableProperty]
+    private List<string> _branches = new() { "Stable", "Dev" };
+    public List<AppVersionResponse>? Versions => AllVersions?.Versions.GetValueOrDefault(SelectedBranch)?.ToList();
 
     [ObservableProperty]
     private string _selectedBranch = "Stable";

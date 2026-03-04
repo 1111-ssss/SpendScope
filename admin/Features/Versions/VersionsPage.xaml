@@ -61,7 +61,7 @@
                     HorizontalAlignment="Center"
                     Content="Удалить версию"
                     DockPanel.Dock="Bottom"
-                    Command="RemoveVersionCommand"
+                    Command="{Binding RemoveVersionCommand}"
                 />
             </DockPanel>
         </ui:Card>
