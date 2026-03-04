@@ -1,5 +1,6 @@
 ﻿using admin.Features.Auth.Pages;
 using admin.Features.Home;
+using admin.Features.Logs;
 using admin.Features.Metrics;
 using admin.Features.Settings;
 using admin.Features.UploadVersion;
@@ -25,6 +26,7 @@ public static class VMsAndPagesExtensions
         services.AddSingleton<VersionsViewModel>();
         services.AddSingleton<MetricsViewModel>();
         services.AddSingleton<UploadVersionViewModel>();
+        services.AddSingleton<LogsViewModel>();
         services.AddSingleton<SettingsViewModel>();
 
         // Pages
@@ -33,6 +35,7 @@ public static class VMsAndPagesExtensions
         services.AddSingleton<VersionsPage>();
         services.AddSingleton<MetricsPage>();
         services.AddSingleton<UploadVersionPage>();
+        services.AddSingleton<LogsPage>();
         services.AddSingleton<SettingsPage>();
 
         return services;

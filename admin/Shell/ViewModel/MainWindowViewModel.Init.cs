@@ -1,6 +1,7 @@
 ﻿using admin.Core.Model;
 using admin.Features.Auth.Pages;
 using admin.Features.Home;
+using admin.Features.Logs;
 using admin.Features.Metrics;
 using admin.Features.Settings;
 using admin.Features.UploadVersion;
@@ -49,6 +50,12 @@ public partial class MainWindowViewModel
                     Content = "Загрузка версии",
                     Icon = new SymbolIcon { Symbol = SymbolRegular.DocumentAdd24 },
                     TargetPageType = typeof(UploadVersionPage),
+                },
+                new NavigationViewItem()
+                {
+                    Content = "Логи",
+                    Icon = new SymbolIcon { Symbol = SymbolRegular.ClipboardSearch24 },
+                    TargetPageType = typeof(LogsPage),
                 },
             ],
 
