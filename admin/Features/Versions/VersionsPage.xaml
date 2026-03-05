@@ -34,28 +34,18 @@
                             Symbol="Branch24"
                             FontSize="24"
                         />
-                        <Label
-                            Content="{Binding CurrentBranch}"
+                        <TextBlock
+                            Margin="5"
+                            TextWrapping="Wrap"
+                            FontWeight="SemiBold"
+                            Text="{Binding CardLabelText, Mode=OneWay}"
                         />
                     </StackPanel>
                     <TextBlock
-                        Text="{Binding Build}"
+                        Margin="10"
+                        TextWrapping="Wrap"
+                        Text="{Binding CardDetailedInfo, Mode=OneWay}"
                     />
-                    <TextBlock
-                        Text="{Binding SelectedVersion.Changelog}"
-                    />
-                    <StackPanel
-                        Orientation="Horizontal"
-                        HorizontalAlignment="Center"
-                        >
-                        <ui:SymbolIcon
-                            Symbol="CalendarArrowDown24"
-                            FontSize="24"
-                        />
-                        <Label
-                            Content="{Binding UploadedAt}"
-                        />
-                    </StackPanel>
                 </StackPanel>
                 <ui:Button
                     HorizontalAlignment="Center"

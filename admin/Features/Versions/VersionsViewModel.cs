@@ -11,10 +11,16 @@ public partial class VersionsViewModel : BaseViewModel
 {
     [ObservableProperty]
     private List<string> _branches = new() { "Stable", "Dev" };
-    public List<AppVersionResponse>? Versions => AllVersions?.Versions.GetValueOrDefault(SelectedBranch)?.ToList();
+    public List<AppVersionResponse> Versions => AllVersions?.Versions.GetValueOrDefault(SelectedBranch)?.ToList() ?? new();
 
     [ObservableProperty]
     private string _selectedBranch = "Stable";
+
+    public string CardLabelText => SelectedVersion != null
+        ? $"Информация о {SelectedVersion.Branch}/{SelectedVersion.Build}"
+        : "Информация о приложении";
+
+    public string CardDetailedInfo => GetCardDetailedInfo();
 
     [ObservableProperty]
     private AppVersionResponse? _selectedVersion;
@@ -58,6 +64,15 @@ public partial class VersionsViewModel : BaseViewModel
     {
         OnPropertyChanged(nameof(Build));
         OnPropertyChanged(nameof(UploadedAt));
+        OnPropertyChanged(nameof(CardLabelText));
+        OnPropertyChanged(nameof(CardDetailedInfo));
+    }
+
+    public string GetCardDetailedInfo()
+    {
+        return SelectedVersion != null 
+            ? $"Билд: {SelectedVersion.Build}\nВетка: {SelectedVersion.Branch}\n\nОписание изменений:\n{SelectedVersion.Changelog}\n\nДата загрузки на сервер: {SelectedVersion.UploadedAt}\nКем загружена: {SelectedVersion.UploadedBy}"
+            : "Выберите поле из списка для получения информации";
     }
 
     public async Task FetchAllVersions()
