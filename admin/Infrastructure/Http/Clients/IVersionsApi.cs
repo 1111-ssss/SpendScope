@@ -5,7 +5,7 @@ namespace admin.Infrastructure.Http.Clients;
 
 public interface IVersionsApi
 {
-    [Get("/versions/")]
+    [Get("/versions/{branch}")]
     Task<AppVersionResponse> GetLatest([Query] string branch, CancellationToken ct = default);
 
     [Get("/versions")]
