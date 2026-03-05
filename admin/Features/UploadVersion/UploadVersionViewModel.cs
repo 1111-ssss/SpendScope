@@ -17,7 +17,7 @@ public partial class UploadVersionViewModel : BaseViewModel
     private string _selectedBranch = "Stable";
 
     [ObservableProperty]
-    private string _build = "0";
+    private int _build = 1;
 
     [ObservableProperty]
     private string _changelog = string.Empty;
@@ -75,8 +75,7 @@ public partial class UploadVersionViewModel : BaseViewModel
                 var streamPart = new StreamPart(
                     fileStream,
                     fileName: $"SpendScope{extension}",
-                    contentType: contentType,
-                    name: $"SpendScope{extension}"
+                    contentType: contentType
                 );
 
                 _streamPart = streamPart;
@@ -96,7 +95,10 @@ public partial class UploadVersionViewModel : BaseViewModel
         await HandleActionAsync(async () =>
         {
             var result = await _apiService.Versions.GetLatest(SelectedBranch);
-            Build = (result.Build + 1).ToString();
+            if (result == null)
+                return;
+
+            Build = result.Build + 1;
         }, false);
     }
 
@@ -110,14 +112,12 @@ public partial class UploadVersionViewModel : BaseViewModel
     {
         await HandleActionAsync(async () =>
         {
-            if (!int.TryParse(Build, out int build))
-                return;
             if (_streamPart == null || _streamPart.Value == null || _streamPart.Value.Length == 0)
                 return;
 
             await _apiService.Versions.UploadVersion(
                 SelectedBranch,
-                build,
+                Build,
                 Changelog,
                 _streamPart
             );

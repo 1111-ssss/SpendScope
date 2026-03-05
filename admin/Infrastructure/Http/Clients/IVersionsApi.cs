@@ -16,5 +16,11 @@ public interface IVersionsApi
 
     [Multipart]
     [Post("/versions/upload")]
-    Task<AppVersionResponse> UploadVersion(string branch, int build, string? changelog, StreamPart file);
+    Task<AppVersionResponse> UploadVersion(
+        string branch,
+        int build,
+        string? changelog,
+        StreamPart file,
+        CancellationToken ct = default
+    );
 }
