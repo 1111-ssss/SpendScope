@@ -3,10 +3,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     xmlns:local="clr-namespace:admin.Features.Logs"
     >
-    <Grid>
+    <Grid
+        Margin="5"
+        >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
@@ -22,16 +25,52 @@
             CornerRadius="10"
             VerticalAlignment="Stretch"
             MinHeight="200"
-            MinWidth="100"
+            MinWidth="200"
             >
-            <Label
-                Content="{Binding SelectedLogEntry.Level}"
-            />
+            <StackPanel>
+                <Label>Text</Label>
+            </StackPanel>
         </Border>
         <StackPanel
             Grid.Column="1"
             >
-            <Label Content="Test"/>
+            <hc:Pagination
+                PageIndex="{Binding CurrentPage}"
+                MaxPageCount="{Binding TotalPages}"
+                >
+                <hc:Interaction.Triggers>
+                    <hc:EventTrigger EventName="CurrentPageUpdated">
+                        <hc:EventToCommand Command="{Binding PageUpdatedCommand}" PassEventArgsToCommand="True" />
+                    </hc:EventTrigger>
+                </hc:Interaction.Triggers>
+            </hc:Pagination>
+            <DataGrid
+                Grid.Column="1"
+                Margin="10,10,10,10"
+                HorizontalAlignment="Stretch"
+                HeadersVisibility="All"
+                RowHeaderWidth="60"
+                AutoGenerateColumns="False"
+                hc:DataGridAttach.ShowRowNumber="True"
+                ItemsSource="{Binding Versions, Mode=OneWay}"
+                CanUserDeleteRows="False"
+                CanUserAddRows="False"
+                SelectedItem="{Binding SelectedVersion, Mode=TwoWay}"
+                SelectionMode="Single"
+                >
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Binding="{Binding Build, Mode=OneWay}"
+                        CanUserResize="False"
+                        Header="Билд"
+                    />
+                    <DataGridTextColumn
+                        Binding="{Binding Changelog, Mode=OneWay}"
+                        CanUserResize="False"
+                        Header="Изменения"
+                    />
+                </DataGrid.Columns>
+            </DataGrid>
         </StackPanel>
         <StackPanel
             Grid.Column="2"
