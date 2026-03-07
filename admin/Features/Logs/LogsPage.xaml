@@ -28,7 +28,16 @@
             MinWidth="200"
             >
             <StackPanel>
-                <Label>Text</Label>
+                <TextBlock
+                    Text="Запись лога"
+                    HorizontalAlignment="Center"
+                    FontWeight="SemiBold"
+                />
+                <TextBlock 
+                    Margin="10"
+                    Text="{Binding CardText, Mode=OneWay}"
+                    TextWrapping="WrapWithOverflow"
+                />
             </StackPanel>
         </Border>
         <StackPanel
@@ -52,28 +61,34 @@
                 RowHeaderWidth="60"
                 AutoGenerateColumns="False"
                 hc:DataGridAttach.ShowRowNumber="True"
-                ItemsSource="{Binding Versions, Mode=OneWay}"
+                ItemsSource="{Binding LogPageItems, Mode=OneWay}"
                 CanUserDeleteRows="False"
                 CanUserAddRows="False"
-                SelectedItem="{Binding SelectedVersion, Mode=TwoWay}"
+                SelectedItem="{Binding SelectedLog, Mode=TwoWay}"
                 SelectionMode="Single"
                 >
                 <DataGrid.Columns>
                     <DataGridTextColumn
-                        Binding="{Binding Build, Mode=OneWay}"
+                        Binding="{Binding Level, Mode=OneWay}"
                         CanUserResize="False"
-                        Header="Билд"
+                        Header="Уровень"
                     />
                     <DataGridTextColumn
-                        Binding="{Binding Changelog, Mode=OneWay}"
+                        Binding="{Binding Message, Mode=OneWay}"
                         CanUserResize="False"
-                        Header="Изменения"
+                        Header="Сообщение"
+                    />
+                    <DataGridTextColumn
+                        Binding="{Binding Timestamp, Mode=OneWay}"
+                        CanUserResize="False"
+                        Header="Время"
                     />
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>
         <StackPanel
             Grid.Column="2"
+            Margin="5"
             >
             <TextBlock
                 Text="Уровень"
