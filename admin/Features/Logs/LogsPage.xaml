@@ -94,18 +94,21 @@
                 Text="Уровень"
             />
             <ComboBox
+                ItemsSource="{Binding LogLevels}"
             />
             <TextBlock
                 Text="Минимальный уровень"
                 TextWrapping="Wrap"
             />
-            <ComboBox
+            <ui:ToggleSwitch
+                Command="{Binding SwitchMinimalLevelCommand}"
             />
             <TextBlock
                 Text="Сортировка"
                 TextWrapping="Wrap"
             />
             <ComboBox
+                ItemsSource="{Binding Sorting}"
             />
             <TextBlock
                 Text="По убыванию"
