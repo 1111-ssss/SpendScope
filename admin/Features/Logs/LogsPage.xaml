@@ -86,43 +86,75 @@
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>
-        <StackPanel
+        <Border
             Grid.Column="2"
             Margin="5"
+            Background="{DynamicResource CardBackground}"
+            BorderBrush="{DynamicResource CardBorderBrush}"
+            BorderThickness="1"
+            Padding="5"
+            CornerRadius="10"
+            VerticalAlignment="Stretch"
+            MinHeight="200"
+            MinWidth="200"
             >
-            <TextBlock
-                Text="Уровень"
-            />
-            <ComboBox
-                ItemsSource="{Binding LogLevels}"
-            />
-            <TextBlock
-                Text="Минимальный уровень"
-                TextWrapping="Wrap"
-            />
-            <ui:ToggleSwitch
-                Command="{Binding SwitchMinimalLevelCommand}"
-            />
-            <TextBlock
-                Text="Сортировка"
-                TextWrapping="Wrap"
-            />
-            <ComboBox
-                ItemsSource="{Binding Sorting}"
-            />
-            <TextBlock
-                Text="По убыванию"
-                TextWrapping="Wrap"
-            />
-            <ui:ToggleSwitch
-            />
-            <TextBlock
-                Text="Поиск"
-                TextWrapping="Wrap"
-            />
-            <ui:TextBox
-                PlaceholderText="Напишите что-то..."
-            />
-        </StackPanel>
+            <StackPanel>
+                <TextBlock
+                    Text="Поиск по логам"
+                    FontWeight="SemiBold"
+                    HorizontalAlignment="Center"
+                />
+                <TextBlock
+                    Text="Уровень"
+                />
+                <ComboBox
+                    ItemsSource="{Binding LogLevels}"
+                    SelectedItem="{Binding Level}"
+                />
+                <TextBlock
+                    Text="Минимальный уровень"
+                    TextWrapping="Wrap"
+                />
+                <ui:ToggleSwitch
+                    Command="{Binding SwitchMinimalLevelCommand}"
+                />
+                <TextBlock
+                    Text="Сортировка"
+                    TextWrapping="Wrap"
+                />
+                <ComboBox
+                    ItemsSource="{Binding Sorting}"
+                    SelectedItem="{Binding SelectedSort}"
+                />
+                <TextBlock
+                    Text="По убыванию"
+                    TextWrapping="Wrap"
+                />
+                <ui:ToggleSwitch
+                    Command="{Binding SwitchAscSortingCommand}"
+                />
+                <TextBlock
+                    Text="Поиск"
+                    TextWrapping="Wrap"
+                />
+                <ui:TextBox
+                    PlaceholderText="Напишите что-то..."
+                    Text="{Binding SearchText}"
+                />
+                <ui:Button
+                    Margin="15 15 15 5"
+                    HorizontalAlignment="Stretch"
+                    Content="Поиск"
+                    Command="{Binding FetchLogsCommand}"
+                />
+                <ui:Button
+                    Margin="15 10 15 5"
+                    HorizontalAlignment="Stretch"
+                    Content="Очистить все логи"
+                    Foreground="{DynamicResource SystemFillColorCriticalBrush}"
+                    Command="{Binding ClearLogsCommand}"
+                />
+            </StackPanel>
+        </Border>
     </Grid>
 </Page>

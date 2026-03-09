@@ -48,7 +48,6 @@ public partial class LogsViewModel : BaseViewModel
         "Level"
     };
 
-
     public string CardText => SelectedLog != null
         ? $"Уровень: {SelectedLog.Level}\nДата: {SelectedLog.Timestamp.ToShortDateString()}\nСообщение: {SelectedLog.Message}\n\nОшибка: {SelectedLog.Exception ?? "Отсутствует"}"
         : "Здесь отобразится информация о журнале";
@@ -63,6 +62,11 @@ public partial class LogsViewModel : BaseViewModel
     )
     {
         _apiService = apiService;
+    }
+
+    partial void OnSelectedLogChanged(LogResponse? value)
+    {
+        OnPropertyChanged(nameof(CardText));
     }
 
     [RelayCommand]
@@ -83,6 +87,15 @@ public partial class LogsViewModel : BaseViewModel
                 string.IsNullOrEmpty(SearchText) ? null : SearchText
             );
             LogResponses = new ObservableCollection<LogResponse?>(result.Items.ToArray());
+        }, true);
+    }
+
+    [RelayCommand]
+    private async Task ClearLogs()
+    {
+        await HandleActionAsync(async () =>
+        {
+            await _apiService.Logging.ClearLogs();
         }, true);
     }
 
