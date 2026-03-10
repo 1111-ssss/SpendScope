@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace admin.Features.Logs;
 
@@ -20,6 +21,9 @@ public partial class LogsViewModel : BaseViewModel
     private int _currentPage = 1;
 
     [ObservableProperty]
+    private int _totalPages = 1;
+
+    [ObservableProperty]
     private int _pageSize = 10;
 
     [ObservableProperty]
@@ -31,7 +35,8 @@ public partial class LogsViewModel : BaseViewModel
     [ObservableProperty]
     private string _level = "Warning";
 
-    public List<string> LogLevels = new() {
+    [ObservableProperty]
+    public ObservableCollection<string> _logLevels = new() {
         "Trace",
         "Debug",
         "Information",
@@ -43,7 +48,8 @@ public partial class LogsViewModel : BaseViewModel
     [ObservableProperty]
     private string _selectedSort = "Timestamp";
 
-    public List<string> Sorting = new() {
+    [ObservableProperty]
+    public ObservableCollection<string> _orderByItems = new() {
         "Timestamp",
         "Level"
     };
@@ -54,7 +60,7 @@ public partial class LogsViewModel : BaseViewModel
 
     public List<LogResponse> LogPageItems => LogPage?.Items ?? new();
     private bool _isDesc = true;
-    private bool _useMinimalLevel = false;
+    private bool _useMinimalLevel = true;
 
     private readonly IApiService _apiService;
     public LogsViewModel(
@@ -62,6 +68,8 @@ public partial class LogsViewModel : BaseViewModel
     )
     {
         _apiService = apiService;
+
+        _ = FetchLogs();
     }
 
     partial void OnSelectedLogChanged(LogResponse? value)
@@ -86,6 +94,8 @@ public partial class LogsViewModel : BaseViewModel
                 _isDesc,
                 string.IsNullOrEmpty(SearchText) ? null : SearchText
             );
+            TotalPages = result.TotalPages;
+            Debug.WriteLine(TotalPages);
             LogResponses = new ObservableCollection<LogResponse?>(result.Items.ToArray());
         }, true);
     }
@@ -96,6 +106,8 @@ public partial class LogsViewModel : BaseViewModel
         await HandleActionAsync(async () =>
         {
             await _apiService.Logging.ClearLogs();
+
+            await FetchLogsCommand.ExecuteAsync(null);
         }, true);
     }
 
@@ -109,5 +121,12 @@ public partial class LogsViewModel : BaseViewModel
     private void SwitchAscSorting()
     {
         _isDesc = !_isDesc;
+    }
+
+    [RelayCommand]
+    private async Task PageUpdated(int page)
+    {
+        CurrentPage = page;
+        await FetchLogsCommand.ExecuteAsync(null);
     }
 }
