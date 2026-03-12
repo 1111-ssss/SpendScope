@@ -221,7 +221,7 @@ Presentation → Application → Domain ← Infrastructure
 
 ## 📦 Поток данных (на примере регистрации)
 
-### 1. **Запрос от клиента**
+### 1. Запрос от клиента
 ```
 POST /api/auth/register
 {
@@ -231,24 +231,19 @@ POST /api/auth/register
 }
 ```
 
-### 2. **Controller (Web Layer)**
+### 2. Controller (Web Layer)
 ```csharp
 // Web/Controllers/AuthController.cs
 [HttpPost("register")]
-public async Task<IActionResult> Register(RegisterUserRequest request)
+public async Task<IActionResult> Register(RegisterUserCommand command)
 {
-    var command = new RegisterUserCommand(
-        request.Username, 
-        request.Email, 
-        request.Password
-    );
-    
     var result = await _mediator.Send(command);
-    return result.IsSuccess ? Ok(result.Value) : BadRequest(result.Error);
+
+    return result.ToActionResult();
 }
 ```
 
-### 3. **Application Layer**
+### 3. Application Layer
 ```
 RegisterUserCommand
     ↓
@@ -262,7 +257,7 @@ RegisterUserCommandHandler
     └── Генерация JWT токена
 ```
 
-### 4. **Domain Layer**
+### 4. Domain Layer
 ```csharp
 // Domain/Entities/User.cs
 public class User : BaseEntity
@@ -279,7 +274,7 @@ public class User : BaseEntity
 }
 ```
 
-### 5. **Infrastructure Layer**
+### 5. Infrastructure Layer
 ```csharp
 // Infrastructure/DataBase/AppDbContext.cs
 public class AppDbContext : DbContext
@@ -360,10 +355,6 @@ Features/
 4. **Web/Controllers**: Добавить endpoint в `TransactionsController`
 5. **Admin/Features** (опционально): Добавить UI для управления
 
-### Удаление фичи
-
-Просто удалите папку фичи — не останется следов в других местах.
-
 ---
 
 ## 🔒 Безопасность и валидация
@@ -410,44 +401,6 @@ public class RegisterUserCommandValidator
     }
 }
 ```
-
----
-
-## 📈 Масштабирование архитектуры
-
-### Для небольших проектов
-- Достаточно: **Web + Application + Domain**
-- Infrastructure можно объединить с Application
-
-### Для средних проектов (как SpendScope)
-- Полное разделение на 4 слоя
-- CQRS с MediatR
-- Vertical Slice для ключевых фич
-
-### Для крупных проектов
-- Добавить: **Shared Kernel**, **Bounded Contexts**
-- Выделить: **API Gateway**, **Microservices**
-- Внедрить: **Event Sourcing**, **CQRS** с разделением БД
-
----
-
-## 🎓 Рекомендации по разработке
-
-### ✅ DO (Делай)
-
-- Размещайте всю логику фичи в одной папке
-- Используйте CQRS для разделения записи/чтения
-- Валидируйте данные на уровне Application
-- Domain-сущности не должны зависеть от внешних библиотек
-- Infrastructure реализует интерфейсы Application
-
-### ❌ DON'T (Не делай)
-
-- Не создавайте зависимости между фичами
-- Не размещайте бизнес-логику в Controllers
-- Не обращайтесь к БД напрямую из Presentation
-- Не используйте Domain-сущности в DTO
-- Не игнорируйте валидацию
 
 ---
 
